@@ -1,0 +1,45 @@
+using System;
+
+namespace ArenaUnity.CloudRendering.Signaling
+{
+    #pragma warning disable 0649
+    [System.Serializable]
+    public class RoutedMessage<T>
+    {
+        public string type;
+        public string source;
+        public string id;
+        public T data;
+    }
+
+    [System.Serializable]
+    public class SDPData
+    {
+        public string type;
+        public string id;
+        public string sdp;
+    }
+
+    [System.Serializable]
+    public class CandidateData
+    {
+        public string id;
+        public string candidate;
+        public string sdpMid;
+        public int sdpMLineIndex;
+        // public int usernameFragment;
+    }
+
+    [System.Serializable]
+    public class ClientPose
+    {
+        public float x;
+        public float y;
+        public float z;
+        public float x_;
+        public float y_;
+        public float z_;
+        public float w_;
+    }
+    #pragma warning restore 0649
+}
