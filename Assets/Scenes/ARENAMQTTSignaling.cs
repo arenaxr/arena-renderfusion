@@ -32,28 +32,23 @@ namespace ArenaUnity.CloudRendering.Signaling
 
         public string Url { get { return "arena"; } }
 
-        public ARENAMQTTSignaling(SynchronizationContext mainThreadContext)
+        protected override void Awake()
         {
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
 
-            m_mainThreadContext = mainThreadContext;
-
-            hostAddress = "mqtt.arenaxr.org";
+            hostAddress = "arena-dev1.conix.io";
             authType = Auth.Anonymous;
 
             SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{m_clientId}";
             SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{m_clientId}";
             SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{m_clientId}";
+
+            base.Awake();
+            name = "ARENA MQTT Signaler (Starting...)";
         }
 
-        ~ARENAMQTTSignaling()
-        {
-            CloseConnection();
-        }
-
-        public void ConnectArena()
-        {
-            StartCoroutine(SigninScene("example", "public", "realm", false));
+        public void SetSyncContext(SynchronizationContext mainThreadContext) {
+            m_mainThreadContext = mainThreadContext;
         }
 
         public event OnClientConnectHandler OnClientConnect;
@@ -63,23 +58,31 @@ namespace ArenaUnity.CloudRendering.Signaling
         public event OnAnswerHandler OnAnswer;
         public event OnIceCandidateHandler OnIceCandidate;
 
+        public void ConnectArena()
+        {
+            StartCoroutine(SigninScene("example", "Edward", "realm", false));
+        }
+
         public void OpenConnection()
         {
             Debug.Log($"MQTT opening connection to ARENA");
             ConnectArena();
-            if (mqttClientConnected)
-            {
-                Debug.Log($"Permissions: {permissions}");
+        }
 
-                // Subscribe(new string[] { "$SYS/#" });
-                Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/#" });
-                Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/#" });
-                Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/#" });
-                Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/#" });
-                Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/#" });
+        protected override void OnConnected()
+        {
+            Debug.Log($"Permissions: {permissions}");
 
-                OnConnected();
-            }
+            // Subscribe(new string[] { "$SYS/#" });
+            Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/#" });
+
+            Debug.Log("MQTT connected!");
+            name = "ARENA MQTT Signaler (Connected)";
+            m_mainThreadContext.Post(d => OnStart?.Invoke(this), null);
         }
 
         public void CloseConnection()
@@ -139,12 +142,6 @@ namespace ArenaUnity.CloudRendering.Signaling
             };
 
             Publish(SERVER_CANDIDATE_TOPIC, JsonUtility.ToJson(routedMessage));
-        }
-
-        protected override void OnConnected()
-        {
-            Debug.Log("MQTT connected!");
-            m_mainThreadContext.Post(d => OnStart?.Invoke(this), null);
         }
 
         protected override void ProcessMessage(byte[] msg)

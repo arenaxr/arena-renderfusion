@@ -1,4 +1,5 @@
 using Unity.WebRTC;
+using System.Threading;
 
 namespace ArenaUnity.CloudRendering.Signaling
 {
@@ -20,6 +21,7 @@ namespace ArenaUnity.CloudRendering.Signaling
 
         string Url { get; }
 
+        void SetSyncContext(SynchronizationContext mainThreadContext);
         void OpenConnection();
         void CloseConnection();
         void SendOffer(string id, RTCSessionDescription offer);
