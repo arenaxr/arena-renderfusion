@@ -44,7 +44,7 @@ namespace ArenaUnity.CloudRendering
         // Start is called before the first frame update
         private void Start()
         {
-            SetupWebSocketSignaling();
+            SetupSignaling();
             Debug.Log("Started Server!");
         }
 
@@ -58,10 +58,15 @@ namespace ArenaUnity.CloudRendering
             }
         }
 
-        private void SetupWebSocketSignaling()
+        private void SetupSignaling()
         {
             // signaler = new WSSignaling("ws://127.0.0.1:8000/ws", SynchronizationContext.Current);
-            signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
+
+            GameObject gobj = new GameObject("Arena Mqtt Signaler");
+            signaler = gobj.AddComponent(typeof(ARENAMQTTSignaling)) as ARENAMQTTSignaling;
+            signaler.SetSyncContext(SynchronizationContext.Current);
+
+            // signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
             signaler.OnStart += OnSignalerStart;
             signaler.OnClientConnect += GotClientConnect;
             signaler.OnClientDisconnect += GotClientDisconnect;
