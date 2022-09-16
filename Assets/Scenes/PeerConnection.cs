@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.WebRTC;
 using UnityEngine;
-using ArenaUnity.CloudRendering.Signaling;
+using ArenaUnity.HybridRendering.Signaling;
 
-namespace ArenaUnity.CloudRendering
+namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection
     {
