@@ -377,10 +377,7 @@ MonoBehaviour:
   hostAddress: arena-dev1.conix.io
   namespaceName: 
   sceneName: example
-  displayName: 
-  headModelPath: /store/models/robobit.glb
-  userCamera: {fileID: 0}
-  publishCamera: 0
+  renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
   logMqttEvents: 0
