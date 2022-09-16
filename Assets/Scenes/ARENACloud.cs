@@ -3,21 +3,19 @@ using System.Text;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.WebRTC;
 using UnityEngine;
 using UnityEngine.UI;
-using ArenaUnity.CloudRendering.Signaling;
+using Unity.WebRTC;
 using ArenaUnity;
+using ArenaUnity.HybridRendering.Signaling;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace ArenaUnity.CloudRendering
+namespace ArenaUnity.HybridRendering
 {
+    [RequireComponent(typeof(ArenaClientScene))]
     public class ARENACloud : MonoBehaviour
     {
-    #pragma warning disable 0649
-        // [SerializeField] private Camera cam;
-        [SerializeField] private Transform rotateObject;
-    #pragma warning restore 0649
-
         private ISignaling signaler;
         private RTCConfiguration config = new RTCConfiguration{
                 iceServers = new[] {
@@ -27,7 +25,6 @@ namespace ArenaUnity.CloudRendering
                 }
             };
 
-        private PeerConnection peerConnection1, peerConnection2;
         Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
 
         private void Awake()
@@ -51,18 +48,12 @@ namespace ArenaUnity.CloudRendering
         // Update is called once per frame
         private void Update()
         {
-            if (rotateObject != null)
-            {
-                float t = Time.deltaTime;
-                rotateObject.Rotate(10 * t, 20 * t, 30 * t);
-            }
+
         }
 
         private void SetupSignaling()
         {
-            // signaler = new WSSignaling("ws://127.0.0.1:8000/ws", SynchronizationContext.Current);
-
-            GameObject gobj = new GameObject("Arena Mqtt Signaler");
+            GameObject gobj = new GameObject("Arena MQTT Signaler");
             signaler = gobj.AddComponent(typeof(ARENAMQTTSignaling)) as ARENAMQTTSignaling;
             signaler.SetSyncContext(SynchronizationContext.Current);
 
@@ -73,11 +64,28 @@ namespace ArenaUnity.CloudRendering
             signaler.OnOffer += GotOffer;
             signaler.OnAnswer += GotAnswer;
             signaler.OnIceCandidate += GotIceCandidate;
+            signaler.OnRemoteObjectStatusUpdate += GotRemoteObjectStatusUpdate;
             signaler.OpenConnection();
         }
 
         private void OnSignalerStart(ISignaling signaler)
         {
+            foreach (var aobj in FindObjectsOfType<ArenaObject>())
+            {
+                JToken data = JToken.Parse(aobj.jsonData);
+                var remoteRenderToken = data["remote-render"];
+                if (remoteRenderToken != null)
+                {
+                    bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
+                    // aobj.gameObject.SetActive(remoteRendered);
+                    aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
+                }
+                else if (aobj.gameObject.activeSelf)
+                {
+                    aobj.gameObject.SetActive(false);
+                }
+            }
+
             StartCoroutine(WebRTC.Update());
         }
 
@@ -148,6 +156,23 @@ namespace ArenaUnity.CloudRendering
                 peer.AddIceCandidate(data);
             else
                 Debug.LogError($"Peer {data.id} not found in dictionary.");
+        }
+
+        private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
+        {
+            // ArenaClientScene.Instance.arenaObjs.
+            Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId}, {remoteRendered}");
+
+            foreach (var aobj in FindObjectsOfType<ArenaObject>())
+            {
+                if (aobj.name != objectId)
+                {
+                    continue;
+                }
+
+                // aobj.gameObject.SetActive(remoteRendered);
+                aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
+            }
         }
     }
 }

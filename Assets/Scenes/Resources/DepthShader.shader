@@ -73,15 +73,16 @@ Shader "Hidden/DepthShader"
                     // depth = Linear01Depth(depth);
                     // depth = depth * _ProjectionParams.z;
 #ifdef SHADER_API_METAL
-                    col.rgb = 1.0 - depth;
+                    col.rb = 1.0 - depth;
 #else
-                    col.rgb = depth;
+                    col.rb = depth;
 #endif
-                    // if (1.0 - depth == 1.0)
-                    //     col.rgb = 0.0;
-                    // else
-                    // if (depth >= _ProjectionParams.z)
-                    //     col.rgb = 1.0;
+                    float depth1 = Linear01Depth(depth);
+                    depth1 = depth1 * _ProjectionParams.z;
+                    if (depth1 >= _ProjectionParams.z)
+                        col.g = 1.0;
+                    else
+                        col.g = 0.0;
                 }
                 else {
                     col = tex2D(_MainTex, float2(i.uv.x * 2.0, i.uv.y));

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ArenaUnity.CloudRendering
+namespace ArenaUnity.HybridRendering
 {
     [RequireComponent(typeof(Camera))]
     public class CameraDepth : MonoBehaviour
