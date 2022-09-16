@@ -12,7 +12,7 @@
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.6",
     "com.unity.webrtc": "2.4.0-exp.7",
-    "io.conix.arena.unity": "file:/Users/Edward/Desktop/ARENA-unity",
+    "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
