@@ -3,7 +3,7 @@ using Unity.WebRTC;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
-namespace ArenaUnity.CloudRendering
+namespace ArenaUnity.HybridRendering
 {
     public class CameraStream
     {
