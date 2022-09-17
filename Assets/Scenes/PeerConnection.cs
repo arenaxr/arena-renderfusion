@@ -12,6 +12,13 @@ namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection
     {
+        static readonly float s_defaultFrameRate = 30;
+
+        static readonly uint s_defaultMinBitrate = 0;
+        static readonly uint s_defaultMaxBitrate = 10000;
+
+        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
+
         private string id;
         private string m_clientId;
 
@@ -25,7 +32,10 @@ namespace ArenaUnity.HybridRendering
         private List<RTCRtpSender> pcSenders;
         private RTCDataChannel remoteDataChannel;
 
-        private readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
+        private float m_FrameRate = s_defaultFrameRate;
+
+        private uint m_minBitrate = s_defaultMinBitrate;
+        private uint m_maxBitrate = s_defaultMaxBitrate;
 
         public string Id { get { return id; } }
 
@@ -47,6 +57,9 @@ namespace ArenaUnity.HybridRendering
 
             track = camStream.GetTrack();
             AddTracks(track);
+
+            SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
+            SetFrameRate(s_defaultFrameRate);
         }
 
         ~PeerConnection()
@@ -204,6 +217,74 @@ namespace ArenaUnity.HybridRendering
                 clientPose.z_,
                 clientPose.w_
             );
+        }
+
+        public void SetFrameRate(float frameRate)
+        {
+            if (frameRate < 0)
+                throw new ArgumentOutOfRangeException("frameRate", frameRate, "The parameter must be greater than zero.");
+            m_FrameRate = frameRate;
+            foreach (var transceiver in pc.GetTransceivers())
+            {
+                RTCError error = transceiver.Sender.SetFrameRate((uint)m_FrameRate);
+                if (error.errorType != RTCErrorType.None)
+                    throw new InvalidOperationException($"Set framerate is failed. {error.message}");
+            }
+        }
+
+        public void SetBitrate(uint minBitrate, uint maxBitrate)
+        {
+            if (minBitrate > maxBitrate)
+                throw new ArgumentException("The maxBitrate must be greater than minBitrate.", "maxBitrate");
+            m_minBitrate = minBitrate;
+            m_maxBitrate = maxBitrate;
+            foreach (var transceiver in pc.GetTransceivers())
+            {
+                RTCError error = transceiver.Sender.SetBitrate(m_minBitrate, m_maxBitrate);
+                if (error.errorType != RTCErrorType.None)
+                    throw new InvalidOperationException($"Set codec is failed. {error.message}");
+            }
+        }
+    }
+
+    internal static class RTCRtpSenderExtension
+    {
+        public static RTCError SetFrameRate(this RTCRtpSender sender, uint framerate)
+        {
+            if (sender.Track.Kind != TrackKind.Video)
+                throw new ArgumentException();
+
+            RTCRtpSendParameters parameters = sender.GetParameters();
+            foreach (var encoding in parameters.encodings)
+            {
+                encoding.maxFramerate = framerate;
+            }
+            return sender.SetParameters(parameters);
+        }
+
+        public static RTCError SetScaleResolutionDown(this RTCRtpSender sender, double? scaleFactor)
+        {
+            if (sender.Track.Kind != TrackKind.Video)
+                throw new ArgumentException();
+
+            RTCRtpSendParameters parameters = sender.GetParameters();
+            foreach (var encoding in parameters.encodings)
+            {
+                encoding.scaleResolutionDownBy = scaleFactor;
+            }
+            return sender.SetParameters(parameters);
+        }
+
+        public static RTCError SetBitrate(this RTCRtpSender sender, uint? minBitrate, uint? maxBitrate)
+        {
+            RTCRtpSendParameters parameters = sender.GetParameters();
+
+            foreach (var encoding in parameters.encodings)
+            {
+                encoding.minBitrate = minBitrate * 1000;
+                encoding.maxBitrate = maxBitrate * 1000;
+            }
+            return sender.SetParameters(parameters);
         }
     }
 }
