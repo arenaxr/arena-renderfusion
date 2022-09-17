@@ -50,7 +50,7 @@ namespace ArenaUnity.HybridRendering
         }
 
         public VideoStreamTrack GetTrack() {
-            // return cam.CaptureStreamTrack(m_width, m_height, 0);
+            // return cam.CaptureStreamTrack(2 * videoSize.x, videoSize.y, 0);
             return new VideoStreamTrack(renderTarget, true);
         }
 

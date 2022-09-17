@@ -31,6 +31,7 @@ namespace ArenaUnity.HybridRendering
 
         private List<RTCRtpSender> pcSenders;
         private RTCDataChannel remoteDataChannel;
+        private MediaStream sourceStream;
 
         private float m_FrameRate = s_defaultFrameRate;
 
@@ -53,6 +54,7 @@ namespace ArenaUnity.HybridRendering
 
             pcSenders = new List<RTCRtpSender>();
 
+            sourceStream = new MediaStream();
             camStream = new CameraStream(id);
 
             track = camStream.GetTrack();
@@ -84,9 +86,15 @@ namespace ArenaUnity.HybridRendering
 
         }
 
-        private void AddTracks(MediaStreamTrack track)
+        private void AddTracks(MediaStreamTrack videoTrack)
         {
-            pcSenders.Add(pc.AddTrack(track));
+            sourceStream.AddTrack(videoTrack);
+
+            foreach (var track in sourceStream.GetTracks())
+            {
+                var pcSender = pc.AddTrack(track, sourceStream);
+                pcSenders.Add(pcSender);
+            }
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType)).ToArray();

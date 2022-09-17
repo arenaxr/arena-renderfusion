@@ -182,7 +182,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "2.4.0-exp.7",
+      "version": "2.4.0-exp.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {
