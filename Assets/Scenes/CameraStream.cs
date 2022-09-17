@@ -7,7 +7,7 @@ namespace ArenaUnity.HybridRendering
 {
     public class CameraStream
     {
-        private Vector2Int videoSize = new Vector2Int(1280, 720);
+        static Vector2Int videoSize = new Vector2Int(1280, 720);
 
         private Camera cam;
         private GameObject gobj;
