@@ -39,7 +39,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
 
             hostAddress = "arena-dev1.conix.io";
-            authType = Auth.Anonymous;
+            authType = Auth.Manual;
 
             SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{m_clientId}";
             SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{m_clientId}";
@@ -64,7 +64,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         public void ConnectArena()
         {
             name = "ARENA MQTT Signaler (Connecting...)";
-            StartCoroutine(SigninScene("example", "Edward", "realm", false));
+            StartCoroutine(Signin());
         }
 
         public void OpenConnection()

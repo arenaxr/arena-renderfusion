@@ -160,7 +160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010506839048, guid: 2f54179bb3d458c4f8d350eba0f6856f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 28.9
+      value: 22.6
       objectReference: {fileID: 0}
     - target: {fileID: 4000010506839048, guid: 2f54179bb3d458c4f8d350eba0f6856f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 1547569698}
   - component: {fileID: 1547569699}
   m_Layer: 0
-  m_Name: arenaxr.org
+  m_Name: arena-dev1.conix.io
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -483,9 +483,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69796b33dcfe5483995570f15eb21bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authType: 1
+  authType: 2
   hostAddress: arena-dev1.conix.io
-  namespaceName: 
+  namespaceName: Edward
   sceneName: example
   renderCameras: 0
   logMqttObjects: 0
