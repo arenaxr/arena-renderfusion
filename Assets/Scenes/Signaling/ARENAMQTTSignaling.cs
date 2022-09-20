@@ -75,8 +75,6 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         protected override void OnConnected()
         {
-            Debug.Log($"Permissions: {permissions}");
-
             // Subscribe(new string[] { "$SYS/#" });
             Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/#" });
@@ -132,7 +130,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             Publish(SERVER_ANSWER_TOPIC, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendHealthCheck(string id){
+        public void BroadcastHealthCheck(string id){
             RoutedMessage<String> healthCheck = new RoutedMessage<String>
             {
                 //Change id to what other senders are using
