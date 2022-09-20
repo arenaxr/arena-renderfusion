@@ -24,6 +24,7 @@ namespace ArenaUnity.HybridRendering
                     }
                 }
             };
+        System.Threading.Timer timer;
 
         Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
 
@@ -35,6 +36,7 @@ namespace ArenaUnity.HybridRendering
         private void OnDestroy()
         {
             WebRTC.Dispose();
+            timer.Dispose();
             Debug.Log("Destroyed");
         }
 
@@ -66,6 +68,9 @@ namespace ArenaUnity.HybridRendering
             signaler.OnIceCandidate += GotIceCandidate;
             signaler.OnRemoteObjectStatusUpdate += GotRemoteObjectStatusUpdate;
             signaler.OpenConnection();
+            //Sets up heartbeats to send to client every second
+            TimerCallback timercallback = new TimerCallback(SendHealthCheck);
+            timer = new Timer(timercallback,signaler as object,1000,1000);
         }
 
         private void OnSignalerStart(ISignaling signaler)
@@ -101,6 +106,7 @@ namespace ArenaUnity.HybridRendering
         private void GotClientConnect(ISignaling signaler, string id)
         {
             PeerConnection peer;
+            Debug.Log(id);
             if (!clientPeerDict.TryGetValue(id, out peer))
             {
                 peer = CreatePeerConnection(id);
@@ -158,6 +164,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogError($"Peer {data.id} not found in dictionary.");
         }
 
+
         private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
             // ArenaClientScene.Instance.arenaObjs.
@@ -174,5 +181,17 @@ namespace ArenaUnity.HybridRendering
                 aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
             }
         }
+
+        
+        private void SendHealthCheck(object signaler)
+        {
+            ISignaling signal = (ISignaling)signaler;
+            foreach(var item in clientPeerDict)
+            {
+                signal.SendHealthCheck(item.Value.Id);
+            }
+        }
+        
+
     }
 }

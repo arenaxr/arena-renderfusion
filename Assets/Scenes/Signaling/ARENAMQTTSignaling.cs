@@ -16,15 +16,15 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string m_clientId;
 
-        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/offer";
-        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/answer";
-        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/candidate";
-
-        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/connect";
-        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/disconnect";
-        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/offer";
-        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/answer";
-        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/candidate";
+        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/offer/mathias";
+        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/answer/mathias";
+        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/candidate/mathias";
+        private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering_test/server/health/mathias";
+        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/connect/mathias";
+        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/disconnect/mathias";
+        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/offer/mathias";
+        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/answer/mathias";
+        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/candidate/mathias";
 
         private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/remote";
 
@@ -131,6 +131,19 @@ namespace ArenaUnity.HybridRendering.Signaling
 
             Publish(SERVER_ANSWER_TOPIC, JsonUtility.ToJson(routedMessage));
         }
+        
+        public void SendHealthCheck(string id){
+            RoutedMessage<String> healthCheck = new RoutedMessage<String>
+            {
+                //Change id to what other senders are using
+                type = "health",
+                source = "server",
+                id = id,
+                data = "somemessage"
+            };
+            Publish(SERVER_HEALTH_CHECK,JsonUtility.ToJson(healthCheck));
+        }
+        
 
         public void SendCandidate(string id, RTCIceCandidate candidate)
         {
@@ -157,7 +170,6 @@ namespace ArenaUnity.HybridRendering.Signaling
             try
             {
                 var routedMessage = JsonUtility.FromJson<RoutedMessage<string>>(content);
-
                 // ignore other servers
                 if (routedMessage.source == "server") return;
 
