@@ -449,6 +449,7 @@ GameObject:
   - component: {fileID: 1547569697}
   - component: {fileID: 1547569698}
   - component: {fileID: 1547569699}
+  - component: {fileID: 1547569700}
   m_Layer: 0
   m_Name: arena-dev1.conix.io
   m_TagString: Untagged
@@ -503,5 +504,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a0c5e8348a01436a83a28e90caed086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1547569700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547569696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfbd1e51dad24b82b473176c92af9f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
