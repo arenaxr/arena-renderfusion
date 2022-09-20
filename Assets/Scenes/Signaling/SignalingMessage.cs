@@ -11,7 +11,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         public string id;
         public T data;
     }
-
     [System.Serializable]
     public class SDPData
     {

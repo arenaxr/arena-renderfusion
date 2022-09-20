@@ -29,5 +29,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         void SendOffer(string id, RTCSessionDescription offer);
         void SendAnswer(string id, RTCSessionDescription answer);
         void SendCandidate(string id, RTCIceCandidate candidate);
+        void SendHealthCheck(string id);
     }
 }
