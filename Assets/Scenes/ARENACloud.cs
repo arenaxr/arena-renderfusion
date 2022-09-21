@@ -43,6 +43,9 @@ namespace ArenaUnity.HybridRendering
         // Start is called before the first frame update
         private void Start()
         {
+#if !UNITY_EDITOR
+            StartCoroutine(ArenaClientScene.Instance.ConnectArena());
+#endif
             SetupSignaling();
             Debug.Log("Started Server!");
         }
@@ -68,9 +71,10 @@ namespace ArenaUnity.HybridRendering
             signaler.OnIceCandidate += GotIceCandidate;
             signaler.OnRemoteObjectStatusUpdate += GotRemoteObjectStatusUpdate;
             signaler.OpenConnection();
-            //Sets up heartbeats to send to client every second
-            TimerCallback timercallback = new TimerCallback(SendHealthCheck);
-            timer = new Timer(timercallback,signaler as object,1000,1000);
+
+            // sets up heartbeats to send to client every second
+            TimerCallback timercallback = new TimerCallback(BroadcastHealthCheck);
+            timer = new Timer(timercallback, signaler as object, 1000, 1000);
         }
 
         private void OnSignalerStart(ISignaling signaler)
@@ -167,7 +171,6 @@ namespace ArenaUnity.HybridRendering
 
         private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
-            // ArenaClientScene.Instance.arenaObjs.
             Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId}, {remoteRendered}");
 
             foreach (var aobj in FindObjectsOfType<ArenaObject>())
@@ -182,16 +185,13 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        
-        private void SendHealthCheck(object signaler)
+        private void BroadcastHealthCheck(object signalerObj)
         {
-            ISignaling signal = (ISignaling)signaler;
+            ISignaling signaler = (ISignaling)signalerObj;
             foreach(var item in clientPeerDict)
             {
-                signal.SendHealthCheck(item.Value.Id);
+                signaler.BroadcastHealthCheck(item.Value.Id);
             }
         }
-        
-
     }
 }
