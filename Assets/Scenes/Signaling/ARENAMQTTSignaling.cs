@@ -28,9 +28,12 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/remote";
 
+        private string STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/stats";
+
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
         private string SERVER_CANDIDATE_TOPIC;
+        public string STATS_TOPIC;
 
         public string Url { get { return "arena"; } }
 
@@ -44,6 +47,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{m_clientId}";
             SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{m_clientId}";
             SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{m_clientId}";
+            STATS_TOPIC = $"{STATS_TOPIC_PREFIX}/{m_clientId}";
 
             base.Awake();
             name = "ARENA MQTT Signaler (Starting...)";
@@ -64,7 +68,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         public void ConnectArena()
         {
             name = "ARENA MQTT Signaler (Connecting...)";
-            StartCoroutine(SigninScene("example", "Edward", "realm", false));
+            StartCoroutine(SigninScene("hamerschlag", "skalasib", "realm", false));
         }
 
         public void OpenConnection()
@@ -147,6 +151,11 @@ namespace ArenaUnity.HybridRendering.Signaling
             };
 
             Publish(SERVER_CANDIDATE_TOPIC, JsonUtility.ToJson(routedMessage));
+        }
+
+        public void SendStats(string stats)
+        {
+            Publish(STATS_TOPIC, stats);
         }
 
         protected override void ProcessMessage(byte[] msg)

@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ArenaUnity.HybridRendering
 {
-    [RequireComponent(typeof(ArenaClientScene))]
+    //[RequireComponent(typeof(ArenaClientScene))]
     public class ARENACloud : MonoBehaviour
     {
         private ISignaling signaler;
@@ -95,6 +95,7 @@ namespace ArenaUnity.HybridRendering
             // pc.SetConfiguration(ref config);
             PeerConnection peer = new PeerConnection(pc, id, signaler);
             clientPeerDict.Add(id, peer);
+            StartCoroutine(peer.GetStatsInterval(1.0f));
             return peer;
         }
 
