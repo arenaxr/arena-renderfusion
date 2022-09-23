@@ -15,7 +15,7 @@ namespace ArenaUnity.HybridRendering
         static readonly float s_defaultFrameRate = 30;
 
         static readonly uint s_defaultMinBitrate = 0;
-        static readonly uint s_defaultMaxBitrate = 10000;
+        static readonly uint s_defaultMaxBitrate = 10;
 
         static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
 
@@ -59,9 +59,6 @@ namespace ArenaUnity.HybridRendering
 
             track = camStream.GetTrack();
             AddTracks(track);
-
-            SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
-            SetFrameRate(s_defaultFrameRate);
         }
 
         ~PeerConnection()
@@ -83,7 +80,6 @@ namespace ArenaUnity.HybridRendering
             pc.OnIceGatheringStateChange = null;
             pc.Dispose();
             pc = null;
-
         }
 
         private void AddTracks(MediaStreamTrack videoTrack)
@@ -105,6 +101,9 @@ namespace ArenaUnity.HybridRendering
                     transceiver.SetCodecPreferences(codecs);
                 }
             }
+
+            SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
+            SetFrameRate(s_defaultFrameRate);
         }
 
         private void OnIceCandidate(RTCIceCandidate candidate)
@@ -113,7 +112,8 @@ namespace ArenaUnity.HybridRendering
             m_signaler.SendCandidate(id, candidate);
         }
 
-        private void OnDataChannel(RTCDataChannel channel) {
+        private void OnDataChannel(RTCDataChannel channel)
+        {
             remoteDataChannel = channel;
             remoteDataChannel.OnMessage = onDataChannelMessage;
         }
@@ -234,9 +234,13 @@ namespace ArenaUnity.HybridRendering
             m_FrameRate = frameRate;
             foreach (var transceiver in pc.GetTransceivers())
             {
-                RTCError error = transceiver.Sender.SetFrameRate((uint)m_FrameRate);
-                if (error.errorType != RTCErrorType.None)
-                    throw new InvalidOperationException($"Set framerate is failed. {error.message}");
+                if (pcSenders.Contains(transceiver.Sender))
+                {
+                    Debug.Log(m_FrameRate);
+                    RTCError error = transceiver.Sender.SetFrameRate((uint)m_FrameRate);
+                    if (error.errorType != RTCErrorType.None)
+                        throw new InvalidOperationException($"Set framerate is failed. {error.message}");
+                }
             }
         }
 
@@ -248,9 +252,12 @@ namespace ArenaUnity.HybridRendering
             m_maxBitrate = maxBitrate;
             foreach (var transceiver in pc.GetTransceivers())
             {
-                RTCError error = transceiver.Sender.SetBitrate(m_minBitrate, m_maxBitrate);
-                if (error.errorType != RTCErrorType.None)
-                    throw new InvalidOperationException($"Set codec is failed. {error.message}");
+                if (pcSenders.Contains(transceiver.Sender))
+                {
+                    RTCError error = transceiver.Sender.SetBitrate(m_minBitrate, m_maxBitrate);
+                    if (error.errorType != RTCErrorType.None)
+                        throw new InvalidOperationException($"Set codec is failed. {error.message}");
+                }
             }
         }
     }
