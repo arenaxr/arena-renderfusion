@@ -236,7 +236,6 @@ namespace ArenaUnity.HybridRendering
             {
                 if (pcSenders.Contains(transceiver.Sender))
                 {
-                    Debug.Log(m_FrameRate);
                     RTCError error = transceiver.Sender.SetFrameRate((uint)m_FrameRate);
                     if (error.errorType != RTCErrorType.None)
                         throw new InvalidOperationException($"Set framerate is failed. {error.message}");
