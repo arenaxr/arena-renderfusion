@@ -7,7 +7,7 @@ namespace ArenaUnity.HybridRendering
 {
     public class CameraStream
     {
-        static Vector2Int videoSize = new Vector2Int(1280, 720);
+        static Vector2Int videoSize = new Vector2Int(1920, 1080);
 
         private Camera cam;
         private GameObject gobj;
@@ -38,7 +38,8 @@ namespace ArenaUnity.HybridRendering
             Dispose();
         }
 
-        private RenderTexture CreateRenderTexture(int width, int height) {
+        private RenderTexture CreateRenderTexture(int width, int height)
+        {
             var format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
             return new RenderTexture(width, height, 0, format);
         }
@@ -49,19 +50,24 @@ namespace ArenaUnity.HybridRendering
             cam = null;
         }
 
-        public VideoStreamTrack GetTrack() {
+        public VideoStreamTrack GetTrack()
+        {
             // return cam.CaptureStreamTrack(2 * videoSize.x, videoSize.y, 0);
             return new VideoStreamTrack(renderTarget, true);
         }
 
-        public void updatePosition(float x, float y, float z) {
-            if (cam) {
+        public void updatePosition(float x, float y, float z)
+        {
+            if (cam)
+            {
                 cam.transform.position = new Vector3(x, y, z);
             }
         }
 
-        public void updateRotation(float x_, float y_, float z_, float w_) {
-            if (cam) {
+        public void updateRotation(float x_, float y_, float z_, float w_)
+        {
+            if (cam)
+            {
                 cam.transform.localRotation = new Quaternion(x_, y_, z_, w_);
             }
         }
