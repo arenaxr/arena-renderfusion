@@ -5,8 +5,6 @@ using System.Collections;
 using Unity.WebRTC;
 using UnityEngine;
 using ArenaUnity;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace ArenaUnity.HybridRendering.Signaling
 {
@@ -16,17 +14,19 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string m_clientId;
 
-        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/offer";
-        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/answer";
-        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/server/candidate";
-        private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering_test/server/health";
-        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/connect";
-        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/disconnect";
-        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/offer";
-        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/answer";
-        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/candidate";
+        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/offer";
+        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/answer";
+        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/candidate";
+        private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering/server/health";
 
-        private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/remote";
+        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/connect";
+        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/disconnect";
+        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/offer";
+        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/answer";
+        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/candidate";
+        private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/stats";
+
+        private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/remote";
 
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
@@ -81,6 +81,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/#" });
 
             Debug.Log("MQTT connected!");
@@ -217,6 +218,10 @@ namespace ArenaUnity.HybridRendering.Signaling
                         };
                         m_mainThreadContext.Post(d => OnIceCandidate?.Invoke(this, candidate), null);
                     }
+                }
+                else if (routedMessage.type == "stats")
+                {
+                    // Debug.Log("got stats");
                 }
                 else if (routedMessage.type == "remote-update")
                 {

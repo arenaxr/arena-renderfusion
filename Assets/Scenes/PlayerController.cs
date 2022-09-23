@@ -24,7 +24,8 @@ namespace ArenaUnity.HybridRendering.Misc
             {
                 transform.Translate(-1 * Vector3.forward * Time.deltaTime * speed);
             }
-            if (Input.GetKey(KeyCode.A)) {
+            if (Input.GetKey(KeyCode.A))
+            {
                 transform.Rotate(0, -1, 0);
             }
             if (Input.GetKey(KeyCode.D))
