@@ -79,19 +79,20 @@ namespace ArenaUnity.HybridRendering
 
         private void OnSignalerStart(ISignaling signaler)
         {
-            foreach (var aobj in FindObjectsOfType<ArenaObject>())
+            foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 JToken data = JToken.Parse(aobj.jsonData);
                 var remoteRenderToken = data["remote-render"];
                 if (remoteRenderToken != null)
                 {
                     bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
-                    // aobj.gameObject.SetActive(remoteRendered);
-                    aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
+                    aobj.gameObject.SetActive(remoteRendered);
+                    // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
                 }
                 else if (aobj.gameObject.activeSelf)
                 {
                     aobj.gameObject.SetActive(false);
+                    // aobj.gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
 
@@ -171,17 +172,16 @@ namespace ArenaUnity.HybridRendering
 
         private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
-            Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId}, {remoteRendered}");
-
-            foreach (var aobj in FindObjectsOfType<ArenaObject>())
+            foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 if (aobj.name != objectId)
                 {
                     continue;
                 }
 
-                // aobj.gameObject.SetActive(remoteRendered);
-                aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
+                Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
+                aobj.gameObject.SetActive(remoteRendered);
+                // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
             }
         }
 
