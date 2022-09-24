@@ -12,12 +12,12 @@ namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection
     {
-        static readonly float s_defaultFrameRate = 30;
+        static readonly float s_defaultFrameRate = 60;
 
         static readonly uint s_defaultMinBitrate = 0;
-        static readonly uint s_defaultMaxBitrate = 10;
+        static readonly uint s_defaultMaxBitrate = 10000;
 
-        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
+        static readonly string[] excludeCodecMimeType = { "video/VP8", "video/red", "video/ulpfec", "video/rtx" };
 
         private string id;
         private string m_clientId;
@@ -94,6 +94,7 @@ namespace ArenaUnity.HybridRendering
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType)).ToArray();
+            // var codecs= capabilities.codecs.Where(codec => codec.mimeType == "video/H264").ToArray();
             foreach (var transceiver in pc.GetTransceivers())
             {
                 if (pcSenders.Contains(transceiver.Sender))
