@@ -43,23 +43,23 @@ Shader "Hidden/DepthShader"
 
             // float4x4 UNITY_MATRIX_IV;
 
-            float3 HSV2RGB(float3 HSV) {
-                float3 RGB = HSV.z;
+            // float3 HSV2RGB(float3 HSV) {
+            //     float3 RGB = HSV.z;
 
-                float var_h = HSV.x * 6;
-                float var_i = floor(var_h);   // Or ... var_i = floor( var_h )
-                float var_1 = HSV.z * (1.0 - HSV.y);
-                float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
-                float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
-                if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
-                else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
-                else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
-                else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
-                else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
-                else                 { RGB = float3(HSV.z, var_1, var_2); }
+            //     float var_h = HSV.x * 6;
+            //     float var_i = floor(var_h);   // Or ... var_i = floor( var_h )
+            //     float var_1 = HSV.z * (1.0 - HSV.y);
+            //     float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
+            //     float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
+            //     if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
+            //     else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
+            //     else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
+            //     else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
+            //     else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
+            //     else                 { RGB = float3(HSV.z, var_1, var_2); }
 
-               return (RGB);
-            }
+            //    return (RGB);
+            // }
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -73,7 +73,11 @@ Shader "Hidden/DepthShader"
                     // depth = Linear01Depth(depth);
                     // depth = depth * _ProjectionParams.z;
 
+#ifdef SHADER_API_METAL
                     col.rgb = 1.0 - depth;
+#else
+                    col.rgb = depth;
+#endif
 
                     // float depth1 = Linear01Depth(depth);
                     // depth1 = depth1 * _ProjectionParams.z;

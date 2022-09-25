@@ -75,7 +75,8 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         protected override void OnConnected()
         {
-            // Subscribe(new string[] { "$SYS/#" });
+            base.OnConnected();
+
             Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/#" });
             Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/#" });
