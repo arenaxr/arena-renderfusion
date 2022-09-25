@@ -79,6 +79,13 @@ namespace ArenaUnity.HybridRendering
 
         private void OnSignalerStart(ISignaling signaler)
         {
+            StartCoroutine(WebRTC.Update());
+            StartCoroutine(removeNonRemoteRenderedObjs());
+        }
+
+        public IEnumerator removeNonRemoteRenderedObjs() {
+            yield return new WaitUntil(() => ArenaClientScene.Instance.mqttClientConnected);
+
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 JToken data = JToken.Parse(aobj.jsonData);
@@ -95,8 +102,6 @@ namespace ArenaUnity.HybridRendering
                     // aobj.gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
-
-            StartCoroutine(WebRTC.Update());
         }
 
         private PeerConnection CreatePeerConnection(string id)
