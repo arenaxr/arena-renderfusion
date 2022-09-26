@@ -145,6 +145,8 @@ namespace ArenaUnity.HybridRendering
                     // Debug.Log($"[{m_clientId}] sent offer.");
                     m_signaler.SendOffer(id, pc.LocalDescription);
                 }
+
+                UpdateBandwidth();
             }
             else
             {
@@ -263,6 +265,22 @@ namespace ArenaUnity.HybridRendering
                 }
                 m_signaler.SendStats(text);
                 //Debug.Log(statsOperation);
+            }
+        }
+
+        private void UpdateBandwidth()
+        {
+            ulong? bandwidth = 100; // Bandwidth in Kbps
+            RTCRtpSender sender = pc.GetSenders().First();
+            RTCRtpSendParameters parameters = sender.GetParameters();
+
+            parameters.encodings[0].maxBitrate = bandwidth * 1000;
+            parameters.encodings[0].minBitrate = bandwidth * 1000;
+
+            RTCError error = sender.SetParameters(parameters);
+            if (error.errorType != RTCErrorType.None)
+            {
+                Debug.LogErrorFormat("Bandwidth update failed. RTCRtpSender.SetParameters failed {0}", error.errorType);
             }
         }
     }
