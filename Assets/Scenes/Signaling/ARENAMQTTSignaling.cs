@@ -28,7 +28,7 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/client/remote";
 
-        private string STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/stats";
+        private string STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering_test/stats_unity";
 
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
