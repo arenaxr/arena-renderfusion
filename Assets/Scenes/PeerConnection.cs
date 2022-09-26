@@ -15,7 +15,7 @@ namespace ArenaUnity.HybridRendering
         static readonly float s_defaultFrameRate = 60;
 
         static readonly uint s_defaultMinBitrate = 0;
-        static readonly uint s_defaultMaxBitrate = 10000;
+        static readonly uint s_defaultMaxBitrate = 5000;
 
         static readonly string[] excludeCodecMimeType = { "video/VP8", "video/red", "video/ulpfec", "video/rtx" };
 
@@ -102,9 +102,6 @@ namespace ArenaUnity.HybridRendering
                     transceiver.SetCodecPreferences(codecs);
                 }
             }
-
-            SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
-            SetFrameRate(s_defaultFrameRate);
         }
 
         private void OnIceCandidate(RTCIceCandidate candidate)
@@ -143,6 +140,9 @@ namespace ArenaUnity.HybridRendering
                     // Debug.Log($"[{m_clientId}] sent offer.");
                     m_signaler.SendOffer(id, pc.LocalDescription);
                 }
+
+                SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
+                SetFrameRate(s_defaultFrameRate);
             }
             else
             {
