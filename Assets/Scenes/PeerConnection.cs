@@ -12,7 +12,7 @@ namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection
     {
-        static readonly float s_defaultFrameRate = 60;
+        static readonly float s_defaultFrameRate = 30;
 
         static readonly uint s_defaultMinBitrate = 0;
         static readonly uint s_defaultMaxBitrate = 5000;
@@ -258,6 +258,35 @@ namespace ArenaUnity.HybridRendering
                     if (error.errorType != RTCErrorType.None)
                         throw new InvalidOperationException($"Set codec is failed. {error.message}");
                 }
+            }
+        }
+
+        public IEnumerator GetStatsInterval(float interval = 1.0f)
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(interval);
+
+                var statsOperation = pc.GetStats();
+                yield return statsOperation;
+
+                var stats = statsOperation.Value.Stats;
+                string text = "";
+
+                foreach (var stat in stats.Values)
+                {
+                    if ((stat is RTCOutboundRTPStreamStats) ||
+                        (stat is RTCTransportStats) ||
+                        (stat is RTCVideoSourceStats))
+                    {
+                        text += System.String.Format("[{0}]\n", stat.GetType().AssemblyQualifiedName);
+                        text += stat.Dict.Aggregate(string.Empty, (str, next) =>
+                                    str + next.Key + "=" + (next.Value == null ? string.Empty : next.Value.ToString()) + "\n");
+                        ;
+                    }
+                }
+                m_signaler.SendStats(text);
+                //Debug.Log(statsOperation);
             }
         }
     }
