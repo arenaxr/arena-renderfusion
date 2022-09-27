@@ -18,6 +18,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/answer";
         private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/candidate";
         private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering/server/health";
+        private string SERVER_STATS_TOPIC = "realm/g/a/cloud_rendering/server/stats";
 
         private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/connect";
         private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/disconnect";
@@ -160,6 +161,11 @@ namespace ArenaUnity.HybridRendering.Signaling
             };
 
             Publish(SERVER_CANDIDATE_TOPIC, JsonUtility.ToJson(routedMessage));
+        }
+
+        public void SendStats(string stats)
+        {
+            Publish(SERVER_STATS_TOPIC, stats);
         }
 
         protected override void ProcessMessage(byte[] msg)

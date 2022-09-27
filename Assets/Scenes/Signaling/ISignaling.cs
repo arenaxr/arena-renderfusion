@@ -30,5 +30,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         void SendAnswer(string id, RTCSessionDescription answer);
         void SendCandidate(string id, RTCIceCandidate candidate);
         void BroadcastHealthCheck(string id);
+        void SendStats(string stats);
     }
 }

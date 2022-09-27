@@ -123,6 +123,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
 
                 StartCoroutine(peer.StartNegotiationCoroutine());
+                StartCoroutine(peer.GetStatsInterval(1.0f));
             }
             else
             {
