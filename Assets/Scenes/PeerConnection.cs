@@ -17,7 +17,7 @@ namespace ArenaUnity.HybridRendering
         static readonly uint s_defaultMinBitrate = 0;
         static readonly uint s_defaultMaxBitrate = 5000;
 
-        static readonly string[] excludeCodecMimeType = { "video/VP8", "video/red", "video/ulpfec", "video/rtx" };
+        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
 
         private string id;
         private string m_clientId;
@@ -266,6 +266,11 @@ namespace ArenaUnity.HybridRendering
             while (true)
             {
                 yield return new WaitForSeconds(interval);
+
+                if (pc == null)
+                {
+                    yield break;
+                }
 
                 var statsOperation = pc.GetStats();
                 yield return statsOperation;
