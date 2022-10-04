@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Unity.WebRTC;
 using UnityEngine;
 using ArenaUnity.HybridRendering.Signaling;
+using Unity.Profiling;
 
 namespace ArenaUnity.HybridRendering
 {
@@ -38,6 +39,8 @@ namespace ArenaUnity.HybridRendering
         private uint m_minBitrate = s_defaultMinBitrate;
         private uint m_maxBitrate = s_defaultMaxBitrate;
 
+        private ProfilerRecorder mainThreadTimeRecorder;
+
         public string Id { get { return id; } }
 
         public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler)
@@ -59,6 +62,8 @@ namespace ArenaUnity.HybridRendering
 
             track = camStream.GetTrack();
             AddTracks(track);
+
+            mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
         }
 
         ~PeerConnection()
@@ -80,6 +85,26 @@ namespace ArenaUnity.HybridRendering
             pc.OnIceGatheringStateChange = null;
             pc.Dispose();
             pc = null;
+            mainThreadTimeRecorder.Dispose();
+        }
+
+        private static double GetRecorderFrameAverage(ProfilerRecorder recorder)
+        {
+            var samplesCount = recorder.Capacity;
+            if (samplesCount == 0)
+                return 0;
+
+            double r = 0;
+            unsafe
+            {
+                var samples = stackalloc ProfilerRecorderSample[samplesCount];
+                recorder.CopyTo(samples, samplesCount);
+                for (var i = 0; i < samplesCount; ++i)
+                    r += samples[i].Value;
+                r /= samplesCount;
+            }
+
+            return r;
         }
 
         private void AddTracks(MediaStreamTrack videoTrack)
@@ -272,20 +297,25 @@ namespace ArenaUnity.HybridRendering
                     yield break;
                 }
 
+                // WebRTC stats
                 var statsOperation = pc.GetStats();
+                // Unity main thread time
+                var frameTime = GetRecorderFrameAverage(mainThreadTimeRecorder) * (1e-9f);
                 yield return statsOperation;
 
                 var stats = statsOperation.Value.Stats;
                 string text = "";
 
+                text += $"[Renderer Time]\nframeTime={frameTime}\n";
                 foreach (var stat in stats.Values)
                 {
                     if ((stat is RTCOutboundRTPStreamStats) ||
                         (stat is RTCTransportStats) ||
-                        (stat is RTCVideoSourceStats))
+                        (stat is RTCVideoSourceStats) ||
+                        (stat is RTCRemoteInboundRtpStreamStats))
                     {
                         text += System.String.Format("[{0}]\n", stat.GetType().AssemblyQualifiedName);
-                        text += $"timestamp={stat.Timestamp}";
+                        text += $"timestamp={stat.Timestamp}\n";
                         text += stat.Dict.Aggregate(string.Empty, (str, next) =>
                                     str + next.Key + "=" + (next.Value == null ? string.Empty : next.Value.ToString()) + "\n");
                         ;
