@@ -285,6 +285,7 @@ namespace ArenaUnity.HybridRendering
                         (stat is RTCVideoSourceStats))
                     {
                         text += System.String.Format("[{0}]\n", stat.GetType().AssemblyQualifiedName);
+                        text += $"timestamp={stat.Timestamp}";
                         text += stat.Dict.Aggregate(string.Empty, (str, next) =>
                                     str + next.Key + "=" + (next.Value == null ? string.Empty : next.Value.ToString()) + "\n");
                         ;
