@@ -46,8 +46,7 @@ namespace ArenaUnity.HybridRendering
 #if !UNITY_EDITOR
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
-            SetupSignaling();
-            Debug.Log("Started Server!");
+            StartCoroutine(SetupSignaling());
         }
 
         // Update is called once per frame
@@ -56,8 +55,10 @@ namespace ArenaUnity.HybridRendering
 
         }
 
-        private void SetupSignaling()
+        private IEnumerator SetupSignaling()
         {
+            yield return new WaitUntil(() => ArenaClientScene.Instance.mqttClientConnected);
+
             GameObject gobj = new GameObject("Arena MQTT Signaler");
             signaler = gobj.AddComponent(typeof(ARENAMQTTSignaling)) as ARENAMQTTSignaling;
             signaler.SetSyncContext(SynchronizationContext.Current);
@@ -79,13 +80,12 @@ namespace ArenaUnity.HybridRendering
 
         private void OnSignalerStart(ISignaling signaler)
         {
+            removeNonRemoteRenderedObjs();
             StartCoroutine(WebRTC.Update());
-            StartCoroutine(removeNonRemoteRenderedObjs());
+            Debug.Log("Hybrid Rendering Server Started!");
         }
 
-        public IEnumerator removeNonRemoteRenderedObjs() {
-            yield return new WaitUntil(() => ArenaClientScene.Instance.mqttClientConnected);
-
+        private void removeNonRemoteRenderedObjs() {
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 JToken data = JToken.Parse(aobj.jsonData);
@@ -116,7 +116,7 @@ namespace ArenaUnity.HybridRendering
         private void GotClientConnect(ISignaling signaler, string id)
         {
             PeerConnection peer;
-            Debug.Log(id);
+            // Debug.Log(id);
             if (!clientPeerDict.TryGetValue(id, out peer))
             {
                 peer = CreatePeerConnection(id);
@@ -128,6 +128,7 @@ namespace ArenaUnity.HybridRendering
             else
             {
                 peer.pc.Close();
+                clientPeerDict.Remove(id);
             }
         }
 
@@ -175,15 +176,12 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogError($"Peer {data.id} not found in dictionary.");
         }
 
-
         private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 if (aobj.name != objectId)
-                {
                     continue;
-                }
 
                 // Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
                 aobj.gameObject.SetActive(remoteRendered);

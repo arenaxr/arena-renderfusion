@@ -17,8 +17,6 @@ namespace ArenaUnity.HybridRendering
         private Material mat;
         public RenderTexture renderTarget;
 
-        private List<ClientPose> poseQueue;
-
         private void Awake()
         {
             cam = GetComponent<Camera>();
@@ -31,28 +29,12 @@ namespace ArenaUnity.HybridRendering
             mat = new Material(Shader.Find("Hidden/DepthShader"));
 
             renderTarget = CreateRenderTexture(2 * videoSize.x, videoSize.y);
-
-            poseQueue = new List<ClientPose>();
-
-            Debug.Log("Started cam");
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (poseQueue.Count > 0)
-            {
-                foreach (var clientPose in poseQueue)
-                {
-                    UpdatePosition(clientPose.x, clientPose.y, clientPose.z);
-                    UpdateRotation(
-                        -clientPose.x_,
-                        -clientPose.y_,
-                        clientPose.z_,
-                        clientPose.w_
-                    );
-                }
-            }
+
         }
 
         private void OnDestroy()
@@ -72,19 +54,19 @@ namespace ArenaUnity.HybridRendering
             return new VideoStreamTrack(renderTarget, true);
         }
 
-        public void AddPose(ClientPose pose)
+        public void UpdatePose(ClientPose clientPose)
         {
-            poseQueue.Add(pose);
-        }
+            // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
+            // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
 
-        private void UpdatePosition(float x, float y, float z)
-        {
-            cam.transform.position = new Vector3(x, y, z);
-        }
-
-        private void UpdateRotation(float x_, float y_, float z_, float w_)
-        {
-            cam.transform.localRotation = new Quaternion(x_, y_, z_, w_);
+            cam.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
+            cam.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
+                clientPose.x_,
+                clientPose.y_,
+                clientPose.z_,
+                clientPose.w_
+            ));
         }
 
         // private void OnPreRender()
