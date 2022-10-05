@@ -90,6 +90,7 @@ namespace ArenaUnity.HybridRendering
             {
                 JToken data = JToken.Parse(aobj.jsonData);
                 var remoteRenderToken = data["remote-render"];
+                // Debug.Log($"{aobj.name} - {remoteRenderToken}");
                 if (remoteRenderToken != null)
                 {
                     bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
@@ -107,7 +108,6 @@ namespace ArenaUnity.HybridRendering
         private PeerConnection CreatePeerConnection(string id)
         {
             var pc = new RTCPeerConnection(ref config);
-            // pc.SetConfiguration(ref config);
             PeerConnection peer = new PeerConnection(pc, id, signaler);
             clientPeerDict.Add(id, peer);
             return peer;
@@ -185,7 +185,7 @@ namespace ArenaUnity.HybridRendering
                     continue;
                 }
 
-                Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
+                // Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
                 aobj.gameObject.SetActive(remoteRendered);
                 // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
             }
