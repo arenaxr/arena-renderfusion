@@ -168,7 +168,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.2",
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.collab-proxy": "1.2.16",
         "com.unity.editorcoroutines": "1.0.0",
         "com.unity.ide.rider": "1.2.1",
@@ -210,7 +210,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "570daeff820496d5ab82605fe3d9ad1b6b4559a1"
+      "hash": "5b9201b11c1e058afe6581a11d2772d5cfc14961"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
