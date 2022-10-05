@@ -9,6 +9,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         public string type;
         public string source;
         public string id;
+        public int ts;
         public T data;
     }
     [System.Serializable]
@@ -39,6 +40,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         public float y_;
         public float z_;
         public float w_;
+        public long ts;
     }
 
     [System.Serializable]
