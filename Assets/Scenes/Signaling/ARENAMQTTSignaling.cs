@@ -14,20 +14,20 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string m_clientId;
 
-        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/offer";
-        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/answer";
-        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/candidate";
-        private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering/server/health";
-        private string SERVER_STATS_TOPIC = "realm/g/a/cloud_rendering/server/stats";
+        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/offer/sagar";
+        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/answer/sagar";
+        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/server/candidate/sagar";
+        private string SERVER_HEALTH_CHECK = "realm/g/a/cloud_rendering/server/health/sagar";
+        private string SERVER_STATS_TOPIC = "realm/g/a/cloud_rendering/server/stats/sagar";
 
-        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/connect";
-        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/disconnect";
-        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/offer";
-        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/answer";
-        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/candidate";
-        private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/stats";
+        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/connect/sagar";
+        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/disconnect/sagar";
+        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/offer/sagar";
+        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/answer/sagar";
+        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/candidate/sagar";
+        private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/stats/sagar";
 
-        private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/remote";
+        private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/cloud_rendering/client/remote/sagar";
 
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
