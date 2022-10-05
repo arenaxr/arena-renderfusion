@@ -12,10 +12,10 @@ namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection
     {
-        static readonly float s_defaultFrameRate = 30;
+        static readonly float s_defaultFrameRate = 60;
 
         static readonly uint s_defaultMinBitrate = 0;
-        static readonly uint s_defaultMaxBitrate = 5000;
+        static readonly uint s_defaultMaxBitrate = 10000;
 
         static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
 
@@ -225,12 +225,7 @@ namespace ArenaUnity.HybridRendering
         {
             string pos = System.Text.Encoding.UTF8.GetString(bytes);
             var clientPose = JsonUtility.FromJson<ClientPose>(pos);
-
-            // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-            // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
-            // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
-
-            camStream.AddPose(clientPose);
+            camStream.UpdatePose(clientPose);
         }
 
         public void SetFrameRate(float frameRate)
