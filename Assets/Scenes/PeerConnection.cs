@@ -33,6 +33,8 @@ namespace ArenaUnity.HybridRendering
         private RTCDataChannel remoteDataChannel;
         private MediaStream sourceStream;
 
+        private GameObject gobj;
+
         private float m_FrameRate = s_defaultFrameRate;
 
         private uint m_minBitrate = s_defaultMinBitrate;
@@ -55,7 +57,10 @@ namespace ArenaUnity.HybridRendering
             pcSenders = new List<RTCRtpSender>();
 
             sourceStream = new MediaStream();
-            camStream = new CameraStream(id);
+
+            gobj = new GameObject(id);
+            gobj.transform.gameObject.AddComponent<Camera>();
+            camStream = gobj.AddComponent<CameraStream>();
 
             track = camStream.GetTrack();
             AddTracks(track);
@@ -68,9 +73,8 @@ namespace ArenaUnity.HybridRendering
 
         public void Dispose()
         {
-            Debug.Log($"Peer (ID: {id}) killed");
             track.Dispose();
-            camStream.Dispose();
+
             pc.OnTrack = null;
             pc.OnDataChannel = null;
             pc.OnIceCandidate = null;
@@ -80,6 +84,10 @@ namespace ArenaUnity.HybridRendering
             pc.OnIceGatheringStateChange = null;
             pc.Dispose();
             pc = null;
+
+            UnityEngine.Object.Destroy(gobj);
+
+            Debug.Log($"Peer (ID: {id}) killed");
         }
 
         private void AddTracks(MediaStreamTrack videoTrack)
@@ -218,14 +226,11 @@ namespace ArenaUnity.HybridRendering
             string pos = System.Text.Encoding.UTF8.GetString(bytes);
             var clientPose = JsonUtility.FromJson<ClientPose>(pos);
 
-            camStream.updatePosition(clientPose.x, clientPose.y, clientPose.z);
+            // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
+            // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
 
-            camStream.updateRotation(
-                -clientPose.x_,
-                -clientPose.y_,
-                clientPose.z_,
-                clientPose.w_
-            );
+            camStream.AddPose(clientPose);
         }
 
         public void SetFrameRate(float frameRate)

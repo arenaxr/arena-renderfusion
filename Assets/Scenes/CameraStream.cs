@@ -1,41 +1,63 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.WebRTC;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using ArenaUnity.HybridRendering.Signaling;
 
 namespace ArenaUnity.HybridRendering
 {
-    public class CameraStream
+    [RequireComponent(typeof(Camera))]
+    public class CameraStream : MonoBehaviour
     {
         static Vector2Int videoSize = new Vector2Int(1920, 1080);
 
         private Camera cam;
-        private GameObject gobj;
+        private Material mat;
+        public RenderTexture renderTarget;
 
-        private string m_id;
+        private List<ClientPose> poseQueue;
 
-        private RenderTexture renderTarget;
-
-        public CameraStream(string id)
+        private void Awake()
         {
-            m_id = id;
-
-            gobj = new GameObject(id);
-            cam = gobj.transform.gameObject.AddComponent<Camera>();
+            cam = GetComponent<Camera>();
             cam.fieldOfView = 80f; // match arena
             cam.nearClipPlane = 0.1f; // match arena
             cam.farClipPlane = 10000f; // match arena
             // cam.backgroundColor = Color.clear;
+            cam.depthTextureMode = DepthTextureMode.Depth;
 
-            gobj.AddComponent<CameraDepth>();
+            mat = new Material(Shader.Find("Hidden/DepthShader"));
 
             renderTarget = CreateRenderTexture(2 * videoSize.x, videoSize.y);
-            gobj.GetComponent<CameraDepth>().renderTarget = renderTarget;
+
+            poseQueue = new List<ClientPose>();
+
+            Debug.Log("Started cam");
         }
 
-        ~CameraStream()
+        // Update is called once per frame
+        private void Update()
         {
-            Dispose();
+            if (poseQueue.Count > 0)
+            {
+                foreach (var clientPose in poseQueue)
+                {
+                    UpdatePosition(clientPose.x, clientPose.y, clientPose.z);
+                    UpdateRotation(
+                        -clientPose.x_,
+                        -clientPose.y_,
+                        clientPose.z_,
+                        clientPose.w_
+                    );
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            cam = null;
         }
 
         private RenderTexture CreateRenderTexture(int width, int height)
@@ -44,31 +66,41 @@ namespace ArenaUnity.HybridRendering
             return new RenderTexture(width, height, 0, format);
         }
 
-        public void Dispose()
-        {
-            UnityEngine.Object.Destroy(gobj);
-            cam = null;
-        }
-
         public VideoStreamTrack GetTrack()
         {
             // return cam.CaptureStreamTrack(2 * videoSize.x, videoSize.y, 0);
             return new VideoStreamTrack(renderTarget, true);
         }
 
-        public void updatePosition(float x, float y, float z)
+        public void AddPose(ClientPose pose)
         {
-            if (cam)
-            {
-                cam.transform.position = new Vector3(x, y, z);
-            }
+            poseQueue.Add(pose);
         }
 
-        public void updateRotation(float x_, float y_, float z_, float w_)
+        private void UpdatePosition(float x, float y, float z)
         {
-            if (cam)
+            cam.transform.position = new Vector3(x, y, z);
+        }
+
+        private void UpdateRotation(float x_, float y_, float z_, float w_)
+        {
+            cam.transform.localRotation = new Quaternion(x_, y_, z_, w_);
+        }
+
+        // private void OnPreRender()
+        // {
+        //     Shader.SetGlobalMatrix(Shader.PropertyToID("UNITY_MATRIX_IV"), Cam.cameraToWorldMatrix);
+        // }
+
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            if (cam != Camera.main)
             {
-                cam.transform.localRotation = new Quaternion(x_, y_, z_, w_);
+                Graphics.Blit(source, renderTarget, mat);
+            }
+            else
+            {
+                Graphics.Blit(source, destination, mat);
             }
         }
     }
