@@ -45,7 +45,12 @@ namespace ArenaUnity.HybridRendering
         private RenderTexture CreateRenderTexture(int width, int height)
         {
             var format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
-            return new RenderTexture(width, height, 0, format);
+            var renderTarget = new RenderTexture(width, height, 0, format)
+            {
+                antiAliasing = 1
+            };
+            renderTarget.Create();
+            return renderTarget;
         }
 
         public VideoStreamTrack GetTrack()
