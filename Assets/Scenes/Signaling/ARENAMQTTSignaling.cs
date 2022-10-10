@@ -17,8 +17,8 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/offer";
         private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/answer";
         private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/candidate";
-        private string SERVER_HEALTH_CHECK = "realm/g/a/hybrid_rendering/server/health";
-        private string SERVER_STATS_TOPIC = "realm/g/a/hybrid_rendering/server/stats";
+        private string SERVER_HEALTH_CHECK_PREFIX = "realm/g/a/hybrid_rendering/server/health";
+        private string SERVER_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/stats";
 
         private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/connect";
         private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/disconnect";
@@ -32,6 +32,8 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
         private string SERVER_CANDIDATE_TOPIC;
+        private string SERVER_HEALTH_CHECK_TOPIC;
+        private string SERVER_STATS_TOPIC;
 
         public string Url { get { return "arena"; } }
 
@@ -45,6 +47,8 @@ namespace ArenaUnity.HybridRendering.Signaling
             SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
             SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
             SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
+            SERVER_HEALTH_CHECK_TOPIC = $"{SERVER_HEALTH_CHECK_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
+            SERVER_STATS_TOPIC = $"{SERVER_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
 
             base.Awake();
             name = "ARENA MQTT Signaler (Starting...)";
@@ -83,7 +87,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
-            Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            // Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
 
             Debug.Log("MQTT connected!");
@@ -142,7 +146,7 @@ namespace ArenaUnity.HybridRendering.Signaling
                 id = id,
                 data = "somemessage"
             };
-            Publish(SERVER_HEALTH_CHECK,JsonUtility.ToJson(healthCheck));
+            Publish(SERVER_HEALTH_CHECK_TOPIC, JsonUtility.ToJson(healthCheck));
         }
 
 
