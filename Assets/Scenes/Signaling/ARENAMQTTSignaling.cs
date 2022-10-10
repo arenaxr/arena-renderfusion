@@ -42,9 +42,9 @@ namespace ArenaUnity.HybridRendering.Signaling
             hostAddress = "arena-dev1.conix.io";
             authType = Auth.Manual;
 
-            SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{m_clientId}";
-            SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{m_clientId}";
-            SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{m_clientId}";
+            SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
+            SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
+            SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
 
             base.Awake();
             name = "ARENA MQTT Signaler (Starting...)";
@@ -78,13 +78,13 @@ namespace ArenaUnity.HybridRendering.Signaling
         {
             base.OnConnected();
 
-            Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/#" });
-            Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/#" });
+            Subscribe(new string[] { $"{CLIENT_CONNECT_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{CLIENT_OFFER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{CLIENT_ANSWER_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+            Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
 
             Debug.Log("MQTT connected!");
             name = "ARENA MQTT Signaler (Connected)";
