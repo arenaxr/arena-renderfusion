@@ -108,7 +108,7 @@ namespace ArenaUnity.HybridRendering
         private PeerConnection CreatePeerConnection(string id)
         {
             var pc = new RTCPeerConnection(ref config);
-            PeerConnection peer = new PeerConnection(pc, id, signaler);
+            PeerConnection peer = new PeerConnection(pc, id, signaler, StartCoroutine);
             clientPeerDict.Add(id, peer);
             return peer;
         }

@@ -11,24 +11,39 @@ namespace ArenaUnity.HybridRendering
     [RequireComponent(typeof(Camera))]
     public class CameraStream : MonoBehaviour
     {
-        static Vector2Int videoSize = new Vector2Int(1920, 1080);
+        private Camera m_camera;
+        private Material m_material;
+        public RenderTexture m_renderTexture;
 
-        private Camera cam;
-        private Material mat;
-        public RenderTexture renderTarget;
+        internal class WaitForCreateTrack : CustomYieldInstruction
+        {
+            public MediaStreamTrack Track { get { return m_track; } }
+
+            MediaStreamTrack m_track;
+
+            bool m_keepWaiting = true;
+
+            public override bool keepWaiting { get { return m_keepWaiting; } }
+
+            public WaitForCreateTrack() { }
+
+            public void Done(MediaStreamTrack track)
+            {
+                m_track = track;
+                m_keepWaiting = false;
+            }
+        }
 
         private void Awake()
         {
-            cam = GetComponent<Camera>();
-            cam.fieldOfView = 80f; // match arena
-            cam.nearClipPlane = 0.1f; // match arena
-            cam.farClipPlane = 10000f; // match arena
-            // cam.backgroundColor = Color.clear;
-            cam.depthTextureMode = DepthTextureMode.Depth;
+            m_camera = GetComponent<Camera>();
+            m_camera.fieldOfView = 80f; // match arena
+            m_camera.nearClipPlane = 0.1f; // match arena
+            m_camera.farClipPlane = 10000f; // match arena
+            // m_camera.backgroundColor = Color.clear;
+            m_camera.depthTextureMode = DepthTextureMode.Depth;
 
-            mat = new Material(Shader.Find("Hidden/DepthShader"));
-
-            renderTarget = CreateRenderTexture(2 * videoSize.x, videoSize.y);
+            m_material = new Material(Shader.Find("Hidden/DepthShader"));
         }
 
         // Update is called once per frame
@@ -39,24 +54,50 @@ namespace ArenaUnity.HybridRendering
 
         private void OnDestroy()
         {
-            cam = null;
+            if (m_renderTexture == null)
+                return;
+            m_camera.targetTexture = null;
+            m_renderTexture.Release();
+            Destroy(m_renderTexture);
+            m_renderTexture = null;
+            m_camera = null;
         }
 
-        private RenderTexture CreateRenderTexture(int width, int height)
+        internal WaitForCreateTrack CreateTrack(int width, int height)
         {
-            var format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
-            var renderTarget = new RenderTexture(width, height, 0, format)
+            if (m_camera.targetTexture != null)
             {
-                antiAliasing = 1
-            };
-            renderTarget.Create();
-            return renderTarget;
-        }
+                m_renderTexture = m_camera.targetTexture;
+                RenderTextureFormat supportFormat = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
+                GraphicsFormat graphicsFormat = GraphicsFormatUtility.GetGraphicsFormat(supportFormat, RenderTextureReadWrite.Default);
+                GraphicsFormat compatibleFormat = SystemInfo.GetCompatibleFormat(graphicsFormat, FormatUsage.Render);
+                GraphicsFormat format = graphicsFormat == compatibleFormat ? graphicsFormat : compatibleFormat;
 
-        public VideoStreamTrack GetTrack()
-        {
-            // return cam.CaptureStreamTrack(2 * videoSize.x, videoSize.y, 0);
-            return new VideoStreamTrack(renderTarget, true);
+                if (m_renderTexture.graphicsFormat != format)
+                {
+                    Debug.LogWarning(
+                        $"This color format:{m_renderTexture.graphicsFormat} not support in unity.webrtc. Change to supported color format:{format}.");
+                    m_renderTexture.Release();
+                    m_renderTexture.graphicsFormat = format;
+                    m_renderTexture.Create();
+                }
+
+                m_camera.targetTexture = m_renderTexture;
+            }
+            else
+            {
+                RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
+                m_renderTexture = new RenderTexture(width, height, 16, format)
+                {
+                    antiAliasing = 1
+                };
+                m_renderTexture.Create();
+                m_camera.targetTexture = m_renderTexture;
+            }
+
+            var instruction = new WaitForCreateTrack();
+            instruction.Done(new VideoStreamTrack(m_renderTexture));
+            return instruction;
         }
 
         public void UpdatePose(ClientPose clientPose)
@@ -65,10 +106,10 @@ namespace ArenaUnity.HybridRendering
             // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
             // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
 
-            if (cam == null) return;
+            if (m_camera == null) return;
 
-            cam.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
-            cam.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
+            m_camera.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
+            m_camera.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
                 clientPose.x_,
                 clientPose.y_,
                 clientPose.z_,
@@ -83,14 +124,14 @@ namespace ArenaUnity.HybridRendering
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            if (cam != Camera.main)
-            {
-                Graphics.Blit(source, renderTarget, mat);
-            }
-            else
-            {
-                Graphics.Blit(source, destination, mat);
-            }
+            // if (m_camera != Camera.main)
+            // {
+            //     Graphics.Blit(source, renderTexture, m_material);
+            // }
+            // else
+            // {
+                Graphics.Blit(source, destination, m_material);
+            // }
         }
     }
 }
