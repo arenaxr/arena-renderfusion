@@ -142,7 +142,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.Log($"[Disconnect] There are now {clientPeerDict.Count} clients connected.");
             }
             else
-                Debug.LogError($"Peer {id} not found in dictionary.");
+                Debug.LogWarning($"Peer {id} not found in dictionary.");
         }
 
         private void GotOffer(ISignaling signaler, SDPData offer)
@@ -153,7 +153,7 @@ namespace ArenaUnity.HybridRendering
             if (clientPeerDict.TryGetValue(offer.id, out peer))
                 StartCoroutine(peer.CreateAndSendAnswerCoroutine(offer));
             else
-                Debug.LogError($"Peer {offer.id} not found in dictionary.");
+                Debug.LogWarning($"Peer {offer.id} not found in dictionary.");
         }
 
         private void GotAnswer(ISignaling signaler, SDPData answer)
@@ -164,7 +164,7 @@ namespace ArenaUnity.HybridRendering
             if (clientPeerDict.TryGetValue(answer.id, out peer))
                 StartCoroutine(peer.SetRemoteDescriptionCoroutine(RTCSdpType.Answer, answer));
             else
-                Debug.LogError($"Peer {answer.id} not found in dictionary.");
+                Debug.LogWarning($"Peer {answer.id} not found in dictionary.");
         }
 
         private void GotIceCandidate(ISignaling signaler, CandidateData data)
@@ -173,7 +173,7 @@ namespace ArenaUnity.HybridRendering
             if (clientPeerDict.TryGetValue(data.id, out peer))
                 peer.AddIceCandidate(data);
             else
-                Debug.LogError($"Peer {data.id} not found in dictionary.");
+                Debug.LogWarning($"Peer {data.id} not found in dictionary.");
         }
 
         private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
