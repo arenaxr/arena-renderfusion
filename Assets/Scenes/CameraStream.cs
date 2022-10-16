@@ -65,6 +65,8 @@ namespace ArenaUnity.HybridRendering
             // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
             // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
 
+            if (cam == null) return;
+
             cam.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
             cam.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
                 clientPose.x_,
