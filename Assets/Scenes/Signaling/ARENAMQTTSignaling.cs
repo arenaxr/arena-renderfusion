@@ -25,7 +25,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/offer";
         private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/answer";
         private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/candidate";
-        private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/stats";
+        // private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/stats";
 
         private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/remote";
 
