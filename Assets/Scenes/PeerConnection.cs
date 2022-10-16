@@ -11,14 +11,16 @@ using Unity.Profiling;
 
 namespace ArenaUnity.HybridRendering
 {
-    public class PeerConnection
+    public class PeerConnection : IDisposable
     {
+        static readonly Vector2Int videoSize = new Vector2Int(1920, 1080);
+
         static readonly float s_defaultFrameRate = 60;
 
         static readonly uint s_defaultMinBitrate = 0;
         static readonly uint s_defaultMaxBitrate = 5000;
 
-        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
+        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx", "video/flexfec-03" };
 
         private string id;
         private string m_clientId;
@@ -26,7 +28,7 @@ namespace ArenaUnity.HybridRendering
         private ISignaling m_signaler;
 
         private CameraStream camStream;
-        private VideoStreamTrack track;
+        // private VideoStreamTrack track;
 
         public RTCPeerConnection pc;
 
@@ -36,19 +38,22 @@ namespace ArenaUnity.HybridRendering
 
         private GameObject gobj;
 
-        private float m_FrameRate = s_defaultFrameRate;
+        private float m_frameRate = s_defaultFrameRate;
 
         private uint m_minBitrate = s_defaultMinBitrate;
         private uint m_maxBitrate = s_defaultMaxBitrate;
 
         private ProfilerRecorder mainThreadTimeRecorder;
 
+        private readonly Func<IEnumerator, Coroutine> _startCoroutine;
+
         public string Id { get { return id; } }
 
-        public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler)
+        public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler, Func<IEnumerator, Coroutine> startCoroutine)
         {
             m_signaler = signaler;
             m_clientId = clientId;
+            _startCoroutine = startCoroutine;
 
             id = System.Guid.NewGuid().ToString();
             Debug.Log($"New Peer: (ID: {id})");
@@ -65,8 +70,8 @@ namespace ArenaUnity.HybridRendering
             gobj.transform.gameObject.AddComponent<Camera>();
             camStream = gobj.AddComponent<CameraStream>();
 
-            track = camStream.GetTrack();
-            AddTracks(track);
+            // track = camStream.GetTrack();
+            AddSender();
 
             mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
         }
@@ -78,7 +83,7 @@ namespace ArenaUnity.HybridRendering
 
         public void Dispose()
         {
-            track.Dispose();
+            // track.Dispose();
 
             pc.OnTrack = null;
             pc.OnDataChannel = null;
@@ -89,10 +94,13 @@ namespace ArenaUnity.HybridRendering
             pc.OnIceGatheringStateChange = null;
             pc.Dispose();
             pc = null;
+
             UnityEngine.Object.Destroy(gobj);
 
-            Debug.Log($"Peer (ID: {id}) killed");
             mainThreadTimeRecorder.Dispose();
+
+            Debug.Log($"Peer (ID: {id}) killed");
+            GC.SuppressFinalize(this);
         }
 
         private static double GetRecorderFrameAverage(ProfilerRecorder recorder)
@@ -114,9 +122,41 @@ namespace ArenaUnity.HybridRendering
             return r;
         }
 
-        private void AddTracks(MediaStreamTrack videoTrack)
+        private RTCRtpTransceiverInit GetTransceiverInit()
         {
-            sourceStream.AddTrack(videoTrack);
+            RTCRtpTransceiverInit init = new RTCRtpTransceiverInit()
+            {
+                direction = RTCRtpTransceiverDirection.SendOnly,
+            };
+            init.sendEncodings = new RTCRtpEncodingParameters[]
+            {
+                new RTCRtpEncodingParameters()
+                {
+                    active = true,
+                    minBitrate = (ulong?)m_minBitrate * 1000,
+                    maxBitrate = (ulong?)m_maxBitrate * 1000,
+                    maxFramerate = (uint?)m_frameRate
+                    // scaleResolutionDownBy = m_scaleResolutionDown
+                }
+            };
+
+            return init;
+        }
+
+        private void AddSender()
+        {
+            _startCoroutine(AddSenderCoroutine());
+        }
+
+        private IEnumerator AddSenderCoroutine()
+        {
+            var op = camStream.CreateTrack(2 * videoSize.x, videoSize.y);
+            if (op.Track == null)
+                yield return op;
+
+            // senderBase.SetTrack(op.Track);
+
+            sourceStream.AddTrack(op.Track);
 
             foreach (var track in sourceStream.GetTracks())
             {
@@ -126,14 +166,18 @@ namespace ArenaUnity.HybridRendering
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType)).ToArray();
-            // var codecs= capabilities.codecs.Where(codec => codec.mimeType == "video/H264").ToArray();
-            foreach (var transceiver in pc.GetTransceivers())
-            {
-                if (pcSenders.Contains(transceiver.Sender))
-                {
-                    transceiver.SetCodecPreferences(codecs);
-                }
-            }
+            // // var codecs = capabilities.codecs.Where(codec => codec.mimeType == "video/H264").ToArray();
+            // foreach (var transceiver in pc.GetTransceivers())
+            // {
+            //     if (pcSenders.Contains(transceiver.Sender))
+            //     {
+            //         transceiver.SetCodecPreferences(codecs);
+            //     }
+            // }
+
+            // RTCRtpTransceiverInit init = GetTransceiverInit();
+            // var transceiver = pc.AddTransceiver(op.Track, init);
+            // transceiver.SetCodecPreferences(codecs);
         }
 
         private void OnIceCandidate(RTCIceCandidate candidate)
@@ -256,12 +300,12 @@ namespace ArenaUnity.HybridRendering
         {
             if (frameRate < 0)
                 throw new ArgumentOutOfRangeException("frameRate", frameRate, "The parameter must be greater than zero.");
-            m_FrameRate = frameRate;
+            m_frameRate = frameRate;
             foreach (var transceiver in pc.GetTransceivers())
             {
                 if (pcSenders.Contains(transceiver.Sender))
                 {
-                    RTCError error = transceiver.Sender.SetFrameRate((uint)m_FrameRate);
+                    RTCError error = transceiver.Sender.SetFrameRate((uint)m_frameRate);
                     if (error.errorType != RTCErrorType.None)
                         throw new InvalidOperationException($"Set framerate is failed. {error.message}");
                 }
