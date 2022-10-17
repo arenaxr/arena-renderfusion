@@ -122,7 +122,7 @@ namespace ArenaUnity.HybridRendering
                 peer = CreatePeerConnection(id);
                 Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
 
-                StartCoroutine(peer.StartNegotiationCoroutine());
+                peer.AddSender();
                 StartCoroutine(peer.GetStatsInterval(1.0f));
             }
             else
