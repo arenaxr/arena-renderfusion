@@ -13,41 +13,27 @@ namespace ArenaUnity.HybridRendering
 {
     public class PeerConnection : IDisposable
     {
-        static readonly Vector2Int videoSize = new Vector2Int(1920, 1080);
-
-        static readonly float s_defaultFrameRate = 60;
-
-        static readonly uint s_defaultMinBitrate = 0;
-        static readonly uint s_defaultMaxBitrate = 5000;
-
         static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx", "video/flexfec-03" };
 
-        private string id;
+        private string m_id;
         private string m_clientId;
 
         private ISignaling m_signaler;
 
         private CameraStream camStream;
-        // private VideoStreamTrack track;
 
         public RTCPeerConnection pc;
-
-        private List<RTCRtpSender> pcSenders;
         private RTCDataChannel remoteDataChannel;
+
         private MediaStream sourceStream;
 
         private GameObject gobj;
-
-        private float m_frameRate = s_defaultFrameRate;
-
-        private uint m_minBitrate = s_defaultMinBitrate;
-        private uint m_maxBitrate = s_defaultMaxBitrate;
 
         private ProfilerRecorder mainThreadTimeRecorder;
 
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
 
-        public string Id { get { return id; } }
+        public string Id { get { return m_id; } }
 
         public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler, Func<IEnumerator, Coroutine> startCoroutine)
         {
@@ -55,23 +41,19 @@ namespace ArenaUnity.HybridRendering
             m_clientId = clientId;
             _startCoroutine = startCoroutine;
 
-            id = System.Guid.NewGuid().ToString();
-            Debug.Log($"New Peer: (ID: {id})");
+            m_id = System.Guid.NewGuid().ToString();
+            Debug.Log($"New Peer: (ID: {m_id})");
 
             pc = peer;
-            pc.OnIceCandidate = OnIceCandidate;
+            pc.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
+            pc.OnIceCandidate = candidate => m_signaler.SendCandidate(m_id, candidate);
             pc.OnDataChannel = OnDataChannel;
-
-            pcSenders = new List<RTCRtpSender>();
 
             sourceStream = new MediaStream();
 
-            gobj = new GameObject(id);
+            gobj = new GameObject(m_id);
             gobj.transform.gameObject.AddComponent<Camera>();
             camStream = gobj.AddComponent<CameraStream>();
-
-            // track = camStream.GetTrack();
-            AddSender();
 
             mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
         }
@@ -79,6 +61,11 @@ namespace ArenaUnity.HybridRendering
         ~PeerConnection()
         {
             Dispose();
+        }
+
+        private void StartCoroutine(IEnumerator enumerator)
+        {
+            _startCoroutine(enumerator);
         }
 
         public void Dispose()
@@ -99,7 +86,7 @@ namespace ArenaUnity.HybridRendering
 
             mainThreadTimeRecorder.Dispose();
 
-            Debug.Log($"Peer (ID: {id}) killed");
+            Debug.Log($"Peer (ID: {m_id}) killed");
             GC.SuppressFinalize(this);
         }
 
@@ -133,57 +120,37 @@ namespace ArenaUnity.HybridRendering
                 new RTCRtpEncodingParameters()
                 {
                     active = true,
-                    minBitrate = (ulong?)m_minBitrate * 1000,
-                    maxBitrate = (ulong?)m_maxBitrate * 1000,
-                    maxFramerate = (uint?)m_frameRate
-                    // scaleResolutionDownBy = m_scaleResolutionDown
+                    minBitrate = (ulong?)camStream.minBitrate * 1000,
+                    maxBitrate = (ulong?)camStream.maxBitrate * 1000,
+                    maxFramerate = (uint?)camStream.frameRate,
+                    scaleResolutionDownBy = camStream.scaleResolutionDown
                 }
             };
 
             return init;
         }
 
-        private void AddSender()
+        public void AddSender()
         {
-            _startCoroutine(AddSenderCoroutine());
+            StartCoroutine(AddSenderCoroutine());
         }
 
         private IEnumerator AddSenderCoroutine()
         {
-            var op = camStream.CreateTrack(2 * videoSize.x, videoSize.y);
+            var op = camStream.CreateTrack();
             if (op.Track == null)
                 yield return op;
 
-            // senderBase.SetTrack(op.Track);
+            camStream.SetTrack(op.Track);
 
-            sourceStream.AddTrack(op.Track);
-
-            foreach (var track in sourceStream.GetTracks())
-            {
-                var pcSender = pc.AddTrack(track, sourceStream);
-                pcSenders.Add(pcSender);
-            }
+            RTCRtpTransceiverInit init = GetTransceiverInit();
+            var transceiver = pc.AddTransceiver(op.Track, init);
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
-            var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType)).ToArray();
-            // // var codecs = capabilities.codecs.Where(codec => codec.mimeType == "video/H264").ToArray();
-            // foreach (var transceiver in pc.GetTransceivers())
-            // {
-            //     if (pcSenders.Contains(transceiver.Sender))
-            //     {
-            //         transceiver.SetCodecPreferences(codecs);
-            //     }
-            // }
+            var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType));
+            transceiver.SetCodecPreferences(codecs.ToArray());
 
-            // RTCRtpTransceiverInit init = GetTransceiverInit();
-            // var transceiver = pc.AddTransceiver(op.Track, init);
-            // transceiver.SetCodecPreferences(codecs);
-        }
-
-        private void OnIceCandidate(RTCIceCandidate candidate)
-        {
-            // Debug.Log($"pc ICE candidate:\n {candidate.Candidate}");
-            m_signaler.SendCandidate(id, candidate);
+            camStream.SetTransceiver(m_id, transceiver);
         }
 
         private void OnDataChannel(RTCDataChannel channel)
@@ -192,7 +159,7 @@ namespace ArenaUnity.HybridRendering
             remoteDataChannel.OnMessage = onDataChannelMessage;
         }
 
-        public IEnumerator StartNegotiationCoroutine()
+        public IEnumerator OnNegotiationNeeded()
         {
             // Debug.Log($"[{m_clientId}] creating offer.");
 
@@ -214,11 +181,8 @@ namespace ArenaUnity.HybridRendering
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent offer.");
-                    m_signaler.SendOffer(id, pc.LocalDescription);
+                    m_signaler.SendOffer(m_id, pc.LocalDescription);
                 }
-
-                SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
-                SetFrameRate(s_defaultFrameRate);
             }
             else
             {
@@ -255,7 +219,7 @@ namespace ArenaUnity.HybridRendering
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent answer.");
-                    m_signaler.SendAnswer(id, pc.LocalDescription);
+                    m_signaler.SendAnswer(m_id, pc.LocalDescription);
                 }
             }
             else
@@ -266,7 +230,7 @@ namespace ArenaUnity.HybridRendering
 
         private static void CreateDescriptionError(RTCError error)
         {
-            Debug.LogError($"Error Detail Type: {error.message}");
+            Debug.LogError($"[CreateDescriptionError]: {error.message}");
         }
 
         public IEnumerator SetRemoteDescriptionCoroutine(RTCSdpType type, SDPData sdpData)
@@ -294,39 +258,6 @@ namespace ArenaUnity.HybridRendering
             string pos = System.Text.Encoding.UTF8.GetString(bytes);
             var clientPose = JsonUtility.FromJson<ClientPose>(pos);
             camStream.UpdatePose(clientPose);
-        }
-
-        public void SetFrameRate(float frameRate)
-        {
-            if (frameRate < 0)
-                throw new ArgumentOutOfRangeException("frameRate", frameRate, "The parameter must be greater than zero.");
-            m_frameRate = frameRate;
-            foreach (var transceiver in pc.GetTransceivers())
-            {
-                if (pcSenders.Contains(transceiver.Sender))
-                {
-                    RTCError error = transceiver.Sender.SetFrameRate((uint)m_frameRate);
-                    if (error.errorType != RTCErrorType.None)
-                        throw new InvalidOperationException($"Set framerate is failed. {error.message}");
-                }
-            }
-        }
-
-        public void SetBitrate(uint minBitrate, uint maxBitrate)
-        {
-            if (minBitrate > maxBitrate)
-                throw new ArgumentException("The maxBitrate must be greater than minBitrate.", "maxBitrate");
-            m_minBitrate = minBitrate;
-            m_maxBitrate = maxBitrate;
-            foreach (var transceiver in pc.GetTransceivers())
-            {
-                if (pcSenders.Contains(transceiver.Sender))
-                {
-                    RTCError error = transceiver.Sender.SetBitrate(m_minBitrate, m_maxBitrate);
-                    if (error.errorType != RTCErrorType.None)
-                        throw new InvalidOperationException($"Set codec is failed. {error.message}");
-                }
-            }
         }
 
         public IEnumerator GetStatsInterval(float interval = 1.0f)
@@ -367,47 +298,6 @@ namespace ArenaUnity.HybridRendering
                 m_signaler.SendStats(text);
                 //Debug.Log(statsOperation);
             }
-        }
-    }
-
-    internal static class RTCRtpSenderExtension
-    {
-        public static RTCError SetFrameRate(this RTCRtpSender sender, uint framerate)
-        {
-            if (sender.Track.Kind != TrackKind.Video)
-                throw new ArgumentException();
-
-            RTCRtpSendParameters parameters = sender.GetParameters();
-            foreach (var encoding in parameters.encodings)
-            {
-                encoding.maxFramerate = framerate;
-            }
-            return sender.SetParameters(parameters);
-        }
-
-        public static RTCError SetScaleResolutionDown(this RTCRtpSender sender, double? scaleFactor)
-        {
-            if (sender.Track.Kind != TrackKind.Video)
-                throw new ArgumentException();
-
-            RTCRtpSendParameters parameters = sender.GetParameters();
-            foreach (var encoding in parameters.encodings)
-            {
-                encoding.scaleResolutionDownBy = scaleFactor;
-            }
-            return sender.SetParameters(parameters);
-        }
-
-        public static RTCError SetBitrate(this RTCRtpSender sender, uint? minBitrate, uint? maxBitrate)
-        {
-            RTCRtpSendParameters parameters = sender.GetParameters();
-
-            foreach (var encoding in parameters.encodings)
-            {
-                encoding.minBitrate = minBitrate * 1000;
-                encoding.maxBitrate = maxBitrate * 1000;
-            }
-            return sender.SetParameters(parameters);
         }
     }
 }
