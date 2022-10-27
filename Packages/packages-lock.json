@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.collab-proxy": {
-      "version": "1.17.2",
+      "version": "1.17.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -210,7 +210,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "5d1233ceb8f37da1deecb0140a0001f3a1162ba0"
+      "hash": "b2e8e327bd9e0a36ed53bd0b756483b88a51d209"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

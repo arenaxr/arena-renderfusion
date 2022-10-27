@@ -65,12 +65,12 @@ namespace ArenaUnity.HybridRendering
 
             // signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
             signaler.OnStart += OnSignalerStart;
-            signaler.OnClientConnect += GotClientConnect;
-            signaler.OnClientDisconnect += GotClientDisconnect;
-            signaler.OnOffer += GotOffer;
-            signaler.OnAnswer += GotAnswer;
-            signaler.OnIceCandidate += GotIceCandidate;
-            signaler.OnRemoteObjectStatusUpdate += GotRemoteObjectStatusUpdate;
+            signaler.OnClientConnect += OnClientConnect;
+            signaler.OnClientDisconnect += OnClientDisconnect;
+            signaler.OnOffer += OnOffer;
+            signaler.OnAnswer += OnAnswer;
+            signaler.OnIceCandidate += OnIceCandidate;
+            signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
@@ -113,7 +113,7 @@ namespace ArenaUnity.HybridRendering
             return peer;
         }
 
-        private void GotClientConnect(ISignaling signaler, string id)
+        private void OnClientConnect(ISignaling signaler, string id)
         {
             PeerConnection peer;
             // Debug.Log(id);
@@ -127,12 +127,12 @@ namespace ArenaUnity.HybridRendering
             }
             else
             {
-                peer.pc.Close();
+                peer.peer.Close();
                 clientPeerDict.Remove(id);
             }
         }
 
-        private void GotClientDisconnect(ISignaling signaler, string id)
+        private void OnClientDisconnect(ISignaling signaler, string id)
         {
             PeerConnection peer;
             if (clientPeerDict.TryGetValue(id, out peer))
@@ -145,7 +145,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
         }
 
-        private void GotOffer(ISignaling signaler, SDPData offer)
+        private void OnOffer(ISignaling signaler, SDPData offer)
         {
             // Debug.Log("got offer.");
 
@@ -156,7 +156,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {offer.id} not found in dictionary.");
         }
 
-        private void GotAnswer(ISignaling signaler, SDPData answer)
+        private void OnAnswer(ISignaling signaler, SDPData answer)
         {
             // Debug.Log("got answer.");
 
@@ -167,7 +167,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {answer.id} not found in dictionary.");
         }
 
-        private void GotIceCandidate(ISignaling signaler, CandidateData data)
+        private void OnIceCandidate(ISignaling signaler, CandidateData data)
         {
             PeerConnection peer;
             if (clientPeerDict.TryGetValue(data.id, out peer))
@@ -176,14 +176,14 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {data.id} not found in dictionary.");
         }
 
-        private void GotRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
+        private void OnRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 if (aobj.name != objectId)
                     continue;
 
-                // Debug.Log($"[GotRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
+                // Debug.Log($"[OnRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
                 aobj.gameObject.SetActive(remoteRendered);
                 // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
             }
