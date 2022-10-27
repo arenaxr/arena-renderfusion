@@ -11,7 +11,7 @@ using Unity.Profiling;
 
 namespace ArenaUnity.HybridRendering
 {
-    public class PeerConnection : IDisposable
+    internal class PeerConnection : IDisposable
     {
         static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx", "video/flexfec-03" };
 
@@ -22,7 +22,8 @@ namespace ArenaUnity.HybridRendering
 
         private CameraStream camStream;
 
-        public RTCPeerConnection pc;
+        private RTCPeerConnection _peer;
+
         private RTCDataChannel remoteDataChannel;
 
         private MediaStream sourceStream;
@@ -34,6 +35,7 @@ namespace ArenaUnity.HybridRendering
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
 
         public string Id { get { return m_id; } }
+        public RTCPeerConnection peer => _peer;
 
         public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler, Func<IEnumerator, Coroutine> startCoroutine)
         {
@@ -44,10 +46,10 @@ namespace ArenaUnity.HybridRendering
             m_id = System.Guid.NewGuid().ToString();
             Debug.Log($"New Peer: (ID: {m_id})");
 
-            pc = peer;
-            pc.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
-            pc.OnIceCandidate = candidate => m_signaler.SendCandidate(m_id, candidate);
-            pc.OnDataChannel = OnDataChannel;
+            _peer = peer;
+            _peer.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
+            _peer.OnIceCandidate = candidate => m_signaler.SendCandidate(m_id, candidate);
+            _peer.OnDataChannel = OnDataChannel;
 
             sourceStream = new MediaStream();
 
@@ -70,17 +72,15 @@ namespace ArenaUnity.HybridRendering
 
         public void Dispose()
         {
-            // track.Dispose();
-
-            pc.OnTrack = null;
-            pc.OnDataChannel = null;
-            pc.OnIceCandidate = null;
-            pc.OnNegotiationNeeded = null;
-            pc.OnConnectionStateChange = null;
-            pc.OnIceConnectionChange = null;
-            pc.OnIceGatheringStateChange = null;
-            pc.Dispose();
-            pc = null;
+            _peer.OnTrack = null;
+            _peer.OnDataChannel = null;
+            _peer.OnIceCandidate = null;
+            _peer.OnNegotiationNeeded = null;
+            _peer.OnConnectionStateChange = null;
+            _peer.OnIceConnectionChange = null;
+            _peer.OnIceGatheringStateChange = null;
+            _peer.Dispose();
+            _peer = null;
 
             UnityEngine.Object.Destroy(gobj);
 
@@ -144,7 +144,7 @@ namespace ArenaUnity.HybridRendering
             camStream.SetTrack(op.Track);
 
             RTCRtpTransceiverInit init = GetTransceiverInit();
-            var transceiver = pc.AddTransceiver(op.Track, init);
+            var transceiver = _peer.AddTransceiver(op.Track, init);
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType));
@@ -163,25 +163,25 @@ namespace ArenaUnity.HybridRendering
         {
             // Debug.Log($"[{m_clientId}] creating offer.");
 
-            var op = pc.CreateOffer();
+            var op = _peer.CreateOffer();
             yield return op;
 
             if (!op.IsError)
             {
-                if (pc.SignalingState != RTCSignalingState.Stable)
+                if (_peer.SignalingState != RTCSignalingState.Stable)
                 {
                     Debug.LogError("pc signaling state is not stable.");
                     yield break;
                 }
 
                 RTCSessionDescription desc = op.Desc;
-                var op1 = pc.SetLocalDescription(ref desc);
+                var op1 = _peer.SetLocalDescription(ref desc);
                 yield return op1;
 
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent offer.");
-                    m_signaler.SendOffer(m_id, pc.LocalDescription);
+                    m_signaler.SendOffer(m_id, _peer.LocalDescription);
                 }
             }
             else
@@ -198,7 +198,7 @@ namespace ArenaUnity.HybridRendering
             description.type = RTCSdpType.Offer;
             description.sdp = offer.sdp;
 
-            var opRemoteDesc = pc.SetRemoteDescription(ref description);
+            var opRemoteDesc = _peer.SetRemoteDescription(ref description);
             yield return opRemoteDesc;
 
             if (opRemoteDesc.IsError)
@@ -207,19 +207,19 @@ namespace ArenaUnity.HybridRendering
                 yield break;
             }
 
-            var op = pc.CreateAnswer();
+            var op = _peer.CreateAnswer();
             yield return op;
 
             if (!op.IsError)
             {
                 RTCSessionDescription desc = op.Desc;
-                var op1 = pc.SetLocalDescription(ref desc);
+                var op1 = _peer.SetLocalDescription(ref desc);
                 yield return op1;
 
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent answer.");
-                    m_signaler.SendAnswer(m_id, pc.LocalDescription);
+                    m_signaler.SendAnswer(m_id, _peer.LocalDescription);
                 }
             }
             else
@@ -239,7 +239,7 @@ namespace ArenaUnity.HybridRendering
             description.type = type;
             description.sdp = sdpData.sdp;
 
-            var opRemoteDesc = pc.SetRemoteDescription(ref description);
+            var opRemoteDesc = _peer.SetRemoteDescription(ref description);
             yield return opRemoteDesc;
         }
 
@@ -250,7 +250,7 @@ namespace ArenaUnity.HybridRendering
                 candidate = data.candidate, sdpMid = data.sdpMid, sdpMLineIndex = data.sdpMLineIndex
             };
 
-            pc.AddIceCandidate(new RTCIceCandidate(option));
+            _peer.AddIceCandidate(new RTCIceCandidate(option));
         }
 
         private void onDataChannelMessage(byte[] bytes)
@@ -266,13 +266,13 @@ namespace ArenaUnity.HybridRendering
             {
                 yield return new WaitForSeconds(interval);
 
-                if (pc == null)
+                if (_peer == null)
                 {
                     yield break;
                 }
 
                 // WebRTC stats
-                var statsOperation = pc.GetStats();
+                var statsOperation = _peer.GetStats();
                 // Unity main thread time
                 var frameTime = GetRecorderFrameAverage(mainThreadTimeRecorder) * (1e-9f);
                 yield return statsOperation;

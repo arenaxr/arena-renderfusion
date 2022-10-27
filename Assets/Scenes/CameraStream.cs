@@ -74,7 +74,7 @@ namespace ArenaUnity.HybridRendering
 
         static readonly Vector2Int videoSize = new Vector2Int(1920, 1080);
 
-        static readonly float s_defaultFrameRate = 30;
+        static readonly float s_defaultFrameRate = 60;
         static readonly float s_defaultScaleFactor = 1f;
         static readonly uint s_defaultMinBitrate = 0;
         static readonly uint s_defaultMaxBitrate = 5000;
@@ -129,10 +129,6 @@ namespace ArenaUnity.HybridRendering
             m_camera.depthTextureMode = DepthTextureMode.Depth;
 
             m_material = new Material(Shader.Find("Hidden/DepthShader"));
-
-            // SetFrameRate(s_defaultFrameRate);
-            // SetBitrate(s_defaultMinBitrate, s_defaultMaxBitrate);
-            // SetScaleResolutionDown(s_defaultScaleFactor);
         }
 
         private void OnDestroy()
@@ -179,7 +175,7 @@ namespace ArenaUnity.HybridRendering
                 RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
                 m_renderTexture = new RenderTexture(width, height, s_defaultDepth, format)
                 {
-                    antiAliasing = 1
+                    antiAliasing = 2
                 };
                 m_renderTexture.Create();
                 // m_camera.targetTexture = m_renderTexture;
