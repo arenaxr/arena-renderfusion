@@ -154,14 +154,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "2.4.0-exp.11",
+      "version": "file:/home/MAGICLEAP/elu/Desktop/webrtc_unity_plugin",
       "depth": 0,
-      "source": "registry",
+      "source": "local",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.editorcoroutines": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
+      }
     },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
@@ -210,7 +209,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "b2e8e327bd9e0a36ed53bd0b756483b88a51d209"
+      "hash": "958f84caaf7cf4a0e2b6d22f18f93cf12095540b"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
