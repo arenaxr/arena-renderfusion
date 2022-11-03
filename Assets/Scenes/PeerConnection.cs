@@ -148,6 +148,7 @@ namespace ArenaUnity.HybridRendering
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType));
+            // var codecs = capabilities.codecs.Where(codec => codec.mimeType == "video/H264");
             transceiver.SetCodecPreferences(codecs.ToArray());
 
             camStream.SetTransceiver(m_id, transceiver);
