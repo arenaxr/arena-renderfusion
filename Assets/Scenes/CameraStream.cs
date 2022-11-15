@@ -148,7 +148,7 @@ namespace ArenaUnity.HybridRendering
 
         internal WaitForCreateTrack CreateTrack()
         {
-            int width = videoSize.x;
+            int width = 2 * videoSize.x;
             int height = videoSize.y;
 
             if (m_camera.targetTexture != null)
@@ -178,7 +178,7 @@ namespace ArenaUnity.HybridRendering
                     antiAliasing = 2
                 };
                 m_renderTexture.Create();
-                m_camera.targetTexture = m_renderTexture;
+                // m_camera.targetTexture = m_renderTexture;
             }
 
             var instruction = new WaitForCreateTrack();
@@ -272,16 +272,16 @@ namespace ArenaUnity.HybridRendering
         //     Shader.SetGlobalMatrix(Shader.PropertyToID("UNITY_MATRIX_IV"), Cam.cameraToWorldMatrix);
         // }
 
-        // private void OnRenderImage(RenderTexture source, RenderTexture destination)
-        // {
-        //     if (m_camera != Camera.main)
-        //     {
-        //         Graphics.Blit(source, m_renderTexture, m_material);
-        //     }
-        //     else
-        //     {
-        //         Graphics.Blit(source, destination, m_material);
-        //     }
-        // }
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            if (m_camera != Camera.main)
+            {
+                Graphics.Blit(source, m_renderTexture, m_material);
+            }
+            else
+            {
+                Graphics.Blit(source, destination, m_material);
+            }
+        }
     }
 }
