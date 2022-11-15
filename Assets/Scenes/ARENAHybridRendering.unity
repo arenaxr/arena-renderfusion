@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.451401, g: 0.5008942, b: 0.5723129, a: 1}
+  m_IndirectSpecularColor: {r: 0.45139998, g: 0.50089234, b: 0.57231176, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -391,14 +391,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   authType: 2
   hostAddress: arena-dev1.conix.io
-  namespaceName: public
-  sceneName: fireside
+  namespaceName: Edward
+  sceneName: example1
   renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
   logMqttEvents: 0
   logMqttNonPersist: 0
-  transformPublishInterval: 30
+  camUpdateIntervalMs: 100
 --- !u!114 &1547569699
 MonoBehaviour:
   m_ObjectHideFlags: 0
