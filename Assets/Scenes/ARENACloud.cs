@@ -43,10 +43,21 @@ namespace ArenaUnity.HybridRendering
         // Start is called before the first frame update
         private void Start()
         {
+            
+
 #if !UNITY_EDITOR
+            string[] arguments = Environment.GetCommandLineArgs();
+            if(arguements.length >=3)
+            {
+                ArenaClientScene scene = ArenaClientScene.Instance;
+                scene.namespaceName = arguments[1];
+                scene.sceneName = arguments[2];
+            }
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
             StartCoroutine(SetupSignaling());
+            Debug.Log(ArenaClientScene.Instance.namespaceName);
+            Debug.Log(ArenaClientScene.Instance.sceneName);
         }
 
         // Update is called once per frame
