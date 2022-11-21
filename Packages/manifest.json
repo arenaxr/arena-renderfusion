@@ -11,7 +11,7 @@
     "com.unity.toolchain.macos-x86_64-linux-x86_64": "2.0.2",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.8",
-    "com.unity.webrtc": "3.0.0-pre.1",
+    "com.unity.webrtc": "2.4.0-exp.11",
     "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
