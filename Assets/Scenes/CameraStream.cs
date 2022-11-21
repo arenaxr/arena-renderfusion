@@ -75,7 +75,7 @@ namespace ArenaUnity.HybridRendering
         static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
-        static readonly float s_defaultScaleFactor = 1.5f;
+        static readonly float s_defaultScaleFactor = 1.0f;
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
 
@@ -126,7 +126,7 @@ namespace ArenaUnity.HybridRendering
             m_camera.nearClipPlane = 0.1f; // match arena
             m_camera.farClipPlane = 10000f; // match arena
             // m_camera.backgroundColor = Color.clear;
-            m_camera.depthTextureMode = DepthTextureMode.Depth;
+            m_camera.depthTextureMode = DepthTextureMode.DepthNormals;
 
             m_material = new Material(Shader.Find("Hidden/DepthShader"));
         }
@@ -179,6 +179,7 @@ namespace ArenaUnity.HybridRendering
                 };
                 m_renderTexture.Create();
                 // m_camera.targetTexture = m_renderTexture;
+                m_camera.aspect = (float)(width / 2) / (float)height;
             }
 
             var instruction = new WaitForCreateTrack();
