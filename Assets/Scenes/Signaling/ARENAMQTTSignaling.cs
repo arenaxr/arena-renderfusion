@@ -187,7 +187,8 @@ namespace ArenaUnity.HybridRendering.Signaling
 
                 if (routedMessage.type == "connect")
                 {
-                    m_mainThreadContext.Post(d => OnClientConnect?.Invoke(this, routedMessage.id), null);
+                    var routedMessageConnectData = JsonUtility.FromJson<RoutedMessage<ConnectData>>(content);
+                    m_mainThreadContext.Post(d => OnClientConnect?.Invoke(this, routedMessageConnectData.data), null);
                 }
                 else if (routedMessage.type == "disconnect")
                 {

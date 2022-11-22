@@ -12,6 +12,18 @@ namespace ArenaUnity.HybridRendering.Signaling
         public int ts;
         public T data;
     }
+
+    [System.Serializable]
+    public class ConnectData
+    {
+        public string id;
+        public string deviceType;
+        public string sceneNamespace;
+        public string sceneName;
+        public int screenWidth;
+        public int screenHeight;
+    }
+
     [System.Serializable]
     public class SDPData
     {
