@@ -107,21 +107,21 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private PeerConnection CreatePeerConnection(string id)
+        private PeerConnection CreatePeerConnection(ConnectData data)
         {
             var pc = new RTCPeerConnection(ref config);
-            PeerConnection peer = new PeerConnection(pc, id, signaler, StartCoroutine);
-            clientPeerDict.Add(id, peer);
+            PeerConnection peer = new PeerConnection(pc, data, signaler, StartCoroutine);
+            clientPeerDict.Add(data.id, peer);
             return peer;
         }
 
-        private void OnClientConnect(ISignaling signaler, string id)
+        private void OnClientConnect(ISignaling signaler, ConnectData data)
         {
             PeerConnection peer;
             // Debug.Log(id);
-            if (!clientPeerDict.TryGetValue(id, out peer))
+            if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
-                peer = CreatePeerConnection(id);
+                peer = CreatePeerConnection(data);
                 Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
 
                 peer.AddSender();
@@ -130,7 +130,7 @@ namespace ArenaUnity.HybridRendering
             else
             {
                 peer.peer.Close();
-                clientPeerDict.Remove(id);
+                clientPeerDict.Remove(data.id);
             }
         }
 
