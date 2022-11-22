@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace ArenaUnity.HybridRendering.Signaling
 {
-    public delegate void OnClientConnectHandler(ISignaling signaler, string id);
+    public delegate void OnClientConnectHandler(ISignaling signaler, ConnectData data);
     public delegate void OnClientDisconnectHandler(ISignaling signaler, string id);
     public delegate void OnStartHandler(ISignaling signaler);
     public delegate void OnOfferHandler(ISignaling signaler, SDPData offer);

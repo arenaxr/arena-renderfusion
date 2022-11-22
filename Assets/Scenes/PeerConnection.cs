@@ -18,6 +18,9 @@ namespace ArenaUnity.HybridRendering
         private string m_id;
         private string m_clientId;
 
+        private int m_screenWidth;
+        private int m_screenHeight;
+
         private ISignaling m_signaler;
 
         private CameraStream camStream;
@@ -37,14 +40,16 @@ namespace ArenaUnity.HybridRendering
         public string Id { get { return m_id; } }
         public RTCPeerConnection peer => _peer;
 
-        public PeerConnection(RTCPeerConnection peer, string clientId, ISignaling signaler, Func<IEnumerator, Coroutine> startCoroutine)
+        public PeerConnection(RTCPeerConnection peer, ConnectData data, ISignaling signaler, Func<IEnumerator, Coroutine> startCoroutine)
         {
             m_signaler = signaler;
-            m_clientId = clientId;
+            m_clientId = data.id;
+            m_screenWidth = data.screenWidth;
+            m_screenHeight = data.screenHeight;
             _startCoroutine = startCoroutine;
 
             m_id = System.Guid.NewGuid().ToString();
-            Debug.Log($"New Peer: (ID: {m_id})");
+            Debug.Log($"New Peer: (ID: {m_id}) - {data.deviceType}");
 
             _peer = peer;
             _peer.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
@@ -137,7 +142,7 @@ namespace ArenaUnity.HybridRendering
 
         private IEnumerator AddSenderCoroutine()
         {
-            var op = camStream.CreateTrack();
+            var op = camStream.CreateTrack(m_screenWidth, m_screenHeight);
             if (op.Track == null)
                 yield return op;
 

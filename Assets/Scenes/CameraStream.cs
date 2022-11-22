@@ -72,10 +72,10 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
+        static readonly Vector2Int videoSize = new Vector2Int(1280, 480);
 
         static readonly float s_defaultFrameRate = 60;
-        static readonly float s_defaultScaleFactor = 1.0f;
+        static readonly float s_defaultScaleFactor = 1.5f;
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
 
@@ -146,10 +146,10 @@ namespace ArenaUnity.HybridRendering
             m_camera = null;
         }
 
-        internal WaitForCreateTrack CreateTrack()
+        internal WaitForCreateTrack CreateTrack(int screenWidth, int screenHeight)
         {
             int width = 2 * videoSize.x;
-            int height = videoSize.y;
+            int height = (int)(videoSize.x * ((float)screenHeight / (float)screenWidth));
 
             if (m_camera.targetTexture != null)
             {
