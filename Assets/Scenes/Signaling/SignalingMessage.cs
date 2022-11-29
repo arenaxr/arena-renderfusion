@@ -18,8 +18,7 @@ namespace ArenaUnity.HybridRendering.Signaling
     {
         public string id;
         public string deviceType;
-        public string sceneNamespace;
-        public string sceneName;
+        public string namespacedScene;
         public int screenWidth;
         public int screenHeight;
     }
