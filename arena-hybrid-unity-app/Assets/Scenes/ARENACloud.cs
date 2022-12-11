@@ -44,6 +44,13 @@ namespace ArenaUnity.HybridRendering
         private void Start()
         {
 #if !UNITY_EDITOR
+	    string[] arguments = Environment.GetCommandLineArgs();
+            if(arguments.Length >=3)
+            {
+            ArenaClientScene scene = ArenaClientScene.Instance;
+            scene.namespaceName = arguments[1];
+            scene.sceneName = arguments[2];
+            }
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
             StartCoroutine(SetupSignaling());
