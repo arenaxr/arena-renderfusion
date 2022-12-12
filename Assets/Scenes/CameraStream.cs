@@ -72,7 +72,7 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        static readonly Vector2Int videoSize = new Vector2Int(1280, 480);
+        static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
         static readonly float s_defaultScaleFactor = 1.0f;
