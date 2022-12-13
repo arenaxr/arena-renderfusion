@@ -155,7 +155,8 @@ namespace ArenaUnity.HybridRendering
             int height = (int)(videoSize.x * ((float)screenHeight / (float)screenWidth));
 
             // int width = 2 * videoSize.x;
-            // int height = videoSize.y; 
+            // int height = videoSize.y;
+
             if (m_camera.targetTexture != null)
             {
                 m_renderTexture = m_camera.targetTexture;
