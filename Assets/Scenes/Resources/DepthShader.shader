@@ -39,7 +39,7 @@ Shader "Hidden/DepthShader"
 
             sampler2D _MainTex;
             sampler2D _CameraDepthNormalsTexture;
-            // sampler2D _CameraDepthTexture;
+            sampler2D _CameraDepthTexture;
 
             // float4x4 UNITY_MATRIX_IV;
 
@@ -66,15 +66,13 @@ Shader "Hidden/DepthShader"
                 fixed4 col;
                 if (i.uv.x > 1.0/2.0) {
                     float4 NormalDepth;
-                    DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, float2(i.uv.x * 2.0 - 1.0, i.uv.y)), NormalDepth.w, NormalDepth.xyz);
+                    // DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, float2(i.uv.x * 2.0 - 1.0, i.uv.y)), NormalDepth.w, NormalDepth.xyz);
                     // col.rgb = NormalDepth.w;
 
-                    // float depth = tex2D(_CameraDepthTexture, float2(i.uv.x * 2.0 - 1.0, i.uv.y)).r;
-                    float depth = NormalDepth.w;
+                    float depth = tex2D(_CameraDepthTexture, float2(i.uv.x * 2.0 - 1.0, i.uv.y)).r;
                     depth = Linear01Depth(depth);
-                    //depth = depth * _ProjectionParams.z;
+                    col.rgb = (depth*50);
 
-                    col.rgb = 1.0 - depth;
 
                     // float depth1 = Linear01Depth(depth);
                     // float depth1 = depth * _ProjectionParams.z;

@@ -126,7 +126,7 @@ namespace ArenaUnity.HybridRendering
             m_camera.nearClipPlane = 0.1f; // match arena
             m_camera.farClipPlane = 10000f; // match arena
             // m_camera.backgroundColor = Color.clear;
-            m_camera.depthTextureMode = DepthTextureMode.DepthNormals;
+            m_camera.depthTextureMode = DepthTextureMode.Depth;
 
             m_material = new Material(Shader.Find("Hidden/DepthShader"));
         }
