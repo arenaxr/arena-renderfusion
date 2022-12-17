@@ -13,7 +13,7 @@ namespace ArenaUnity.HybridRendering
 {
     internal class PeerConnection : IDisposable
     {
-        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx", "video/flexfec-03" };
+        static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
 
         private string m_id;
         private string m_clientId;
@@ -266,7 +266,7 @@ namespace ArenaUnity.HybridRendering
             camStream.UpdatePose(clientPose);
         }
 
-        public IEnumerator GetStatsInterval(float interval = 1.0f)
+        public IEnumerator GetStats(float interval = 1.0f)
         {
             while (true)
             {

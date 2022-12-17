@@ -75,7 +75,7 @@ namespace ArenaUnity.HybridRendering
         static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
-        static readonly float s_defaultScaleFactor = 1.0f;
+        static readonly float s_defaultScaleFactor = 1.5f;
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
 
@@ -125,7 +125,8 @@ namespace ArenaUnity.HybridRendering
             m_camera.fieldOfView = 80f; // match arena
             m_camera.nearClipPlane = 0.1f; // match arena
             m_camera.farClipPlane = 10000f; // match arena
-            // m_camera.backgroundColor = Color.clear;
+            m_camera.transform.position = new Vector3(0.0f,1.6f,0.0f);
+            m_camera.backgroundColor = Color.clear;
             m_camera.depthTextureMode = DepthTextureMode.Depth;
 
             m_material = new Material(Shader.Find("Hidden/DepthShader"));
