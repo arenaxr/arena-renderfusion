@@ -90,7 +90,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             // Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
 
-            Debug.Log("MQTT connected!");
+            Debug.Log("Hybrid Rendering MQTT client connected!");
             name = "ARENA MQTT Signaler (Connected)";
             m_mainThreadContext.Post(d => OnStart?.Invoke(this), null);
         }

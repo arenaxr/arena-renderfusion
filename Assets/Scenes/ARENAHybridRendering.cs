@@ -14,35 +14,32 @@ using Newtonsoft.Json.Linq;
 namespace ArenaUnity.HybridRendering
 {
     [RequireComponent(typeof(ArenaClientScene))]
-    public class ARENACloud : MonoBehaviour
+    public sealed class ARENAHybridRendering : MonoBehaviour
     {
-        private ISignaling signaler;
-        private RTCConfiguration config = new RTCConfiguration{
-                iceServers = new[] {
-                    new RTCIceServer {
-                        urls = new[] {"stun:stun.l.google.com:19302"}
-                    }
-                }
-            };
-        System.Threading.Timer timer;
+#pragma warning disable 0649
+        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
+        private RTCIceServer[] iceServers = new RTCIceServer[]
+        {
+            new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
+        };
 
-        Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+        [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
+        public bool remoteRender = true;
+
+        [SerializeField, Tooltip("Automatically started when called Awake method.")]
+        public bool runOnAwake = true;
+#pragma warning restore 0649
+
+        private ISignaling signaler;
+        private Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+
+        private System.Threading.Timer timer;
 
         private void Awake()
         {
-            WebRTC.Initialize();
-        }
+            if (!runOnAwake)
+                return;
 
-        private void OnDestroy()
-        {
-            WebRTC.Dispose();
-            timer.Dispose();
-            Debug.Log("Destroyed");
-        }
-
-        // Start is called before the first frame update
-        private void Start()
-        {
 #if !UNITY_EDITOR
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
@@ -51,10 +48,9 @@ namespace ArenaUnity.HybridRendering
             Debug.Log(ArenaClientScene.Instance.sceneName);
         }
 
-        // Update is called once per frame
-        private void Update()
+        private void OnDestroy()
         {
-
+            timer.Dispose();
         }
 
         private IEnumerator SetupSignaling()
@@ -82,7 +78,9 @@ namespace ArenaUnity.HybridRendering
 
         private void OnSignalerStart(ISignaling signaler)
         {
-            removeNonRemoteRenderedObjs();
+            if (remoteRender)
+                removeNonRemoteRenderedObjs();
+
             StartCoroutine(WebRTC.Update());
             Debug.Log("Hybrid Rendering Server Started!");
         }
@@ -109,7 +107,8 @@ namespace ArenaUnity.HybridRendering
 
         private PeerConnection CreatePeerConnection(ConnectData data)
         {
-            var pc = new RTCPeerConnection(ref config);
+            RTCConfiguration conf = new RTCConfiguration { iceServers = iceServers };
+            var pc = new RTCPeerConnection(ref conf);
             PeerConnection peer = new PeerConnection(pc, data, signaler, StartCoroutine);
             clientPeerDict.Add(data.id, peer);
             return peer;
@@ -125,7 +124,7 @@ namespace ArenaUnity.HybridRendering
                 Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
 
                 peer.AddSender();
-                StartCoroutine(peer.GetStatsInterval(1.0f));
+                StartCoroutine(peer.GetStats(1.0f));
             }
             else
             {
@@ -180,6 +179,9 @@ namespace ArenaUnity.HybridRendering
 
         private void OnRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
+            if (!remoteRender)
+                return;
+
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 if (aobj.name != objectId)
