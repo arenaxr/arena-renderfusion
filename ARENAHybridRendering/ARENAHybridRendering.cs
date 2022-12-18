@@ -27,7 +27,7 @@ namespace ArenaUnity.HybridRendering
         public bool remoteRender = true;
 
         [SerializeField, Tooltip("Automatically started when called Awake method.")]
-        public bool runOnAwake = true;
+        public bool runOnStart = true;
 #pragma warning restore 0649
 
         private ISignaling signaler;
@@ -37,20 +37,26 @@ namespace ArenaUnity.HybridRendering
 
         private void Awake()
         {
-            if (!runOnAwake)
+            WebRTC.Initialize();
+        }
+
+        private void Start()
+        {
+            if (!runOnStart)
                 return;
 
 #if !UNITY_EDITOR
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
-            StartCoroutine(SetupSignaling());
             Debug.Log(ArenaClientScene.Instance.namespaceName);
             Debug.Log(ArenaClientScene.Instance.sceneName);
+            StartCoroutine(SetupSignaling());
         }
 
         private void OnDestroy()
         {
             timer.Dispose();
+            WebRTC.Dispose();
         }
 
         private IEnumerator SetupSignaling()

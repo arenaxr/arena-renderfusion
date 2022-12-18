@@ -401,6 +401,8 @@ GameObject:
   - component: {fileID: 1823688466}
   - component: {fileID: 1823688465}
   - component: {fileID: 1823688468}
+  - component: {fileID: 1823688469}
+  - component: {fileID: 1823688470}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -439,9 +441,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 10000
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -599,6 +601,30 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &1823688469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823688464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094022a2e4a744178b43af31e6bb948c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1823688470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823688464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0655c8da6e146ae8f787e106b45e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -657,6 +683,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2027341282}
   - component: {fileID: 2027341281}
+  - component: {fileID: 2027341283}
+  - component: {fileID: 2027341284}
   m_Layer: 0
   m_Name: arena-dev1.conix.io
   m_TagString: Untagged
@@ -679,8 +707,8 @@ MonoBehaviour:
   authType: 2
   hostAddress: arena-dev1.conix.io
   namespaceName: Edward
-  sceneName: coupe
-  renderCameras: 1
+  sceneName: example1
+  renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
   logMqttEvents: 0
@@ -701,3 +729,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2027341283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027341280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 402f758c369a24c0784ca94f5c2cf42f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iceServers:
+  - credential: 
+    credentialType: 0
+    urls:
+    - stun:stun.l.google.com:19302
+    username: 
+  remoteRender: 1
+  runOnStart: 1
+--- !u!114 &2027341284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027341280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfbd1e51dad24b82b473176c92af9f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
