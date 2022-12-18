@@ -14,4 +14,3 @@ Open `arena-hybrid-unity-app` in Unity.
 ## High Definition Render Pipeline
 Open `arena-hybrid-unity-app-hd` in Unity.
 
-
