@@ -75,7 +75,11 @@ namespace ArenaUnity.HybridRendering
         static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         static readonly float s_defaultScaleFactor = 1.5f;
+#else
+        static readonly float s_defaultScaleFactor = 1.0f;
+#endif
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
 
