@@ -16,6 +16,7 @@ namespace ArenaUnity.HybridRendering
     [RequireComponent(typeof(ArenaClientScene))]
     public class ARENACloud : MonoBehaviour
     {
+        private String id = " ";
         private ISignaling signaler;
         private RTCConfiguration config = new RTCConfiguration{
                 iceServers = new[] {
@@ -25,6 +26,9 @@ namespace ArenaUnity.HybridRendering
                 }
             };
         System.Threading.Timer timer;
+        [Header("HAL")]
+        [Tooltip("Whether this application will be launched using HAL")]
+        public bool halStatus = false;
 
         Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
 
@@ -43,16 +47,26 @@ namespace ArenaUnity.HybridRendering
         // Start is called before the first frame update
         private void Start()
         {
+        Debug.Log(halStatus);
 #if !UNITY_EDITOR
+        halStatus = true; // change later 
 	    string[] arguments = Environment.GetCommandLineArgs();
-            if(arguments.Length >=3)
+        ArenaClientScene scene = ArenaClientScene.Instance;
+        
+            if(arguments.Length >=2)
             {
-            ArenaClientScene scene = ArenaClientScene.Instance;
-            scene.namespaceName = arguments[1];
-            scene.sceneName = arguments[2];
+            
+            id = arguments[1];
+            
+            }
+            if(halStatus) {
+            //Conect to empty scene
+            scene.namespaceName = "public";
+            scene.sceneName = "example";
             }
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
+           
             StartCoroutine(SetupSignaling());
             Debug.Log(ArenaClientScene.Instance.namespaceName);
             Debug.Log(ArenaClientScene.Instance.sceneName);
@@ -80,6 +94,8 @@ namespace ArenaUnity.HybridRendering
             signaler.OnAnswer += OnAnswer;
             signaler.OnIceCandidate += OnIceCandidate;
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
+            signaler.onHALConnect += onHALConnect;
+            signaler.updateHALInfo(id,halStatus);
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
@@ -205,6 +221,16 @@ namespace ArenaUnity.HybridRendering
             {
                 signaler.BroadcastHealthCheck(item.Value.Id);
             }
+        }
+        private void onHALConnect(ISignaling signaler, ConnectData data) 
+        {
+            Debug.Log("Reset Signaling");
+            string[] sceneInfo = data.namespacedScene.Split('/');
+            ArenaClientScene.Instance.namespaceName = sceneInfo[0];
+            ArenaClientScene.Instance.sceneName = sceneInfo[1];
+            ArenaClientScene.Instance.DisconnectArena();
+            ArenaClientScene.Instance.ConnectArena();
+            StartCoroutine(SetupSignaling());
         }
     }
 }
