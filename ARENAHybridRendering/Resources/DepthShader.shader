@@ -71,8 +71,7 @@ Shader "Hidden/DepthShader"
 
                     float depth = tex2D(_CameraDepthTexture, float2(i.uv.x * 2.0 - 1.0, i.uv.y)).r;
                     depth = Linear01Depth(depth);
-                    col.rgb = (depth*50);
-
+                    col.rgb = 50 * depth;
 
                     // float depth1 = Linear01Depth(depth);
                     // float depth1 = depth * _ProjectionParams.z;

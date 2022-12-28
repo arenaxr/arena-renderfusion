@@ -48,8 +48,8 @@ namespace ArenaUnity.HybridRendering
 #if !UNITY_EDITOR
             StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
-            Debug.Log(ArenaClientScene.Instance.namespaceName);
-            Debug.Log(ArenaClientScene.Instance.sceneName);
+            // Debug.Log(ArenaClientScene.Instance.namespaceName);
+            // Debug.Log(ArenaClientScene.Instance.sceneName);
             StartCoroutine(SetupSignaling());
         }
 
