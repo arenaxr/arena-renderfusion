@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.WebRTC;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using ArenaUnity.HybridRendering.Signaling;
 
@@ -75,7 +76,7 @@ namespace ArenaUnity.HybridRendering
         static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX  // my M1 can only encode video up to 1280x720
         static readonly float s_defaultScaleFactor = 1.5f;
 #else
         static readonly float s_defaultScaleFactor = 1.0f;
@@ -133,7 +134,10 @@ namespace ArenaUnity.HybridRendering
             m_camera.backgroundColor = Color.clear;
             m_camera.depthTextureMode = DepthTextureMode.Depth;
 
-            m_material = new Material(Shader.Find("Hidden/DepthShader"));
+            if (Shader.Find("Hidden/DepthShader") != null)
+                m_material = new Material(Shader.Find("Hidden/DepthShader"));
+            else
+                Debug.LogError("Cannot find required shader Hidden/DepthShader!");
         }
 
         private void OnDestroy()
@@ -189,7 +193,7 @@ namespace ArenaUnity.HybridRendering
                     antiAliasing = 2
                 };
                 m_renderTexture.Create();
-                // m_camera.targetTexture = m_renderTexture;
+                m_camera.targetTexture = m_renderTexture;
                 m_camera.aspect = (float)(width / 2) / (float)height;
             }
 
