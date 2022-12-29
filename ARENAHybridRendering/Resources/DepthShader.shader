@@ -38,6 +38,8 @@ Shader "Hidden/DepthShader"
             }
 
             sampler2D _MainTex;
+            sampler2D _RightEyeTexture;
+
             sampler2D _CameraDepthNormalsTexture;
             sampler2D _CameraDepthTexture;
 
