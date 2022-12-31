@@ -23,6 +23,9 @@ namespace ArenaUnity.HybridRendering
             new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
         };
 
+        [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
+        public int maxMissedHeartbeats = 3;
+
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
 
@@ -32,6 +35,7 @@ namespace ArenaUnity.HybridRendering
 
         private ISignaling signaler;
         private Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+        private List<string> deadPeerIds = new List<string>();
 
         private System.Threading.Timer timer;
 
@@ -74,11 +78,12 @@ namespace ArenaUnity.HybridRendering
             signaler.OnOffer += OnOffer;
             signaler.OnAnswer += OnAnswer;
             signaler.OnIceCandidate += OnIceCandidate;
+            signaler.OnClientHealthCheck += OnClientHealthCheck;
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
-            TimerCallback timercallback = new TimerCallback(BroadcastHealthCheck);
+            TimerCallback timercallback = new TimerCallback(HandleHealthCheck);
             timer = new Timer(timercallback, signaler as object, 1000, 1000);
         }
 
@@ -120,14 +125,26 @@ namespace ArenaUnity.HybridRendering
             return peer;
         }
 
+        private void RemovePeerConnection(string id)
+        {
+            PeerConnection peer;
+            if (clientPeerDict.TryGetValue(id, out peer))
+            {
+                clientPeerDict.Remove(id);
+                peer.Dispose();
+                Debug.Log($"[RemovePeerConnection] There are now {clientPeerDict.Count} clients connected.");
+            }
+            else
+                Debug.LogWarning($"Peer {id} not found in dictionary.");
+        }
+
         private void OnClientConnect(ISignaling signaler, ConnectData data)
         {
             PeerConnection peer;
-            // Debug.Log(id);
             if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
                 peer = CreatePeerConnection(data);
-                Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
+                Debug.Log($"[OnClientConnect] There are now {clientPeerDict.Count} clients connected.");
 
                 peer.AddSender();
                 StartCoroutine(peer.GetStats(1.0f));
@@ -141,15 +158,7 @@ namespace ArenaUnity.HybridRendering
 
         private void OnClientDisconnect(ISignaling signaler, string id)
         {
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(id, out peer))
-            {
-                clientPeerDict.Remove(id);
-                peer.Dispose();
-                Debug.Log($"[Disconnect] There are now {clientPeerDict.Count} clients connected.");
-            }
-            else
-                Debug.LogWarning($"Peer {id} not found in dictionary.");
+            RemovePeerConnection(id);
         }
 
         private void OnOffer(ISignaling signaler, SDPData offer)
@@ -183,6 +192,14 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {data.id} not found in dictionary.");
         }
 
+        private void OnClientHealthCheck(ISignaling signaler, string id) {
+            PeerConnection peer;
+            if (clientPeerDict.TryGetValue(id, out peer))
+                peer.healthCounter = 0;
+            else
+                Debug.LogWarning($"Peer {id} not found in dictionary.");
+        }
+
         private void OnRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
             if (!remoteRender)
@@ -199,13 +216,29 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private void BroadcastHealthCheck(object signalerObj)
+        private void HandleHealthCheck(object signalerObj)
         {
             ISignaling signaler = (ISignaling)signalerObj;
-            foreach(var item in clientPeerDict)
+            foreach (var item in clientPeerDict)
             {
-                signaler.BroadcastHealthCheck(item.Value.Id);
+                var id = item.Key;
+                var peer = item.Value;
+
+                signaler.SendHealthCheck(peer.Id);
+
+                if (peer.healthCounter >= maxMissedHeartbeats)
+                    deadPeerIds.Add(id);
+
+                peer.healthCounter++;
             }
+        }
+
+        private void Update() {
+            for (int i = 0; i < deadPeerIds.Count; i++) {
+                string deadPeerId = deadPeerIds[i];
+                RemovePeerConnection(deadPeerId);
+            }
+            deadPeerIds.Clear();
         }
     }
 }
