@@ -21,6 +21,8 @@ namespace ArenaUnity.HybridRendering
         private int m_screenWidth;
         private int m_screenHeight;
 
+        public int healthCounter = 0;
+
         private ISignaling m_signaler;
 
         private CameraStream camStream;
@@ -49,7 +51,7 @@ namespace ArenaUnity.HybridRendering
             _startCoroutine = startCoroutine;
 
             m_id = System.Guid.NewGuid().ToString();
-            Debug.Log($"New Peer: (ID: {m_id}) - {data.deviceType}");
+            Debug.Log($"New Peer: (ID: {m_clientId}) - {data.deviceType}");
 
             _peer = peer;
             _peer.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
@@ -58,7 +60,7 @@ namespace ArenaUnity.HybridRendering
 
             sourceStream = new MediaStream();
 
-            gobj = new GameObject(m_id);
+            gobj = new GameObject($"hybrid_{m_clientId}");
             gobj.transform.gameObject.AddComponent<Camera>();
             camStream = gobj.AddComponent<CameraStream>();
 
@@ -87,11 +89,12 @@ namespace ArenaUnity.HybridRendering
             _peer.Dispose();
             _peer = null;
 
-            UnityEngine.Object.Destroy(gobj);
-
             mainThreadTimeRecorder.Dispose();
 
-            Debug.Log($"Peer (ID: {m_id}) killed");
+            UnityEngine.Object.Destroy(gobj);
+
+            Debug.Log($"Peer (ID: {m_id}, cID: {m_clientId}) killed");
+
             GC.SuppressFinalize(this);
         }
 
