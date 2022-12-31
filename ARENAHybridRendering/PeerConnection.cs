@@ -21,7 +21,7 @@ namespace ArenaUnity.HybridRendering
         private int m_screenWidth;
         private int m_screenHeight;
 
-        public int healthCounter = 0;
+        public int missedHeartbeatsCounter = 0;
 
         private ISignaling m_signaler;
 
@@ -29,7 +29,7 @@ namespace ArenaUnity.HybridRendering
 
         private RTCPeerConnection _peer;
 
-        private RTCDataChannel remoteDataChannel;
+        private RTCDataChannel clientInputDataChannel;
 
         private MediaStream sourceStream;
 
@@ -164,8 +164,8 @@ namespace ArenaUnity.HybridRendering
 
         private void OnDataChannel(RTCDataChannel channel)
         {
-            remoteDataChannel = channel;
-            remoteDataChannel.OnMessage = onDataChannelMessage;
+            clientInputDataChannel = channel;
+            clientInputDataChannel.OnMessage = bytes => camStream.OnInputMessage(bytes);;
         }
 
         public IEnumerator OnNegotiationNeeded()
@@ -260,13 +260,6 @@ namespace ArenaUnity.HybridRendering
             };
 
             _peer.AddIceCandidate(new RTCIceCandidate(option));
-        }
-
-        private void onDataChannelMessage(byte[] bytes)
-        {
-            string pos = System.Text.Encoding.UTF8.GetString(bytes);
-            var clientPose = JsonUtility.FromJson<ClientPose>(pos);
-            camStream.UpdatePose(clientPose);
         }
 
         public IEnumerator GetStats(float interval = 1.0f)

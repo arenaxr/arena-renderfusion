@@ -296,7 +296,7 @@ MonoBehaviour:
   authType: 2
   hostAddress: arena-dev1.conix.io
   namespaceName: Edward
-  sceneName: example1
+  sceneName: coupe
   renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
@@ -321,6 +321,7 @@ MonoBehaviour:
     urls:
     - stun:stun.l.google.com:19302
     username: 
+  maxMissedHeartbeats: 3
   remoteRender: 1
   runOnStart: 1
 --- !u!114 &1547569700

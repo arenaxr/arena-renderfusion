@@ -195,7 +195,7 @@ namespace ArenaUnity.HybridRendering
         private void OnClientHealthCheck(ISignaling signaler, string id) {
             PeerConnection peer;
             if (clientPeerDict.TryGetValue(id, out peer))
-                peer.healthCounter = 0;
+                peer.missedHeartbeatsCounter = 0;
             else
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
         }
@@ -226,16 +226,16 @@ namespace ArenaUnity.HybridRendering
 
                 signaler.SendHealthCheck(peer.Id);
 
-                if (peer.healthCounter >= maxMissedHeartbeats)
+                if (peer.missedHeartbeatsCounter >= maxMissedHeartbeats)
                     deadPeerIds.Add(id);
 
-                peer.healthCounter++;
+                peer.missedHeartbeatsCounter++;
             }
         }
 
         private void Update() {
-            for (int i = 0; i < deadPeerIds.Count; i++) {
-                string deadPeerId = deadPeerIds[i];
+            foreach (var deadPeerId in deadPeerIds)
+            {
                 RemovePeerConnection(deadPeerId);
             }
             deadPeerIds.Clear();

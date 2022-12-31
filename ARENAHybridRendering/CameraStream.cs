@@ -76,11 +76,7 @@ namespace ArenaUnity.HybridRendering
         static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
 
         static readonly float s_defaultFrameRate = 60;
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX  // my M1 can only encode video up to 1280x720
-        static readonly float s_defaultScaleFactor = 1.5f;
-#else
         static readonly float s_defaultScaleFactor = 1.0f;
-#endif
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
 
@@ -97,6 +93,8 @@ namespace ArenaUnity.HybridRendering
         private RenderTexture m_renderTexture;
 
         private MediaStreamTrack m_track;
+
+        private List<ClientPose> clientPoses = new List<ClientPose>();
 
         private Dictionary<string, RTCRtpTransceiver> m_transceivers = new Dictionary<string, RTCRtpTransceiver>();
 
@@ -190,7 +188,7 @@ namespace ArenaUnity.HybridRendering
                 RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
                 m_renderTexture = new RenderTexture(width, height, s_defaultDepth, format)
                 {
-                    antiAliasing = 2
+                    antiAliasing = 1
                 };
                 m_renderTexture.Create();
                 m_camera.targetTexture = m_renderTexture;
@@ -266,21 +264,42 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        public void UpdatePose(ClientPose clientPose)
+        public void OnInputMessage(byte[] bytes)
         {
+            string poseMsg = System.Text.Encoding.UTF8.GetString(bytes);
+            var clientPose = JsonUtility.FromJson<ClientPose>(poseMsg);
+
             // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
             // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
             // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
 
+            clientPoses.Add(clientPose);
+        }
+
+        private void updatePose(ClientPose clientPose)
+        {
             if (m_camera == null) return;
 
-            m_camera.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
+            m_camera.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
+                clientPose.x,
+                clientPose.y,
+                clientPose.z
+            ));
             m_camera.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
                 clientPose.x_,
                 clientPose.y_,
                 clientPose.z_,
                 clientPose.w_
             ));
+        }
+
+        private void Update()
+        {
+            foreach (var clientPose in clientPoses)
+            {
+                updatePose(clientPose);
+            }
+            clientPoses.Clear();
         }
 
         // private void OnPreRender()
