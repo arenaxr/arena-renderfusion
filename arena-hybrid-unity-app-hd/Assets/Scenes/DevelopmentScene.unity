@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2160.1348, g: 2264.0215, b: 3286.6953, a: 1}
+  m_IndirectSpecularColor: {r: 2160.502, g: 2264.3926, b: 3286.9766, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -707,7 +707,7 @@ MonoBehaviour:
   authType: 2
   hostAddress: arena-dev1.conix.io
   namespaceName: Edward
-  sceneName: example1
+  sceneName: coupe
   renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
@@ -741,14 +741,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402f758c369a24c0784ca94f5c2cf42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxClients: -1
+  maxMissedHeartbeats: 3
+  remoteRender: 1
+  runOnStart: 1
   iceServers:
   - credential: 
     credentialType: 0
     urls:
     - stun:stun.l.google.com:19302
     username: 
-  remoteRender: 1
-  runOnStart: 1
 --- !u!114 &2027341284
 MonoBehaviour:
   m_ObjectHideFlags: 0
