@@ -93,7 +93,7 @@ namespace ArenaUnity.HybridRendering
 
             UnityEngine.Object.Destroy(gobj);
 
-            Debug.Log($"Peer (ID: {m_id}, cID: {m_clientId}) killed");
+            Debug.Log($"Peer (cID: {m_clientId}, ID: {m_id}) killed");
 
             GC.SuppressFinalize(this);
         }
