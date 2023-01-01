@@ -36,11 +36,11 @@ namespace ArenaUnity.HybridRendering
         };
 #pragma warning restore 0649
 
-        private ISignaling signaler;
-        private Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
-        private List<string> deadPeerIds = new List<string>();
+        internal ISignaling signaler;
+        internal Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+        internal List<string> deadPeerIds = new List<string>();
 
-        private System.Threading.Timer timer;
+        internal System.Threading.Timer timer;
 
         private void Awake()
         {
