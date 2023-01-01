@@ -411,16 +411,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402f758c369a24c0784ca94f5c2cf42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxClients: -1
+  maxMissedHeartbeats: 3
+  remoteRender: 1
+  runOnStart: 1
   iceServers:
   - credential: 
     credentialType: 0
     urls:
     - stun:stun.l.google.com:19302
     username: 
-  maxMissedHeartbeats: 3
-  maxClients: -1
-  remoteRender: 1
-  runOnStart: 1
 --- !u!114 &1547569700
 MonoBehaviour:
   m_ObjectHideFlags: 0

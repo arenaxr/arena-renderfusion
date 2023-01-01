@@ -259,6 +259,7 @@ GameObject:
   - component: {fileID: 1547569698}
   - component: {fileID: 1547569699}
   - component: {fileID: 1547569700}
+  - component: {fileID: 1547569701}
   m_Layer: 0
   m_Name: arena-dev1.conix.io
   m_TagString: Untagged
@@ -315,15 +316,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402f758c369a24c0784ca94f5c2cf42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxClients: -1
+  maxMissedHeartbeats: 3
+  remoteRender: 1
+  runOnStart: 1
   iceServers:
   - credential: 
     credentialType: 0
     urls:
     - stun:stun.l.google.com:19302
     username: 
-  maxMissedHeartbeats: 3
-  remoteRender: 1
-  runOnStart: 1
 --- !u!114 &1547569700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,9 +333,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547569696}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdfbd1e51dad24b82b473176c92af9f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1547569701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547569696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094022a2e4a744178b43af31e6bb948c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1833724144
