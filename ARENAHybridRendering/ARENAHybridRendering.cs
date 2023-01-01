@@ -17,11 +17,8 @@ namespace ArenaUnity.HybridRendering
     public sealed class ARENAHybridRendering : MonoBehaviour
     {
 #pragma warning disable 0649
-        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
-        private RTCIceServer[] iceServers = new RTCIceServer[]
-        {
-            new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
-        };
+        [SerializeField, Tooltip("Maximum clients allowed (-1 if unlimited).")]
+        public int maxClients = -1;
 
         [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
         public int maxMissedHeartbeats = 3;
@@ -29,8 +26,14 @@ namespace ArenaUnity.HybridRendering
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
 
-        [SerializeField, Tooltip("Automatically started when called Awake method.")]
+        [SerializeField, Tooltip("Automatically started when called Start method.")]
         public bool runOnStart = true;
+
+        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
+        private RTCIceServer[] iceServers = new RTCIceServer[]
+        {
+            new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
+        };
 #pragma warning restore 0649
 
         private ISignaling signaler;
@@ -101,7 +104,6 @@ namespace ArenaUnity.HybridRendering
             {
                 JToken data = JToken.Parse(aobj.jsonData);
                 var remoteRenderToken = data["remote-render"];
-                // Debug.Log($"{aobj.name} - {remoteRenderToken}");
                 if (remoteRenderToken != null)
                 {
                     bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
@@ -140,6 +142,12 @@ namespace ArenaUnity.HybridRendering
 
         private void OnClientConnect(ISignaling signaler, ConnectData data)
         {
+            if (maxClients != -1 && clientPeerDict.Count >= maxClients)
+            {
+                Debug.LogWarning($"[OnClientConnect] Only a maximum of {maxClients} are allowed to connect.");
+                return;
+            }
+
             PeerConnection peer;
             if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
@@ -233,7 +241,8 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private void Update() {
+        private void Update()
+        {
             foreach (var deadPeerId in deadPeerIds)
             {
                 RemovePeerConnection(deadPeerId);
