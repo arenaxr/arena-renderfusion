@@ -181,9 +181,9 @@
       "url": "https://packages.unity.com"
     },
     "io.conix.arena.unity": {
-      "version": "https://github.com/EdwardLu2018/arena-unity.git",
+      "version": "file:/Users/Edward/Documents/GitHub/ARENA-unity",
       "depth": 0,
-      "source": "git",
+      "source": "local",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.collab-proxy": "1.2.16",
@@ -226,8 +226,7 @@
         "com.unity.modules.vr": "1.0.0",
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
-      },
-      "hash": "b2809320b61afbcc47c8e3b4d7647dd5e2ae6631"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

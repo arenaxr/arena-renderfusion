@@ -14,21 +14,21 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private string m_clientId;
 
-        private string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/offer";
-        private string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/answer";
-        private string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/candidate";
-        private string SERVER_HEALTH_CHECK_PREFIX = "realm/g/a/hybrid_rendering/server/health";
-        private string SERVER_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/stats";
+        private readonly string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/offer";
+        private readonly string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/answer";
+        private readonly string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/candidate";
+        private readonly string SERVER_HEALTH_CHECK_PREFIX = "realm/g/a/hybrid_rendering/server/health";
+        private readonly string SERVER_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/stats";
 
-        private string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/connect";
-        private string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/disconnect";
-        private string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/offer";
-        private string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/answer";
-        private string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/candidate";
-        private string CLIENT_HEALTH_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/health";
-        // private string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/stats";
+        private readonly string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/connect";
+        private readonly string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/disconnect";
+        private readonly string CLIENT_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/offer";
+        private readonly string CLIENT_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/answer";
+        private readonly string CLIENT_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/candidate";
+        private readonly string CLIENT_HEALTH_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/health";
+        // private readonly string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/stats";
 
-        private string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/remote";
+        private readonly string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/remote";
 
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
@@ -36,7 +36,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string SERVER_HEALTH_CHECK_TOPIC;
         private string SERVER_STATS_TOPIC;
 
-        public string Url { get { return "arena"; } }
+        public string Url { get { return "arenaxr.org"; } }
 
         protected override void Awake()
         {
