@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2160.502, g: 2264.3926, b: 3286.9766, a: 1}
+  m_IndirectSpecularColor: {r: 2159.9102, g: 2263.6309, b: 3286.1133, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -707,7 +707,7 @@ MonoBehaviour:
   authType: 2
   hostAddress: arena-dev1.conix.io
   namespaceName: Edward
-  sceneName: coupe
+  sceneName: example1
   renderCameras: 0
   logMqttObjects: 0
   logMqttUsers: 0
