@@ -124,6 +124,7 @@ namespace ArenaUnity.HybridRendering
             var pc = new RTCPeerConnection(ref conf);
             PeerConnection peer = new PeerConnection(pc, data, signaler, StartCoroutine);
             clientPeerDict.Add(data.id, peer);
+            Debug.Log($"[OnClientConnect] There are now {clientPeerDict.Count} clients connected.");
             return peer;
         }
 
@@ -152,8 +153,6 @@ namespace ArenaUnity.HybridRendering
             if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
                 peer = CreatePeerConnection(data);
-                Debug.Log($"[OnClientConnect] There are now {clientPeerDict.Count} clients connected.");
-
                 peer.AddSender();
                 StartCoroutine(peer.GetStats(1.0f));
             }
@@ -203,7 +202,7 @@ namespace ArenaUnity.HybridRendering
         private void OnClientHealthCheck(ISignaling signaler, string id) {
             PeerConnection peer;
             if (clientPeerDict.TryGetValue(id, out peer))
-                peer.missedHeartbeatsCounter = 0;
+                peer.missedHeartbeats = 0;
             else
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
         }
@@ -234,10 +233,10 @@ namespace ArenaUnity.HybridRendering
 
                 signaler.SendHealthCheck(peer.Id);
 
-                if (peer.missedHeartbeatsCounter >= maxMissedHeartbeats)
+                if (peer.missedHeartbeats >= maxMissedHeartbeats)
                     deadPeerIds.Add(id);
 
-                peer.missedHeartbeatsCounter++;
+                peer.missedHeartbeats++;
             }
         }
 
