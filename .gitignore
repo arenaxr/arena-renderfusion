@@ -74,11 +74,4 @@ crashlytics-build.properties
 /[Aa]ssets/ArenaUnity/*
 
 .vscode/
-
-node_modules/
-
 .DS_Store
-
-*.cert
-
-.parcel-cache
