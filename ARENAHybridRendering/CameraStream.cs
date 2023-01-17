@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.WebRTC;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using ArenaUnity.HybridRendering.Signaling;
 
@@ -50,48 +51,33 @@ namespace ArenaUnity.HybridRendering
         }
     }
 
-    [RequireComponent(typeof(Camera))]
+    // [RequireComponent(typeof(Camera))]
     public class CameraStream : MonoBehaviour
     {
-        internal class WaitForCreateTrack : CustomYieldInstruction
-        {
-            public MediaStreamTrack Track { get { return m_track; } }
-
-            MediaStreamTrack m_track;
-
-            bool m_keepWaiting = true;
-
-            public override bool keepWaiting { get { return m_keepWaiting; } }
-
-            public WaitForCreateTrack() { }
-
-            public void Done(MediaStreamTrack track)
-            {
-                m_track = track;
-                m_keepWaiting = false;
-            }
-        }
-
-        static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
-
         static readonly float s_defaultFrameRate = 60;
-        static readonly float s_defaultScaleFactor = 1.5f;
+        static readonly float s_defaultScaleFactor = 1.0f;
         static readonly uint s_defaultMinBitrate = 100;
         static readonly uint s_defaultMaxBitrate = 100000;
-
-        static readonly int s_defaultDepth = 16;
 
         private float m_FrameRate = s_defaultFrameRate;
         private float m_ScaleFactor = s_defaultScaleFactor;
         private uint m_MinBitrate = s_defaultMinBitrate;
         private uint m_MaxBitrate = s_defaultMaxBitrate;
 
-        private Camera m_camera;
+        private HybridCamera m_hybridCameraMono;
+        private HybridCamera m_hybridCameraLeft;
+        private HybridCamera m_hybridCameraRight;
 
-        private Material m_material;
         private RenderTexture m_renderTexture;
 
         private MediaStreamTrack m_track;
+
+        public bool InDualCameraMode
+        {
+            get { return !m_hybridCameraMono.gameObject.activeSelf; }
+        }
+
+        private List<ClientPose> clientPoses = new List<ClientPose>();
 
         private Dictionary<string, RTCRtpTransceiver> m_transceivers = new Dictionary<string, RTCRtpTransceiver>();
 
@@ -119,84 +105,72 @@ namespace ArenaUnity.HybridRendering
 
         public MediaStreamTrack Track => m_track;
 
+        private HybridCamera addCamera(string identifier)
+        {
+            var gobj = new GameObject($"camera-{identifier}");
+            gobj.transform.parent = gameObject.transform; // new game object the child of this one
+            gobj.transform.gameObject.AddComponent<Camera>();
+            return gobj.transform.gameObject.AddComponent<HybridCamera>();
+        }
+
         private void Awake()
         {
-            m_camera = GetComponent<Camera>();
-            m_camera.fieldOfView = 80f; // match arena
-            m_camera.nearClipPlane = 0.1f; // match arena
-            m_camera.farClipPlane = 10000f; // match arena
-            m_camera.transform.position = new Vector3(0.0f,1.6f,0.0f);
-            m_camera.backgroundColor = Color.clear;
-            m_camera.depthTextureMode = DepthTextureMode.Depth;
-
-            m_material = new Material(Shader.Find("Hidden/DepthShader"));
+            m_hybridCameraMono = addCamera("mono");
+            m_hybridCameraLeft = addCamera("left");
+            m_hybridCameraRight = addCamera("right");
+            // disable stereo cameras at first
+            m_hybridCameraLeft.gameObject.SetActive(false);
+            m_hybridCameraRight.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
             m_track?.Dispose();
             m_track = null;
-
-            if (m_renderTexture == null)
-                return;
-            m_camera.targetTexture = null;
-            m_renderTexture.Release();
-            Destroy(m_renderTexture);
-            m_renderTexture = null;
-
-            m_camera = null;
         }
 
-        internal WaitForCreateTrack CreateTrack(int screenWidth, int screenHeight)
+        public void SetDualCameraMode(bool active)
         {
-            // int width = 2 * screenWidth;
-            // int height = screenHeight;
+            m_hybridCameraMono.gameObject.SetActive(!active);
+            m_hybridCameraLeft.gameObject.SetActive(active);
+            m_hybridCameraRight.gameObject.SetActive(active);
+        }
 
-            int width = 2 * videoSize.x;
-            int height = (int)(videoSize.x * ((float)screenHeight / (float)screenWidth));
+        public void SetIPD(float ipd)
+        {
+            m_hybridCameraLeft.transform.position = new Vector3(-ipd/2f, 0f, 0f);
+            m_hybridCameraRight.transform.position = new Vector3(ipd/2f, 0f, 0f);
+        }
 
-            // int width = 2 * videoSize.x;
-            // int height = videoSize.y;
+        internal void CreateTrack(int screenWidth, int screenHeight)
+        {
+            StartCoroutine(CreateTrackCoroutine(screenWidth, screenHeight));
+        }
 
-            if (m_camera.targetTexture != null)
-            {
-                m_renderTexture = m_camera.targetTexture;
-                RenderTextureFormat supportFormat = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
-                GraphicsFormat graphicsFormat = GraphicsFormatUtility.GetGraphicsFormat(supportFormat, RenderTextureReadWrite.Default);
-                GraphicsFormat compatibleFormat = SystemInfo.GetCompatibleFormat(graphicsFormat, FormatUsage.Render);
-                GraphicsFormat format = graphicsFormat == compatibleFormat ? graphicsFormat : compatibleFormat;
-
-                if (m_renderTexture.graphicsFormat != format)
-                {
-                    Debug.LogWarning(
-                        $"This color format:{m_renderTexture.graphicsFormat} not support in unity.webrtc. Change to supported color format:{format}.");
-                    m_renderTexture.Release();
-                    m_renderTexture.graphicsFormat = format;
-                    m_renderTexture.Create();
-                }
-
-                m_camera.targetTexture = m_renderTexture;
-            }
+        private IEnumerator CreateTrackCoroutine(int screenWidth, int screenHeight)
+        {
+            WaitForCreateTrack op;
+            if (!InDualCameraMode)
+                op = m_hybridCameraMono.CreateTrack(screenWidth, screenHeight);
             else
+                op = m_hybridCameraLeft.CreateTrack(screenWidth, screenHeight);
+
+            if (op.Track == null)
+                yield return op;
+
+            // remove the current track, if it exists
+            if (m_track != null)
             {
-                RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
-                m_renderTexture = new RenderTexture(width, height, s_defaultDepth, format)
-                {
-                    antiAliasing = 2
-                };
-                m_renderTexture.Create();
-                // m_camera.targetTexture = m_renderTexture;
-                m_camera.aspect = (float)(width / 2) / (float)height;
+                m_track.Dispose();
+                m_track = null;
             }
+            m_track = op.Track;
 
-            var instruction = new WaitForCreateTrack();
-            instruction.Done(new VideoStreamTrack(m_renderTexture));
-            return instruction;
-        }
-
-        internal void SetTrack(MediaStreamTrack newTrack)
-        {
-            m_track = newTrack;
+            if (InDualCameraMode)
+            {
+                var rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
+                m_hybridCameraLeft.SetRenderTextureOther(rightEyeTargetTexture);
+            }
         }
 
         public void SetFrameRate(float frameRate)
@@ -248,26 +222,38 @@ namespace ArenaUnity.HybridRendering
                 m_transceivers.Remove(pcId);
                 if (!m_transceivers.Any())
                 {
-                    m_track.Dispose();
+                    m_track?.Dispose();
                     m_track = null;
                 }
             }
             else
             {
+                // if there already exists a transceiver, just remove it
+                RTCRtpTransceiver trans;
+                if (m_transceivers.TryGetValue(pcId, out trans))
+                {
+                    m_transceivers.Remove(pcId);
+                }
                 m_transceivers.Add(pcId, transceiver);
             }
         }
 
-        public void UpdatePose(ClientPose clientPose)
+        public void OnInputMessage(byte[] bytes)
         {
-            // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-            // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
-            // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
+            string poseMsg = System.Text.Encoding.UTF8.GetString(bytes);
+            var clientPose = JsonUtility.FromJson<ClientPose>(poseMsg);
 
-            if (m_camera == null) return;
+            clientPoses.Add(clientPose);
+        }
 
-            m_camera.transform.position = ArenaUnity.ToUnityPosition(new Vector3(clientPose.x, clientPose.y, clientPose.z));
-            m_camera.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
+        private void updatePose(ClientPose clientPose)
+        {
+            gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
+                clientPose.x,
+                clientPose.y,
+                clientPose.z
+            ));
+            gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
                 clientPose.x_,
                 clientPose.y_,
                 clientPose.z_,
@@ -275,21 +261,16 @@ namespace ArenaUnity.HybridRendering
             ));
         }
 
-        // private void OnPreRender()
-        // {
-        //     Shader.SetGlobalMatrix(Shader.PropertyToID("UNITY_MATRIX_IV"), Cam.cameraToWorldMatrix);
-        // }
-
-        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        private void Update()
         {
-            if (m_camera != Camera.main)
+            foreach (var clientPose in clientPoses)
             {
-                Graphics.Blit(source, m_renderTexture, m_material);
+                // System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+                // long currTime = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
+                // Debug.Log($"{currTime} {clientPose.ts} {currTime - clientPose.ts}");
+                updatePose(clientPose);
             }
-            else
-            {
-                Graphics.Blit(source, destination, m_material);
-            }
+            clientPoses.Clear();
         }
     }
 }
