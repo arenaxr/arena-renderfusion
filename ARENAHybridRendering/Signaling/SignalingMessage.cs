@@ -28,6 +28,11 @@ namespace ArenaUnity.HybridRendering.Signaling
     {
         public string type;
         public string id;
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        public bool isMac = true;
+#else
+        public bool isMac = false;
+#endif
         public string sdp;
     }
 

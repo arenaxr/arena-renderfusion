@@ -15,11 +15,17 @@ namespace ArenaUnity.HybridRendering
     {
         static readonly string[] excludeCodecMimeType = { "video/red", "video/ulpfec", "video/rtx" };
 
+        private readonly string CLIENT_INPUT_DC_LABEL = "client-input";
+        private readonly string CLIENT_STATUS_DC_LABEL = "client-status";
+
         private string m_id;
         private string m_clientId;
 
         private int m_screenWidth;
         private int m_screenHeight;
+
+        // Used by ARENAHybridRendering
+        public int missedHeartbeats = 0;
 
         private ISignaling m_signaler;
 
@@ -27,7 +33,8 @@ namespace ArenaUnity.HybridRendering
 
         private RTCPeerConnection _peer;
 
-        private RTCDataChannel remoteDataChannel;
+        private RTCDataChannel clientInputDataChannel;
+        private RTCDataChannel clientStatusDataChannel;
 
         private MediaStream sourceStream;
 
@@ -49,7 +56,7 @@ namespace ArenaUnity.HybridRendering
             _startCoroutine = startCoroutine;
 
             m_id = System.Guid.NewGuid().ToString();
-            Debug.Log($"New Peer: (ID: {m_id}) - {data.deviceType}");
+            Debug.Log($"New Peer: (ID: {m_clientId}) - {data.deviceType}");
 
             _peer = peer;
             _peer.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
@@ -58,8 +65,7 @@ namespace ArenaUnity.HybridRendering
 
             sourceStream = new MediaStream();
 
-            gobj = new GameObject(m_id);
-            gobj.transform.gameObject.AddComponent<Camera>();
+            gobj = new GameObject($"hybrid_{m_clientId}");
             camStream = gobj.AddComponent<CameraStream>();
 
             mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
@@ -77,7 +83,6 @@ namespace ArenaUnity.HybridRendering
 
         public void Dispose()
         {
-            _peer.OnTrack = null;
             _peer.OnDataChannel = null;
             _peer.OnIceCandidate = null;
             _peer.OnNegotiationNeeded = null;
@@ -87,31 +92,13 @@ namespace ArenaUnity.HybridRendering
             _peer.Dispose();
             _peer = null;
 
-            UnityEngine.Object.Destroy(gobj);
-
             mainThreadTimeRecorder.Dispose();
 
-            Debug.Log($"Peer (ID: {m_id}) killed");
+            UnityEngine.Object.Destroy(gobj);
+
+            Debug.Log($"Peer (cID: {m_clientId}, ID: {m_id}) killed");
+
             GC.SuppressFinalize(this);
-        }
-
-        private static double GetRecorderFrameAverage(ProfilerRecorder recorder)
-        {
-            var samplesCount = recorder.Capacity;
-            if (samplesCount == 0)
-                return 0;
-
-            double r = 0;
-            unsafe
-            {
-                var samples = stackalloc ProfilerRecorderSample[samplesCount];
-                recorder.CopyTo(samples, samplesCount);
-                for (var i = 0; i < samplesCount; ++i)
-                    r += samples[i].Value;
-                r /= samplesCount;
-            }
-
-            return r;
         }
 
         private RTCRtpTransceiverInit GetTransceiverInit()
@@ -135,21 +122,14 @@ namespace ArenaUnity.HybridRendering
             return init;
         }
 
-        public void AddSender()
+        public void AddSender(bool dualCameraMode=false)
         {
-            StartCoroutine(AddSenderCoroutine());
-        }
-
-        private IEnumerator AddSenderCoroutine()
-        {
-            var op = camStream.CreateTrack(m_screenWidth, m_screenHeight);
-            if (op.Track == null)
-                yield return op;
-
-            camStream.SetTrack(op.Track);
+            camStream.SetIPD(0.67f);
+            camStream.SetDualCameraMode(dualCameraMode);
+            camStream.CreateTrack(m_screenWidth, m_screenHeight);
 
             RTCRtpTransceiverInit init = GetTransceiverInit();
-            var transceiver = _peer.AddTransceiver(op.Track, init);
+            var transceiver = _peer.AddTransceiver(camStream.Track, init);
 
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType));
@@ -161,8 +141,23 @@ namespace ArenaUnity.HybridRendering
 
         private void OnDataChannel(RTCDataChannel channel)
         {
-            remoteDataChannel = channel;
-            remoteDataChannel.OnMessage = onDataChannelMessage;
+            if (channel.Label == CLIENT_INPUT_DC_LABEL)
+            {
+                clientInputDataChannel = channel;
+                clientInputDataChannel.OnMessage = bytes => camStream.OnInputMessage(bytes);
+            }
+            else if (channel.Label == CLIENT_STATUS_DC_LABEL)
+            {
+                clientStatusDataChannel = channel;
+                clientStatusDataChannel.OnMessage = bytes => OnClientStatusChange(bytes);
+            }
+        }
+
+        private void OnClientStatusChange(byte[] bytes)
+        {
+            string statusMsg = System.Text.Encoding.UTF8.GetString(bytes);
+            // var clientStatus = JsonUtility.FromJson<ClientStatus>(statusMsg);
+            Debug.Log(statusMsg);
         }
 
         public IEnumerator OnNegotiationNeeded()
@@ -259,11 +254,23 @@ namespace ArenaUnity.HybridRendering
             _peer.AddIceCandidate(new RTCIceCandidate(option));
         }
 
-        private void onDataChannelMessage(byte[] bytes)
+        private static double GetRecorderFrameAverage(ProfilerRecorder recorder)
         {
-            string pos = System.Text.Encoding.UTF8.GetString(bytes);
-            var clientPose = JsonUtility.FromJson<ClientPose>(pos);
-            camStream.UpdatePose(clientPose);
+            var samplesCount = recorder.Capacity;
+            if (samplesCount == 0)
+                return 0;
+
+            double r = 0;
+            unsafe
+            {
+                var samples = stackalloc ProfilerRecorderSample[samplesCount];
+                recorder.CopyTo(samples, samplesCount);
+                for (var i = 0; i < samplesCount; ++i)
+                    r += samples[i].Value;
+                r /= samplesCount;
+            }
+
+            return r;
         }
 
         public IEnumerator GetStats(float interval = 1.0f)
@@ -302,7 +309,7 @@ namespace ArenaUnity.HybridRendering
                     }
                 }
                 m_signaler.SendStats(text);
-                //Debug.Log(statsOperation);
+                // Debug.Log(statsOperation);
             }
         }
     }

@@ -16,38 +16,39 @@ namespace ArenaUnity.HybridRendering
     [RequireComponent(typeof(ArenaClientScene))]
     public sealed class ARENAHybridRendering : MonoBehaviour
     {
-        private String id = " ";
-        private ISignaling signaler;
-        private RTCConfiguration config = new RTCConfiguration{
-                iceServers = new[] {
-                    new RTCIceServer {
-                        urls = new[] {"stun:stun.l.google.com:19302"}
-                    }
-                }
-            };
-        System.Threading.Timer timer;
-        [Header("HAL")]
-        [Tooltip("Whether this application will be launched using HAL")]
-        public bool halStatus = false;
-
 #pragma warning disable 0649
-        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
-        private RTCIceServer[] iceServers = new RTCIceServer[]
-        {
-            new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
-        }
+        [SerializeField, Tooltip("Maximum clients allowed (-1 if unlimited).")]
+        public int maxClients = -1;
+
+        [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
+        public int maxMissedHeartbeats = 3;
 
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
 
-        [SerializeField, Tooltip("Automatically started when called Awake method.")]
+        [SerializeField, Tooltip("Automatically started when called Start method.")]
         public bool runOnStart = true;
+
+        [SerializeField, Tooltip("Whether or not to use Hybrid Application Launcher")]
+        public bool halStatus = false;
+
+        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
+
+        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
+        private RTCIceServer[] iceServers = new RTCIceServer[]
+        {
+            new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
+        };
+
 #pragma warning restore 0649
 
-        private ISignaling signaler;
-        private Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+        internal ISignaling signaler;
+        internal Dictionary<string, PeerConnection> clientPeerDict = new Dictionary<string, PeerConnection>();
+        internal List<string> deadPeerIds = new List<string>();
 
-        private System.Threading.Timer timer;
+        internal System.Threading.Timer timer;
+
+        private String id = " ";
 
         private void Awake()
         {
@@ -56,33 +57,28 @@ namespace ArenaUnity.HybridRendering
 
         private void Start()
         {
-
-        Debug.Log(halStatus);
             if (!runOnStart)
                 return;
+
 #if !UNITY_EDITOR
-        halStatus = true; // change later 
-	    string[] arguments = Environment.GetCommandLineArgs();
-        ArenaClientScene scene = ArenaClientScene.Instance;
-        
+            string[] arguments = Environment.GetCommandLineArgs();
+
+            ArenaClientScene scene = ArenaClientScene.Instance;
+
             if(arguments.Length >=2)
             {
-            
+
             id = arguments[1];
-            
+
             }
             if(halStatus) {
             //Conect to empty scene
             scene.namespaceName = "public";
             scene.sceneName = "example";
             }
-            StartCoroutine(ArenaClientScene.Instance.ConnectArena());
 #endif
-           
-            StartCoroutine(SetupSignaling());
-
-            Debug.Log(ArenaClientScene.Instance.namespaceName);
-            Debug.Log(ArenaClientScene.Instance.sceneName);
+            // Debug.Log(ArenaClientScene.Instance.namespaceName);
+            // Debug.Log(ArenaClientScene.Instance.sceneName);
             StartCoroutine(SetupSignaling());
         }
 
@@ -107,13 +103,14 @@ namespace ArenaUnity.HybridRendering
             signaler.OnOffer += OnOffer;
             signaler.OnAnswer += OnAnswer;
             signaler.OnIceCandidate += OnIceCandidate;
+            signaler.OnClientHealthCheck += OnClientHealthCheck;
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
             signaler.onHALConnect += onHALConnect;
             signaler.updateHALInfo(id,halStatus);
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
-            TimerCallback timercallback = new TimerCallback(BroadcastHealthCheck);
+            TimerCallback timercallback = new TimerCallback(HandleHealthCheck);
             timer = new Timer(timercallback, signaler as object, 1000, 1000);
         }
 
@@ -131,7 +128,6 @@ namespace ArenaUnity.HybridRendering
             {
                 JToken data = JToken.Parse(aobj.jsonData);
                 var remoteRenderToken = data["remote-render"];
-                // Debug.Log($"{aobj.name} - {remoteRenderToken}");
                 if (remoteRenderToken != null)
                 {
                     bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
@@ -152,18 +148,35 @@ namespace ArenaUnity.HybridRendering
             var pc = new RTCPeerConnection(ref conf);
             PeerConnection peer = new PeerConnection(pc, data, signaler, StartCoroutine);
             clientPeerDict.Add(data.id, peer);
+            Debug.Log($"[OnClientConnect] There are now {clientPeerDict.Count} clients connected.");
             return peer;
+        }
+
+        private void RemovePeerConnection(string id)
+        {
+            PeerConnection peer;
+            if (clientPeerDict.TryGetValue(id, out peer))
+            {
+                clientPeerDict.Remove(id);
+                peer.Dispose();
+                Debug.Log($"[RemovePeerConnection] There are now {clientPeerDict.Count} clients connected.");
+            }
+            else
+                Debug.LogWarning($"Peer {id} not found in dictionary.");
         }
 
         private void OnClientConnect(ISignaling signaler, ConnectData data)
         {
+            if (maxClients != -1 && clientPeerDict.Count >= maxClients)
+            {
+                Debug.LogWarning($"[OnClientConnect] Only a maximum of {maxClients} are allowed to connect.");
+                return;
+            }
+
             PeerConnection peer;
-            // Debug.Log(id);
             if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
                 peer = CreatePeerConnection(data);
-                Debug.Log($"[Connect] There are now {clientPeerDict.Count} clients connected.");
-
                 peer.AddSender();
                 StartCoroutine(peer.GetStats(1.0f));
             }
@@ -176,15 +189,7 @@ namespace ArenaUnity.HybridRendering
 
         private void OnClientDisconnect(ISignaling signaler, string id)
         {
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(id, out peer))
-            {
-                clientPeerDict.Remove(id);
-                peer.Dispose();
-                Debug.Log($"[Disconnect] There are now {clientPeerDict.Count} clients connected.");
-            }
-            else
-                Debug.LogWarning($"Peer {id} not found in dictionary.");
+            RemovePeerConnection(id);
         }
 
         private void OnOffer(ISignaling signaler, SDPData offer)
@@ -218,6 +223,14 @@ namespace ArenaUnity.HybridRendering
                 Debug.LogWarning($"Peer {data.id} not found in dictionary.");
         }
 
+        private void OnClientHealthCheck(ISignaling signaler, string id) {
+            PeerConnection peer;
+            if (clientPeerDict.TryGetValue(id, out peer))
+                peer.missedHeartbeats = 0;
+            else
+                Debug.LogWarning($"Peer {id} not found in dictionary.");
+        }
+
         private void OnRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
         {
             if (!remoteRender)
@@ -234,14 +247,23 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private void BroadcastHealthCheck(object signalerObj)
+        private void HandleHealthCheck(object signalerObj)
         {
             ISignaling signaler = (ISignaling)signalerObj;
-            foreach(var item in clientPeerDict)
+            foreach (var item in clientPeerDict)
             {
-                signaler.BroadcastHealthCheck(item.Value.Id);
+                var id = item.Key;
+                var peer = item.Value;
+
+                signaler.SendHealthCheck(peer.Id);
+
+                if (peer.missedHeartbeats >= maxMissedHeartbeats)
+                    deadPeerIds.Add(id);
+
+                peer.missedHeartbeats++;
             }
         }
+
         private void onHALConnect(ISignaling signaler, ConnectData data) 
         {
             Debug.Log("Reset Signaling");
@@ -251,6 +273,15 @@ namespace ArenaUnity.HybridRendering
             ArenaClientScene.Instance.DisconnectArena();
             ArenaClientScene.Instance.ConnectArena();
             StartCoroutine(SetupSignaling());
+        }
+        
+        private void Update()
+        {
+            foreach (var deadPeerId in deadPeerIds)
+            {
+                RemovePeerConnection(deadPeerId);
+            }
+            deadPeerIds.Clear();
         }
     }
 }
