@@ -33,8 +33,6 @@ namespace ArenaUnity.HybridRendering
         public bool halStatus = false;
 
         [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
-
-        [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
         private RTCIceServer[] iceServers = new RTCIceServer[]
         {
             new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
