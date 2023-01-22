@@ -81,11 +81,13 @@ def onConnect(client, userdata, msg):
     if(data in clientDict):
         clientDict[data].add(id)
     else:
+            
             topic = "realm/g/a/hybrid_rendering/HAL/connect/" + executableQueue.pop()
             print(topic)
             scene.mqttc.publish(topic,json.dumps(request, ensure_ascii=False).encode('utf-8'))
             clientDict[data] = set()
             clientDict[data].add(id)
+            setupHybrid()
 
     return
 
