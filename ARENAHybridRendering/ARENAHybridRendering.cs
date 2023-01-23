@@ -42,11 +42,6 @@ namespace ArenaUnity.HybridRendering
 
         internal System.Threading.Timer timer;
 
-        private void Awake()
-        {
-            WebRTC.Initialize();
-        }
-
         private void Start()
         {
             if (!runOnStart)
@@ -63,7 +58,6 @@ namespace ArenaUnity.HybridRendering
         private void OnDestroy()
         {
             timer.Dispose();
-            WebRTC.Dispose();
         }
 
         private IEnumerator SetupSignaling()
