@@ -21,7 +21,7 @@ namespace ArenaUnity.HybridRendering
         public int maxClients = -1;
 
         [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
-        public int maxMissedHeartbeats = 3;
+        public int maxMissedHeartbeats = 10;
 
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;

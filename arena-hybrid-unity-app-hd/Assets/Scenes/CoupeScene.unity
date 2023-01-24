@@ -5290,7 +5290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463029480}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.00000011920932, y: 3.6, z: 1.0000083}
+  m_LocalPosition: {x: -0.00000011920932, y: 3.6, z: 1.0000091}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23256,7 +23256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxClients: -1
-  maxMissedHeartbeats: 3
+  maxMissedHeartbeats: 20
   remoteRender: 1
   runOnStart: 1
   iceServers:
