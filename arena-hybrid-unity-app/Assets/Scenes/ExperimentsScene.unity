@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxClients: -1
-  maxMissedHeartbeats: 3
+  maxMissedHeartbeats: 10
   remoteRender: 0
   runOnStart: 1
   iceServers:
