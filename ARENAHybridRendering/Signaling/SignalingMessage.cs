@@ -60,6 +60,16 @@ namespace ArenaUnity.HybridRendering.Signaling
     }
 
     [System.Serializable]
+    public class ClientStatus
+    {
+        public bool inVRMode;
+        public bool isARMode;
+        public bool hasDualCameras;
+        // public float ipd;
+        public long ts;
+    }
+
+    [System.Serializable]
     public class RemoteObjectStatusUpdate
     {
         public string object_id;

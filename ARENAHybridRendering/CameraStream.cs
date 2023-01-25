@@ -64,17 +64,16 @@ namespace ArenaUnity.HybridRendering
         private uint m_MinBitrate = s_defaultMinBitrate;
         private uint m_MaxBitrate = s_defaultMaxBitrate;
 
-        private HybridCamera m_hybridCameraMono;
         private HybridCamera m_hybridCameraLeft;
         private HybridCamera m_hybridCameraRight;
 
-        private RenderTexture m_renderTexture;
+        private RenderTexture m_rightEyeTargetTexture;
 
         private MediaStreamTrack m_track;
 
-        public bool InDualCameraMode
+        public bool hasDualCameras
         {
-            get { return !m_hybridCameraMono.gameObject.activeSelf; }
+            get { return !m_hybridCameraLeft.gameObject.activeSelf; }
         }
 
         private List<ClientPose> clientPoses = new List<ClientPose>();
@@ -115,11 +114,9 @@ namespace ArenaUnity.HybridRendering
 
         private void Awake()
         {
-            m_hybridCameraMono = addCamera("mono");
             m_hybridCameraLeft = addCamera("left");
             m_hybridCameraRight = addCamera("right");
             // disable stereo cameras at first
-            m_hybridCameraLeft.gameObject.SetActive(false);
             m_hybridCameraRight.gameObject.SetActive(false);
         }
 
@@ -129,17 +126,20 @@ namespace ArenaUnity.HybridRendering
             m_track = null;
         }
 
-        public void SetDualCameraMode(bool active)
+        public void SetHasDualCameras(bool active, float ipd=0.67f)
         {
-            m_hybridCameraMono.gameObject.SetActive(!active);
-            m_hybridCameraLeft.gameObject.SetActive(active);
             m_hybridCameraRight.gameObject.SetActive(active);
-        }
-
-        public void SetIPD(float ipd)
-        {
-            m_hybridCameraLeft.transform.position = new Vector3(-ipd/2f, 0f, 0f);
-            m_hybridCameraRight.transform.position = new Vector3(ipd/2f, 0f, 0f);
+            if (!active)
+            {
+                m_hybridCameraLeft.transform.localPosition = ArenaUnity.ToUnityPosition(Vector3.zero);
+                m_hybridCameraLeft.SetRenderTextureOther(null);
+            }
+            else if (m_rightEyeTargetTexture)
+            {
+                m_hybridCameraLeft.transform.localPosition = ArenaUnity.ToUnityPosition(new Vector3(-ipd/2f, 0f, 0f));
+                m_hybridCameraRight.transform.localPosition = ArenaUnity.ToUnityPosition(new Vector3(ipd/2f, 0f, 0f));
+                m_hybridCameraLeft.SetRenderTextureOther(m_rightEyeTargetTexture);
+            }
         }
 
         internal void CreateTrack(int screenWidth, int screenHeight)
@@ -149,11 +149,7 @@ namespace ArenaUnity.HybridRendering
 
         private IEnumerator CreateTrackCoroutine(int screenWidth, int screenHeight)
         {
-            WaitForCreateTrack op;
-            if (!InDualCameraMode)
-                op = m_hybridCameraMono.CreateTrack(screenWidth, screenHeight);
-            else
-                op = m_hybridCameraLeft.CreateTrack(screenWidth, screenHeight);
+            WaitForCreateTrack op = m_hybridCameraLeft.CreateTrack(screenWidth, screenHeight);
 
             if (op.Track == null)
                 yield return op;
@@ -166,11 +162,7 @@ namespace ArenaUnity.HybridRendering
             }
             m_track = op.Track;
 
-            if (InDualCameraMode)
-            {
-                var rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
-                m_hybridCameraLeft.SetRenderTextureOther(rightEyeTargetTexture);
-            }
+            m_rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
         }
 
         public void SetFrameRate(float frameRate)
