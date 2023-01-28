@@ -8,6 +8,8 @@ git clone https://github.com/EdwardLu2018/arena-hybrid-unity-app.git
 
 # Usage
 
+Development uses Unity Editor Version 2021.3.16
+
 ## Standard Render Pipeline
 Open `arena-hybrid-unity-app` in Unity.
 
