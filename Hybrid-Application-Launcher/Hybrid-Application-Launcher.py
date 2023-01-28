@@ -6,9 +6,14 @@ import logging
 import uuid
 
 scene = Scene(host="arena-dev1.conix.io", scene="example")
+CLIENT_CONNECT = "realm/g/a/hybrid_rendering/client/connect/#"
+CLIENT_DISCONNECT = "realm/g/a/hybrid_rendering/client/disconnect/#"
+CLIENT_REMOTE = "realm/g/a/hybrid_rendering/client/remote/#"
+SERVER_HEALTH = "realm/g/a/hybrid_rendering/server/health/#"
+HAL_CONNECT = "realm/g/a/hybrid_rendering/HAL/connect/"
+
 clientDict = dict()
 SceneDict = dict()
-healthStatusDict = dict()
 remoteRender = dict()
 executableQueue = []
 def openExecutable(data):
@@ -60,6 +65,7 @@ def sendRenderStatus(client, userdata,msg):
     request = json.loads((msg.payload.decode("utf-8")))
     print(request)
     return 
+    
 def onConnect(client, userdata, msg):
     
     request = json.loads((msg.payload.decode("utf-8")))
@@ -81,13 +87,11 @@ def onConnect(client, userdata, msg):
     if(data in clientDict):
         clientDict[data].add(id)
     else:
-            
-            topic = "realm/g/a/hybrid_rendering/HAL/connect/" + executableQueue.pop()
+            topic = HAL_CONNECT + executableQueue.pop()
             print(topic)
             scene.mqttc.publish(topic,json.dumps(request, ensure_ascii=False).encode('utf-8'))
             clientDict[data] = set()
             clientDict[data].add(id)
-            setupHybrid()
 
     return
 
@@ -110,8 +114,8 @@ def closeExecutable(data):
 
 setupHybrid()
 
-scene.message_callback_add("realm/g/a/hybrid_rendering/client/connect/#", onConnect)
-scene.message_callback_add("realm/g/a/hybrid_rendering/client/disconnect/#", onDisconnect)
-scene.message_callback_add("realm/g/a/hybrid_rendering/client/remote/#", renderStatus)
-scene.message_callback_add("realm/g/a/hybrid_rendering/server/health/#", sendRenderStatus)
+scene.message_callback_add(CLIENT_CONNECT, onConnect)
+scene.message_callback_add(CLIENT_DISCONNECT, onDisconnect)
+scene.message_callback_add(CLIENT_REMOTE, renderStatus)
+scene.message_callback_add(SERVER_HEALTH, sendRenderStatus)
 scene.run_tasks()
