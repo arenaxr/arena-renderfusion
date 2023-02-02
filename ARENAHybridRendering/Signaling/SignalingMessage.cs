@@ -62,7 +62,7 @@ namespace ArenaUnity.HybridRendering.Signaling
     [System.Serializable]
     public class ClientStatus
     {
-        public bool inVRMode;
+        public bool isVRMode;
         public bool isARMode;
         public bool hasDualCameras;
         public float ipd;
