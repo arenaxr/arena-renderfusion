@@ -22,12 +22,10 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.17.7",
+      "version": "2.0.0",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "com.unity.services.core": "1.0.1"
-      },
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.editorcoroutines": {
@@ -49,8 +47,8 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.ide.visualstudio": "2.0.16",
-        "com.unity.ide.rider": "3.0.16",
+        "com.unity.ide.visualstudio": "2.0.17",
+        "com.unity.ide.rider": "3.0.18",
         "com.unity.ide.vscode": "1.2.5",
         "com.unity.editorcoroutines": "1.0.0",
         "com.unity.performance.profile-analyzer": "1.1.1",
@@ -59,7 +57,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.16",
+      "version": "3.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -68,7 +66,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.16",
+      "version": "2.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -105,7 +103,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.8",
+      "version": "12.1.10",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -115,7 +113,7 @@
       }
     },
     "com.unity.render-pipelines.high-definition": {
-      "version": "12.1.8",
+      "version": "12.1.10",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -125,18 +123,18 @@
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.terrain": "1.0.0",
-        "com.unity.render-pipelines.core": "12.1.8",
-        "com.unity.shadergraph": "12.1.8",
-        "com.unity.visualeffectgraph": "12.1.8",
-        "com.unity.render-pipelines.high-definition-config": "12.1.8"
+        "com.unity.render-pipelines.core": "12.1.10",
+        "com.unity.shadergraph": "12.1.10",
+        "com.unity.visualeffectgraph": "12.1.10",
+        "com.unity.render-pipelines.high-definition-config": "12.1.10"
       }
     },
     "com.unity.render-pipelines.high-definition-config": {
-      "version": "12.1.8",
+      "version": "12.1.10",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.8"
+        "com.unity.render-pipelines.core": "12.1.10"
       }
     },
     "com.unity.searcher": {
@@ -144,17 +142,6 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.services.core": {
-      "version": "1.6.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.modules.androidjni": "1.0.0"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.settings-manager": {
@@ -165,11 +152,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.8",
+      "version": "12.1.10",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.8",
+        "com.unity.render-pipelines.core": "12.1.10",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -225,16 +212,16 @@
       }
     },
     "com.unity.visualeffectgraph": {
-      "version": "12.1.8",
+      "version": "12.1.10",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.shadergraph": "12.1.8",
-        "com.unity.render-pipelines.core": "12.1.8"
+        "com.unity.shadergraph": "12.1.10",
+        "com.unity.render-pipelines.core": "12.1.10"
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.7.8",
+      "version": "1.8.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -311,7 +298,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "8f6d583a605b80d619570ec0f1ef29afad52d826"
+      "hash": "902f77de8e65e8464053bdf28f5f7e75f9d635aa"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

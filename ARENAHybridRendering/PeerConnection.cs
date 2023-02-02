@@ -156,7 +156,7 @@ namespace ArenaUnity.HybridRendering
         {
             string statusMsg = System.Text.Encoding.UTF8.GetString(bytes);
             var clientStatus = JsonUtility.FromJson<ClientStatus>(statusMsg);
-            bool inVRMode = clientStatus.inVRMode;
+            bool isVRMode = clientStatus.isVRMode;
             bool isARMode = clientStatus.isARMode;
             bool hasDualCameras = clientStatus.hasDualCameras;
             float ipd = clientStatus.ipd;
