@@ -126,18 +126,35 @@ namespace ArenaUnity.HybridRendering
             m_track = null;
         }
 
-        public void SetHasDualCameras(bool active, float ipd=0.064f)
+        public void UpdateStateWithStatus(ClientStatus clientStatus)
         {
-            m_hybridCameraRight.gameObject.SetActive(active);
-            if (!active)
+            bool isVRMode = clientStatus.isVRMode;
+            bool isARMode = clientStatus.isARMode;
+            bool hasDualCameras = clientStatus.hasDualCameras;
+
+            m_hybridCameraRight.gameObject.SetActive(hasDualCameras);
+            if (!hasDualCameras)
             {
-                m_hybridCameraLeft.transform.localPosition = ArenaUnity.ToUnityPosition(Vector3.zero);
+                m_hybridCameraLeft.transform.localPosition = Vector3.zero;
+                m_hybridCameraRight.transform.localPosition = Vector3.zero;
+
+                m_hybridCameraLeft.setCameraParams();
+                m_hybridCameraRight.setCameraParams();
+
                 m_hybridCameraLeft.SetRenderTextureOther(null);
             }
             else if (m_rightEyeTargetTexture)
             {
-                m_hybridCameraLeft.transform.localPosition = ArenaUnity.ToUnityPosition(new Vector3(-ipd/2f, 0f, 0f));
-                m_hybridCameraRight.transform.localPosition = ArenaUnity.ToUnityPosition(new Vector3(ipd/2f, 0f, 0f));
+                float ipd = clientStatus.ipd;
+                var leftProj = clientStatus.leftProj;
+                var rightProj = clientStatus.rightProj;
+
+                m_hybridCameraLeft.transform.localPosition = new Vector3(-ipd/2f, 0f, 0f);
+                m_hybridCameraRight.transform.localPosition = new Vector3(ipd/2f, 0f, 0f);
+
+                if (leftProj != null && leftProj.Length > 0) m_hybridCameraLeft.setCameraProj(leftProj);
+                if (rightProj != null && rightProj.Length > 0) m_hybridCameraRight.setCameraProj(rightProj);
+
                 m_hybridCameraLeft.SetRenderTextureOther(m_rightEyeTargetTexture);
             }
         }

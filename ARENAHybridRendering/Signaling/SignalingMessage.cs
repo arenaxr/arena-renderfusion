@@ -66,6 +66,8 @@ namespace ArenaUnity.HybridRendering.Signaling
         public bool isARMode;
         public bool hasDualCameras;
         public float ipd;
+        public float[] leftProj;
+        public float[] rightProj;
         public long ts;
     }
 

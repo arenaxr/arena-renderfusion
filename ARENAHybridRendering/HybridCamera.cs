@@ -36,20 +36,47 @@ namespace ArenaUnity.HybridRendering
 
         static readonly int s_defaultDepth = 16;
 
-        public Camera m_camera;
+        private Camera m_camera;
 
         private Material m_material;
 
         private RenderTexture m_renderTexture;
 
-        private Camera setCameraParams() {
+        public void setCameraParams() {
             var cam = GetComponent<Camera>();
             cam.fieldOfView = 80f; // match arena
             cam.nearClipPlane = 0.1f; // match arena
             cam.farClipPlane = 10000f; // match arena
-            cam.backgroundColor = Color.clear;
-            cam.depthTextureMode = DepthTextureMode.Depth;
-            return cam;
+        }
+
+        public void setCameraProj(float[] proj) {
+            var cam = GetComponent<Camera>();
+            float x = proj[0];
+            float a = proj[1];
+            float y = proj[2];
+            float b = proj[3];
+            float c = proj[4];
+            float d = proj[5];
+            float e = proj[6];
+
+            Matrix4x4 m = new Matrix4x4();
+            m[0, 0] = x;
+            m[0, 1] = 0;
+            m[0, 2] = a;
+            m[0, 3] = 0;
+            m[1, 0] = 0;
+            m[1, 1] = y;
+            m[1, 2] = b;
+            m[1, 3] = 0;
+            m[2, 0] = 0;
+            m[2, 1] = 0;
+            m[2, 2] = c;
+            m[2, 3] = d;
+            m[3, 0] = 0;
+            m[3, 1] = 0;
+            m[3, 2] = e;
+            m[3, 3] = 0;
+            cam.projectionMatrix = m;
         }
 
         private void Awake()
@@ -59,7 +86,9 @@ namespace ArenaUnity.HybridRendering
             else
                 Debug.LogError("Cannot find required shader Hidden/RGBDepthShader!");
 
-            m_camera = setCameraParams();
+            m_camera = GetComponent<Camera>();
+            m_camera.backgroundColor = Color.clear;
+            m_camera.depthTextureMode = DepthTextureMode.Depth;
         }
 
         private void OnDestroy()
