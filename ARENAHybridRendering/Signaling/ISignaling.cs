@@ -1,5 +1,10 @@
-using Unity.WebRTC;
+using System;
+using System.Text;
 using System.Threading;
+using System.Collections;
+using Unity.WebRTC;
+using UnityEngine;
+using ArenaUnity;
 
 namespace ArenaUnity.HybridRendering.Signaling
 {
@@ -28,6 +33,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         void SetSyncContext(SynchronizationContext mainThreadContext);
         void OpenConnection();
         void CloseConnection();
+        IEnumerator SendConnect();
         void SendOffer(string id, RTCSessionDescription offer);
         void SendAnswer(string id, RTCSessionDescription answer);
         void SendCandidate(string id, RTCIceCandidate candidate);

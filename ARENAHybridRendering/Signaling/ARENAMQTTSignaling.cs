@@ -19,6 +19,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         private readonly string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/candidate";
         private readonly string SERVER_HEALTH_CHECK_PREFIX = "realm/g/a/hybrid_rendering/server/health";
         private readonly string SERVER_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/stats";
+        private readonly string SERVER_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/connect";
 
         private readonly string CLIENT_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/connect";
         private readonly string CLIENT_DISCONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/disconnect";
@@ -35,6 +36,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         private string SERVER_CANDIDATE_TOPIC;
         private string SERVER_HEALTH_CHECK_TOPIC;
         private string SERVER_STATS_TOPIC;
+        private string SERVER_CONNECT_TOPIC;
 
         public string Url { get { return "arenaxr.org"; } }
 
@@ -50,6 +52,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
             SERVER_HEALTH_CHECK_TOPIC = $"{SERVER_HEALTH_CHECK_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
             SERVER_STATS_TOPIC = $"{SERVER_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
+            SERVER_CONNECT_TOPIC = $"{SERVER_CONNECT_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}";
 
             base.Awake();
             name = "Hybrid Rendering Signaler (Starting...)";
@@ -107,6 +110,22 @@ namespace ArenaUnity.HybridRendering.Signaling
         {
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
             Publish(topic, payload);
+        }
+
+        public IEnumerator SendConnect()
+        {
+            while (true) {
+                yield return new WaitForSeconds(5);
+
+                RoutedMessage<string> routedMessage = new RoutedMessage<string>
+                {
+                    type = "connect",
+                    source = "server",
+                    id = m_clientId,
+                    data = ""
+                };
+                Publish(SERVER_CONNECT_TOPIC, JsonUtility.ToJson(routedMessage));
+            }
         }
 
         public void SendOffer(string id, RTCSessionDescription offer)
@@ -175,6 +194,7 @@ namespace ArenaUnity.HybridRendering.Signaling
             Publish(SERVER_STATS_TOPIC, stats);
         }
 
+
         protected override void ProcessMessage(byte[] msg)
         {
             // msg.Topic, msg.Message
@@ -187,12 +207,11 @@ namespace ArenaUnity.HybridRendering.Signaling
                 if (routedMessage.source == "server") return;
 
                 // Debug.Log($"MQTT Received message: {content}");
-
-                if (routedMessage.type == "connect")
+                if (routedMessage.type == "connect-ack")
                 {
                     var routedMessageConnectData = JsonUtility.FromJson<RoutedMessage<ConnectData>>(content);
                     m_mainThreadContext.Post(d => OnClientConnect?.Invoke(this, routedMessageConnectData.data), null);
-                }
+                }     
                 else if (routedMessage.type == "disconnect")
                 {
                     m_mainThreadContext.Post(d => OnClientDisconnect?.Invoke(this, routedMessage.id), null);

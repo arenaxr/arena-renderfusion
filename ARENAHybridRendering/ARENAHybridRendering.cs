@@ -82,6 +82,7 @@ namespace ArenaUnity.HybridRendering
             // sets up heartbeats to send to client every second
             TimerCallback timercallback = new TimerCallback(HandleHealthCheck);
             timer = new Timer(timercallback, signaler as object, 1000, 1000);
+            StartCoroutine(signaler.SendConnect());
         }
 
         private void OnSignalerStart(ISignaling signaler)
