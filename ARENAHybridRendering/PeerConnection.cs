@@ -124,7 +124,10 @@ namespace ArenaUnity.HybridRendering
 
         public void AddSender(bool dualCameraMode=false)
         {
-            camStream.SetHasDualCameras(dualCameraMode);
+            ClientStatus clientStatus = new ClientStatus{
+                hasDualCameras = dualCameraMode,
+            };
+            camStream.UpdateStateWithStatus(clientStatus);
             camStream.CreateTrack(m_screenWidth, m_screenHeight);
 
             RTCRtpTransceiverInit init = GetTransceiverInit();
@@ -156,11 +159,7 @@ namespace ArenaUnity.HybridRendering
         {
             string statusMsg = System.Text.Encoding.UTF8.GetString(bytes);
             var clientStatus = JsonUtility.FromJson<ClientStatus>(statusMsg);
-            bool isVRMode = clientStatus.isVRMode;
-            bool isARMode = clientStatus.isARMode;
-            bool hasDualCameras = clientStatus.hasDualCameras;
-            float ipd = clientStatus.ipd;
-            camStream.SetHasDualCameras(hasDualCameras, ipd);
+            camStream.UpdateStateWithStatus(clientStatus);
             // Debug.Log(statusMsg);
         }
 
