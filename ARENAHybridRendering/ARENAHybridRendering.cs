@@ -29,11 +29,15 @@ namespace ArenaUnity.HybridRendering
         [SerializeField, Tooltip("Automatically started when called Start method.")]
         public bool runOnStart = true;
 
+        [SerializeField, Tooltip("Whether or not to use Hybrid Application Launcher")]
+        public bool halStatus = false;
+
         [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
         private RTCIceServer[] iceServers = new RTCIceServer[]
         {
             new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
         };
+
 #pragma warning restore 0649
 
         internal ISignaling signaler;
@@ -42,13 +46,34 @@ namespace ArenaUnity.HybridRendering
 
         internal System.Threading.Timer timer;
 
+        private String id = " ";
+
+        private void Awake()
+        {
+            WebRTC.Initialize();
+        }
+
         private void Start()
         {
             if (!runOnStart)
                 return;
 
 #if !UNITY_EDITOR
-            StartCoroutine(ArenaClientScene.Instance.ConnectArena());
+            string[] arguments = Environment.GetCommandLineArgs();
+
+            ArenaClientScene scene = ArenaClientScene.Instance;
+
+            if(arguments.Length >=2)
+            {
+
+            id = arguments[1];
+
+            }
+            if(halStatus) {
+            //Conect to empty scene
+            scene.namespaceName = "public";
+            scene.sceneName = "example";
+            }
 #endif
             // Debug.Log(ArenaClientScene.Instance.namespaceName);
             // Debug.Log(ArenaClientScene.Instance.sceneName);
@@ -77,6 +102,8 @@ namespace ArenaUnity.HybridRendering
             signaler.OnIceCandidate += OnIceCandidate;
             signaler.OnClientHealthCheck += OnClientHealthCheck;
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
+            signaler.onHALConnect += onHALConnect;
+            signaler.updateHALInfo(id,halStatus);
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
@@ -235,6 +262,17 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
+        private void onHALConnect(ISignaling signaler, ConnectData data) 
+        {
+            Debug.Log("Reset Signaling");
+            string[] sceneInfo = data.namespacedScene.Split('/');
+            ArenaClientScene.Instance.namespaceName = sceneInfo[0];
+            ArenaClientScene.Instance.sceneName = sceneInfo[1];
+            ArenaClientScene.Instance.DisconnectArena();
+            ArenaClientScene.Instance.ConnectArena();
+            StartCoroutine(SetupSignaling());
+        }
+        
         private void Update()
         {
             foreach (var deadPeerId in deadPeerIds)
