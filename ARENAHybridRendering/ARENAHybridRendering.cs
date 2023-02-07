@@ -23,6 +23,9 @@ namespace ArenaUnity.HybridRendering
         [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
         public int maxMissedHeartbeats = 10;
 
+        [SerializeField, Tooltip("Discovery interval. Amount of seconds to poll for clients.")]
+        public int discoveryInterval = 5;
+
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
 
@@ -46,7 +49,9 @@ namespace ArenaUnity.HybridRendering
 
         internal System.Threading.Timer timer;
 
-        private String id = " ";
+        private String m_id = "";
+
+        private int timerCounter = 0;
 
         private void Awake()
         {
@@ -63,20 +68,20 @@ namespace ArenaUnity.HybridRendering
 
             ArenaClientScene scene = ArenaClientScene.Instance;
 
-            if(arguments.Length >=2)
+            if (arguments.Length >= 2)
             {
-
-            id = arguments[1];
-
+                m_id = arguments[1];
             }
-            if(halStatus) {
-            //Conect to empty scene
-            scene.namespaceName = "public";
-            scene.sceneName = "example";
+
+            if (halStatus)
+            {
+                // Connect to dummy scene
+                scene.namespaceName = "public";
+                scene.sceneName = "example";
             }
+
+            StartCoroutine(scene.ConnectArena());
 #endif
-            // Debug.Log(ArenaClientScene.Instance.namespaceName);
-            // Debug.Log(ArenaClientScene.Instance.sceneName);
             StartCoroutine(SetupSignaling());
         }
 
@@ -102,14 +107,15 @@ namespace ArenaUnity.HybridRendering
             signaler.OnIceCandidate += OnIceCandidate;
             signaler.OnClientHealthCheck += OnClientHealthCheck;
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
-            signaler.onHALConnect += onHALConnect;
-            signaler.updateHALInfo(id,halStatus);
+            signaler.OnHALConnect += OnHALConnect;
+
+            signaler.UpdateHALInfo(m_id, halStatus);
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
-            TimerCallback timercallback = new TimerCallback(HandleHealthCheck);
+            TimerCallback timercallback = new TimerCallback(HandleTimerCallback);
             timer = new Timer(timercallback, signaler as object, 1000, 1000);
-            StartCoroutine(signaler.SendConnect());
+            signaler.SendConnect();
         }
 
         private void OnSignalerStart(ISignaling signaler)
@@ -245,9 +251,16 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private void HandleHealthCheck(object signalerObj)
+        private void HandleTimerCallback(object signalerObj)
         {
             ISignaling signaler = (ISignaling)signalerObj;
+
+            if (timerCounter % discoveryInterval == 0)
+            {
+                signaler.SendConnect();
+            }
+            timerCounter++;
+
             foreach (var item in clientPeerDict)
             {
                 var id = item.Key;
@@ -262,7 +275,7 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        private void onHALConnect(ISignaling signaler, ConnectData data) 
+        private void OnHALConnect(ISignaling signaler, ConnectData data)
         {
             Debug.Log("Reset Signaling");
             string[] sceneInfo = data.namespacedScene.Split('/');
@@ -272,7 +285,7 @@ namespace ArenaUnity.HybridRendering
             ArenaClientScene.Instance.ConnectArena();
             StartCoroutine(SetupSignaling());
         }
-        
+
         private void Update()
         {
             foreach (var deadPeerId in deadPeerIds)

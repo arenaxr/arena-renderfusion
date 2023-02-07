@@ -13,8 +13,10 @@ namespace ArenaUnity.HybridRendering.Signaling
         private SynchronizationContext m_mainThreadContext;
 
         private string m_clientId;
-        private string halID;
-        private bool halStatus;
+
+        private string m_halID;
+        private bool m_halStatus;
+
         private readonly string SERVER_OFFER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/offer";
         private readonly string SERVER_ANSWER_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/answer";
         private readonly string SERVER_CANDIDATE_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/server/candidate";
@@ -32,6 +34,7 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         private readonly string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/remote";
         private readonly string HAL_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/HAL/connect";
+
         private string SERVER_OFFER_TOPIC;
         private string SERVER_ANSWER_TOPIC;
         private string SERVER_CANDIDATE_TOPIC;
@@ -71,7 +74,7 @@ namespace ArenaUnity.HybridRendering.Signaling
         public event OnIceCandidateHandler OnIceCandidate;
         public event OnClientHealthCheckHandler OnClientHealthCheck;
         public event OnRemoteObjectStatusUpdateHandler OnRemoteObjectStatusUpdate;
-        public event onHALConnectHandler onHALConnect;
+        public event OnHALConnectHandler OnHALConnect;
 
         public void ConnectArena()
         {
@@ -96,8 +99,10 @@ namespace ArenaUnity.HybridRendering.Signaling
             Subscribe(new string[] { $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{CLIENT_HEALTH_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             // Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
+
             Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
-            Subscribe(new string[] { $"{HAL_CONNECT_TOPIC_PREFIX}/{halID}/#" });
+            Subscribe(new string[] { $"{HAL_CONNECT_TOPIC_PREFIX}/{m_halID}/#" });
+
             Debug.Log("Hybrid Rendering MQTT client connected!");
             name = "Hybrid Rendering Signaler (MQTT Connected)";
             m_mainThreadContext.Post(d => OnStart?.Invoke(this), null);
@@ -114,20 +119,16 @@ namespace ArenaUnity.HybridRendering.Signaling
             Publish(topic, payload);
         }
 
-        public IEnumerator SendConnect()
+        public void SendConnect()
         {
-            while (true) {
-                yield return new WaitForSeconds(5);
-
-                RoutedMessage<string> routedMessage = new RoutedMessage<string>
-                {
-                    type = "connect",
-                    source = "server",
-                    id = m_clientId,
-                    data = ""
-                };
-                Publish(SERVER_CONNECT_TOPIC, JsonUtility.ToJson(routedMessage));
-            }
+            RoutedMessage<string> routedMessage = new RoutedMessage<string>
+            {
+                type = "connect",
+                source = "server",
+                id = m_clientId,
+                data = ""
+            };
+            Publish(SERVER_CONNECT_TOPIC, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendOffer(string id, RTCSessionDescription offer)
@@ -173,10 +174,10 @@ namespace ArenaUnity.HybridRendering.Signaling
             Publish(SERVER_HEALTH_CHECK_TOPIC, JsonUtility.ToJson(healthCheck));
         }
 
-         public void updateHALInfo(string id,bool halStatus)
+        public void UpdateHALInfo(string id, bool halStatus)
         {
-            this.halID = id;
-            this.halStatus = halStatus;
+            m_halID = id;
+            m_halStatus = halStatus;
         }
 
         public void SendCandidate(string id, RTCIceCandidate candidate)
@@ -218,7 +219,7 @@ namespace ArenaUnity.HybridRendering.Signaling
                 {
                     var routedMessageConnectData = JsonUtility.FromJson<RoutedMessage<ConnectData>>(content);
                     m_mainThreadContext.Post(d => OnClientConnect?.Invoke(this, routedMessageConnectData.data), null);
-                }     
+                }
                 else if (routedMessage.type == "disconnect")
                 {
                     m_mainThreadContext.Post(d => OnClientDisconnect?.Invoke(this, routedMessage.id), null);
@@ -279,7 +280,7 @@ namespace ArenaUnity.HybridRendering.Signaling
                 else if(routedMessage.type == "HAL")
                 {
                     var routedMessageConnectData = JsonUtility.FromJson<RoutedMessage<ConnectData>>(content);
-                    m_mainThreadContext.Post(d => onHALConnect?.Invoke(this, routedMessageConnectData.data), null);
+                    m_mainThreadContext.Post(d => OnHALConnect?.Invoke(this, routedMessageConnectData.data), null);
                 }
             }
             catch (Exception ex)
