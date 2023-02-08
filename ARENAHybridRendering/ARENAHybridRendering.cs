@@ -33,7 +33,7 @@ namespace ArenaUnity.HybridRendering
         public bool runOnStart = true;
 
         [SerializeField, Tooltip("Whether or not to use Hybrid Application Launcher")]
-        public bool halStatus = false;
+        public bool useHAL = false;
 
         [SerializeField, Tooltip("Array to set custom STUN/TURN servers.")]
         private RTCIceServer[] iceServers = new RTCIceServer[]
@@ -53,11 +53,6 @@ namespace ArenaUnity.HybridRendering
 
         private int timerCounter = 0;
 
-        private void Awake()
-        {
-            WebRTC.Initialize();
-        }
-
         private void Start()
         {
             if (!runOnStart)
@@ -73,7 +68,7 @@ namespace ArenaUnity.HybridRendering
                 m_id = arguments[1];
             }
 
-            if (halStatus)
+            if (useHAL)
             {
                 // Connect to dummy scene
                 scene.namespaceName = "public";
@@ -109,7 +104,7 @@ namespace ArenaUnity.HybridRendering
             signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
             signaler.OnHALConnect += OnHALConnect;
 
-            signaler.UpdateHALInfo(m_id, halStatus);
+            signaler.UpdateHALInfo(m_id, useHAL);
             signaler.OpenConnection();
 
             // sets up heartbeats to send to client every second
