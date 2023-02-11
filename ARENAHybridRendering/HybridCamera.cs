@@ -10,25 +10,6 @@ using ArenaUnity.HybridRendering.Signaling;
 
 namespace ArenaUnity.HybridRendering
 {
-    internal class WaitForCreateTrack : CustomYieldInstruction
-    {
-        public MediaStreamTrack Track { get { return m_track; } }
-
-        MediaStreamTrack m_track;
-
-        bool m_keepWaiting = true;
-
-        public override bool keepWaiting { get { return m_keepWaiting; } }
-
-        public WaitForCreateTrack() { }
-
-        public void Done(MediaStreamTrack track)
-        {
-            m_track = track;
-            m_keepWaiting = false;
-        }
-    }
-
     [RequireComponent(typeof(Camera))]
     public class HybridCamera : MonoBehaviour
     {
@@ -41,6 +22,8 @@ namespace ArenaUnity.HybridRendering
         private Material m_material;
 
         private RenderTexture m_renderTexture;
+
+        public bool isDualCamera;
 
         public void setCameraParams() {
             var cam = GetComponent<Camera>();
@@ -59,32 +42,35 @@ namespace ArenaUnity.HybridRendering
             float d = proj[5];
             float e = proj[6];
 
-            Matrix4x4 m = new Matrix4x4();
-            m[0, 0] = x;
-            m[0, 1] = 0;
-            m[0, 2] = a;
-            m[0, 3] = 0;
-            m[1, 0] = 0;
-            m[1, 1] = y;
-            m[1, 2] = b;
-            m[1, 3] = 0;
-            m[2, 0] = 0;
-            m[2, 1] = 0;
-            m[2, 2] = c;
-            m[2, 3] = d;
-            m[3, 0] = 0;
-            m[3, 1] = 0;
-            m[3, 2] = e;
-            m[3, 3] = 0;
-            cam.projectionMatrix = m;
+            Matrix4x4 p = new Matrix4x4();
+            p[0, 0] = x;
+            p[0, 1] = 0;
+            p[0, 2] = a;
+            p[0, 3] = 0;
+            p[1, 0] = 0;
+            p[1, 1] = y;
+            p[1, 2] = b;
+            p[1, 3] = 0;
+            p[2, 0] = 0;
+            p[2, 1] = 0;
+            p[2, 2] = c;
+            p[2, 3] = d;
+            p[3, 0] = 0;
+            p[3, 1] = 0;
+            p[3, 2] = e;
+            p[3, 3] = 0;
+            cam.projectionMatrix = p;
         }
 
         private void Awake()
         {
-            if (Shader.Find("Hidden/RGBDepthShader") != null)
-                m_material = new Material(Shader.Find("Hidden/RGBDepthShader"));
-            else
-                Debug.LogError("Cannot find required shader Hidden/RGBDepthShader!");
+            if (!GraphicsSettings.renderPipelineAsset)
+            {
+                if (Shader.Find("Hidden/RGBDepthShader") != null)
+                    m_material = new Material(Shader.Find("Hidden/RGBDepthShader"));
+                else
+                    Debug.LogError("Cannot find required shader Hidden/RGBDepthShader!");
+            }
 
             m_camera = GetComponent<Camera>();
             m_camera.backgroundColor = Color.clear;
@@ -150,16 +136,10 @@ namespace ArenaUnity.HybridRendering
             return renderTexture;
         }
 
-        internal WaitForCreateTrack CreateTrack(int screenWidth, int screenHeight)
-        {
-            CreateRenderTexture(screenWidth, screenHeight);
-            var instruction = new WaitForCreateTrack();
-            instruction.Done(new VideoStreamTrack(m_renderTexture));
-            return instruction;
-        }
-
         internal void SetRenderTextureOther(RenderTexture otherRendertexture)
         {
+            if (GraphicsSettings.renderPipelineAsset) return;
+
             if (otherRendertexture != null)
             {
                 m_material.SetInteger("_HasRightEyeTex", 1);

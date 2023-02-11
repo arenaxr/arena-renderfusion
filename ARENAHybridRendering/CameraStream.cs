@@ -10,6 +10,26 @@ using ArenaUnity.HybridRendering.Signaling;
 
 namespace ArenaUnity.HybridRendering
 {
+
+    internal class WaitForCreateTrack : CustomYieldInstruction
+    {
+        public MediaStreamTrack Track { get { return m_track; } }
+
+        MediaStreamTrack m_track;
+
+        bool m_keepWaiting = true;
+
+        public override bool keepWaiting { get { return m_keepWaiting; } }
+
+        public WaitForCreateTrack() { }
+
+        public void Done(MediaStreamTrack track)
+        {
+            m_track = track;
+            m_keepWaiting = false;
+        }
+    }
+
     internal static class RTCRtpSenderExtension
     {
         public static RTCError SetFrameRate(this RTCRtpSender sender, uint framerate)
@@ -67,6 +87,8 @@ namespace ArenaUnity.HybridRendering
         private HybridCamera m_hybridCameraLeft;
         private HybridCamera m_hybridCameraRight;
 
+
+        private RenderTexture m_renderTexture;
         private RenderTexture m_rightEyeTargetTexture;
 
         private MediaStreamTrack m_track;
@@ -141,9 +163,20 @@ namespace ArenaUnity.HybridRendering
                 m_hybridCameraLeft.setCameraParams();
                 m_hybridCameraRight.setCameraParams();
 
-                m_hybridCameraLeft.SetRenderTextureOther(null);
+                if (!GraphicsSettings.renderPipelineAsset)
+                {
+                    m_hybridCameraLeft.SetRenderTextureOther(null);
+                }
+                else
+                {
+                    m_hybridCameraLeft.GetComponent<Camera>().rect = new Rect(new Vector2(0f, 0f), new Vector2(1f, 1f));
+                    m_hybridCameraRight.GetComponent<Camera>().targetTexture = null;
+
+                    m_hybridCameraLeft.GetComponent<HybridCamera>().isDualCamera = false;
+                    m_hybridCameraRight.GetComponent<HybridCamera>().isDualCamera = false;
+                }
             }
-            else if (m_rightEyeTargetTexture)
+            else
             {
                 float ipd = clientStatus.ipd;
                 var leftProj = clientStatus.leftProj;
@@ -155,7 +188,20 @@ namespace ArenaUnity.HybridRendering
                 if (leftProj != null && leftProj.Length > 0) m_hybridCameraLeft.setCameraProj(leftProj);
                 if (rightProj != null && rightProj.Length > 0) m_hybridCameraRight.setCameraProj(rightProj);
 
-                m_hybridCameraLeft.SetRenderTextureOther(m_rightEyeTargetTexture);
+                if (!GraphicsSettings.renderPipelineAsset)
+                {
+                    if (m_rightEyeTargetTexture)
+                        m_hybridCameraLeft.SetRenderTextureOther(m_rightEyeTargetTexture);
+                }
+                else
+                {
+                    m_hybridCameraLeft.GetComponent<Camera>().rect = new Rect(new Vector2(0f, 0f), new Vector2(0.5f, 1f));
+                    m_hybridCameraLeft.GetComponent<HybridCamera>().isDualCamera = true;
+
+                    m_hybridCameraRight.GetComponent<Camera>().targetTexture = m_renderTexture;
+                    m_hybridCameraRight.GetComponent<Camera>().rect = new Rect(new Vector2(0.5f, 0f), new Vector2(0.5f, 1f));
+                    m_hybridCameraRight.GetComponent<HybridCamera>().isDualCamera = true;
+                }
             }
         }
 
@@ -164,9 +210,17 @@ namespace ArenaUnity.HybridRendering
             StartCoroutine(CreateTrackCoroutine(screenWidth, screenHeight));
         }
 
+        internal WaitForCreateTrack CreateTrackInternal(RenderTexture rt, int screenWidth, int screenHeight)
+        {
+            var instruction = new WaitForCreateTrack();
+            instruction.Done(new VideoStreamTrack(rt));
+            return instruction;
+        }
+
         private IEnumerator CreateTrackCoroutine(int screenWidth, int screenHeight)
         {
-            WaitForCreateTrack op = m_hybridCameraLeft.CreateTrack(screenWidth, screenHeight);
+            m_renderTexture = m_hybridCameraLeft.CreateRenderTexture(screenWidth, screenHeight);
+            WaitForCreateTrack op = CreateTrackInternal(m_renderTexture, screenWidth, screenHeight);
 
             if (op.Track == null)
                 yield return op;
@@ -179,7 +233,8 @@ namespace ArenaUnity.HybridRendering
             }
             m_track = op.Track;
 
-            m_rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
+            if (!GraphicsSettings.renderPipelineAsset)
+                m_rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
         }
 
         public void SetFrameRate(float frameRate)
