@@ -53,13 +53,15 @@ Shader "Hidden/Shader/DepthShaderHD"
             {
                 float4 col;
                 uint2 positionSS;
-                if (i.uv.x > 1.0/2.0) {
+                if (i.uv.x > 1.0/2.0)
+                {
                     positionSS = float2(i.uv.x * 2.0 - 1.0, i.uv.y) * _ScreenSize.xy;
                     float depth = LoadCameraDepth(positionSS);
                     depth = Linear01Depth(depth, _ZBufferParams);
                     col.xyz = 50 * depth;
                 }
-                else {
+                else
+                {
                     positionSS = float2(i.uv.x * 2.0, i.uv.y) * _ScreenSize.xy;
                     col.xyz = LOAD_TEXTURE2D_X(_MainTex, positionSS).xyz;
                 }
