@@ -509,6 +509,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210407, guid: 6c56638ac1ff44ac7b5f3e17b66d52ca, type: 3}
+      propertyPath: sceneName
+      value: example1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210407, guid: 6c56638ac1ff44ac7b5f3e17b66d52ca, type: 3}
+      propertyPath: namespaceName
+      value: Edward
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210407, guid: 6c56638ac1ff44ac7b5f3e17b66d52ca, type: 3}
+      propertyPath: renderCameras
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
