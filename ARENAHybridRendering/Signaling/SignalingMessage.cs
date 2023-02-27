@@ -49,6 +49,7 @@ namespace ArenaUnity.HybridRendering.Signaling
     [System.Serializable]
     public class ClientPose
     {
+        public int id;
         public float x;
         public float y;
         public float z;

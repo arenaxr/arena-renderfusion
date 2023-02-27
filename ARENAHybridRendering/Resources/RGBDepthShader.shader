@@ -5,6 +5,7 @@ Shader "Hidden/RGBDepthShader"
         _MainTex ("Texture", 2D) = "white" {}
         _RightEyeTex ("RightEyeTexture", 2D) = "white" {}
         _HasRightEyeTex ("HasRightEyeTex", Integer) = 0
+        _FrameID ("FrameID", Integer) = 0
     }
     SubShader
     {
@@ -42,9 +43,12 @@ Shader "Hidden/RGBDepthShader"
             sampler2D _MainTex;
             sampler2D _RightEyeTex;
             int _HasRightEyeTex;
+            int _FrameID;
 
             sampler2D _CameraDepthNormalsTexture;
             sampler2D _CameraDepthTexture;
+
+            uniform float4 _MainTex_TexelSize;
 
             // float4x4 UNITY_MATRIX_IV;
 
@@ -156,12 +160,20 @@ Shader "Hidden/RGBDepthShader"
             {
                 fixed4 col;
                 if (_HasRightEyeTex == 0)
-                {
                     col = RGBDepthSideBySideSingle(i);
-                }
                 else
-                {
                     col = RGBDepthSideBySideDual(i);
+
+                int width = _MainTex_TexelSize.z;
+                int height = _MainTex_TexelSize.w;
+                int x = i.uv.x * width;
+                int y = (1 - i.uv.y) * height;
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= 1)) {
+                    x = x - (width - 32);
+                    if ((_FrameID >> x) & 1)
+                        col.gb = 1;
+                    else
+                        col.gb = 0;
                 }
 
                 return col;
