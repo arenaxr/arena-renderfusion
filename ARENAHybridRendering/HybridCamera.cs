@@ -22,17 +22,18 @@ namespace ArenaUnity.HybridRendering
         private Material m_material;
 
         private RenderTexture m_renderTexture;
-
         public bool isDualCamera;
 
-        public void setCameraParams() {
+        public void setCameraParams()
+        {
             var cam = GetComponent<Camera>();
             cam.fieldOfView = 80f; // match arena
             cam.nearClipPlane = 0.1f; // match arena
             cam.farClipPlane = 10000f; // match arena
         }
 
-        public void setCameraProj(float[] proj) {
+        public void setCameraProj(float[] proj)
+        {
             var cam = GetComponent<Camera>();
             float x = proj[0];
             float a = proj[1];
@@ -69,7 +70,7 @@ namespace ArenaUnity.HybridRendering
                 if (Shader.Find("Hidden/RGBDepthShader") != null)
                     m_material = new Material(Shader.Find("Hidden/RGBDepthShader"));
                 else
-                    Debug.LogError("Cannot find required shader Hidden/RGBDepthShader!");
+                    throw new InvalidOperationException("Cannot find required shader Hidden/RGBDepthShader!");
             }
 
             m_camera = GetComponent<Camera>();
@@ -149,6 +150,11 @@ namespace ArenaUnity.HybridRendering
                 m_material.SetInteger("_HasRightEyeTex", 0);
                 m_material.SetTexture("_RightEyeTex", null);
             }
+        }
+
+        internal void setFrameID(int frameID)
+        {
+            m_material.SetInteger("_FrameID", frameID);
         }
 
         // private void OnPreRender()
