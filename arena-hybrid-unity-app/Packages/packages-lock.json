@@ -99,7 +99,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.2",
+      "version": "1.7.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -161,7 +161,7 @@
       "url": "https://packages.unity.com"
     },
     "io.conix.arena.unity": {
-      "version": "https://github.com/EdwardLu2018/arena-unity.git",
+      "version": "https://github.com/arenaxr/arena-unity.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -207,7 +207,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "76badb29c513216648ce2cb6c539d427f09e302b"
+      "hash": "f1563948eda86b7cf4839b88db521d2996a322c9"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
