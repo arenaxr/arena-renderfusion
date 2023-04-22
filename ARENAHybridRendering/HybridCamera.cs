@@ -22,7 +22,9 @@ namespace ArenaUnity.HybridRendering
         private Material m_material;
 
         private RenderTexture m_renderTexture;
-        public bool isDualCamera;
+
+        public bool IsDualCamera;
+        public int FrameID;
 
         public void setCameraParams()
         {
@@ -152,9 +154,14 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        internal void setFrameID(int frameID)
+        internal void SetFrameID(int frameID)
         {
-            m_material.SetInteger("_FrameID", frameID);
+            FrameID = frameID;
+
+            if (m_material)
+            {
+                m_material.SetInteger("_FrameID", FrameID);
+            }
         }
 
         // private void OnPreRender()

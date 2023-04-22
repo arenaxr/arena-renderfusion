@@ -45,7 +45,8 @@ Shader "Hidden/RGBDepthShaderHD"
             TEXTURE2D_X(_MainTex);
             TEXTURE2D_X(_DepthTexture);
 
-            float _DualCameras;
+            int _DualCameras;
+            int _FrameID;
 
             float4 CustomPostProcess(Varyings i) : SV_Target
             {
@@ -100,6 +101,18 @@ Shader "Hidden/RGBDepthShaderHD"
                         depth = Linear01Depth(depth, _ZBufferParams);
                         col.rgb = 50 * depth;
                     }
+                }
+
+                int width = _ScreenSize.x;
+                int height =  _ScreenSize.y;
+                int x = i.uv.x * width;
+                int y = (1 - i.uv.y) * height;
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= 1)) {
+                    // x = x - (width - 32);
+                    if ((_FrameID >> x) & 1)
+                        col.gb = 1;
+                    else
+                        col.gb = 0;
                 }
 
                 return col;

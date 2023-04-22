@@ -172,8 +172,8 @@ namespace ArenaUnity.HybridRendering
                     m_hybridCameraLeft.GetComponent<Camera>().rect = new Rect(new Vector2(0f, 0f), new Vector2(1f, 1f));
                     m_hybridCameraRight.GetComponent<Camera>().targetTexture = null;
 
-                    m_hybridCameraLeft.GetComponent<HybridCamera>().isDualCamera = false;
-                    m_hybridCameraRight.GetComponent<HybridCamera>().isDualCamera = false;
+                    m_hybridCameraLeft.GetComponent<HybridCamera>().IsDualCamera = false;
+                    m_hybridCameraRight.GetComponent<HybridCamera>().IsDualCamera = false;
                 }
             }
             else
@@ -196,11 +196,11 @@ namespace ArenaUnity.HybridRendering
                 else
                 {
                     m_hybridCameraLeft.GetComponent<Camera>().rect = new Rect(new Vector2(0f, 0f), new Vector2(0.5f, 1f));
-                    m_hybridCameraLeft.GetComponent<HybridCamera>().isDualCamera = true;
+                    m_hybridCameraLeft.GetComponent<HybridCamera>().IsDualCamera = true;
 
                     m_hybridCameraRight.GetComponent<Camera>().targetTexture = m_renderTexture;
                     m_hybridCameraRight.GetComponent<Camera>().rect = new Rect(new Vector2(0.5f, 0f), new Vector2(0.5f, 1f));
-                    m_hybridCameraRight.GetComponent<HybridCamera>().isDualCamera = true;
+                    m_hybridCameraRight.GetComponent<HybridCamera>().IsDualCamera = true;
                 }
             }
         }
@@ -312,10 +312,7 @@ namespace ArenaUnity.HybridRendering
 
         private void updatePose(ClientPose clientPose)
         {
-            if (GraphicsSettings.renderPipelineAsset == null)
-            {
-                m_hybridCameraLeft.setFrameID(clientPose.id);
-            }
+            m_hybridCameraLeft.SetFrameID(clientPose.id);
 
             gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
                 clientPose.x,

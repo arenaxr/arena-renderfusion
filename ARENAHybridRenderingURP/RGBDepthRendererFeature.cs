@@ -8,7 +8,8 @@ namespace ArenaUnity.HybridRendering
     internal class RGBDepthRendererFeature : ScriptableRendererFeature
     {
         [Range(0, 1)]
-        public int m_HasDualCameras = 0;
+        private int m_HasDualCameras = 0;
+        private int m_FrameID = 0;
 
         private Shader m_Shader;
 
@@ -28,14 +29,16 @@ namespace ArenaUnity.HybridRendering
             if (cameraData.cameraType == CameraType.Game)
             {
                 var hybridCamera = cameraData.camera.gameObject.GetComponent<HybridCamera>();
-                if (hybridCamera)
-                    m_HasDualCameras = (hybridCamera.isDualCamera) ? 1 : 0;
+                if (hybridCamera) {
+                    m_HasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
+                    m_FrameID = hybridCamera.FrameID;
+                }
 
                 // Calling ConfigureInput with the ScriptableRenderPassInput.Color argument
                 // ensures that the opaque texture is available to the Render Pass.
                 m_RenderPass.ConfigureInput(ScriptableRenderPassInput.Color);
                 m_RenderPass.ConfigureInput(ScriptableRenderPassInput.Depth);
-                m_RenderPass.SetTarget(renderer.cameraColorTargetHandle, m_HasDualCameras);
+                m_RenderPass.SetTarget(renderer.cameraColorTargetHandle, m_HasDualCameras, m_FrameID);
             }
         }
 
