@@ -22,7 +22,8 @@ Shader "Hidden/RGBDepthShaderURP"
             TEXTURE2D_X(_CameraDepthTexture);
             SAMPLER(sampler_CameraDepthTexture);
 
-            float _DualCameras;
+            int _DualCameras;
+            int _FrameID;
 
             half4 frag (Varyings input) : SV_Target
             {
@@ -76,6 +77,18 @@ Shader "Hidden/RGBDepthShaderURP"
                         depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
+                }
+
+                int width = _ScreenSize.x;
+                int height =  _ScreenSize.y;
+                int x = input.texcoord.x * width;
+                int y = (1 - input.texcoord.y) * height;
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= 1)) {
+                    // x = x - (width - 32);
+                    if ((_FrameID >> x) & 1)
+                        col.gb = 1;
+                    else
+                        col.gb = 0;
                 }
 
                 return col;

@@ -11,6 +11,7 @@ namespace ArenaUnity.HybridRendering
         private Material m_Material;
         private RTHandle m_CameraColorTarget;
         private int m_HasDualCameras;
+        private int m_FrameID;
 
         public RGBDepthPass(Material material)
         {
@@ -18,10 +19,11 @@ namespace ArenaUnity.HybridRendering
             renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
         }
 
-        public void SetTarget(RTHandle colorHandle, int hasDualCameras)
+        public void SetTarget(RTHandle colorHandle, int hasDualCameras, int frameID)
         {
             m_CameraColorTarget = colorHandle;
             m_HasDualCameras = hasDualCameras;
+            m_FrameID = frameID;
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -42,6 +44,7 @@ namespace ArenaUnity.HybridRendering
             using (new ProfilingScope(cmd, m_ProfilingSampler))
             {
                 m_Material.SetInt("_DualCameras", m_HasDualCameras);
+                m_Material.SetInt("_FrameID", m_FrameID);
                 Blitter.BlitCameraTexture(cmd, m_CameraColorTarget, m_CameraColorTarget, m_Material, 0);
             }
             context.ExecuteCommandBuffer(cmd);
