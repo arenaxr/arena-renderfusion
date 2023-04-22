@@ -12,6 +12,7 @@ namespace ArenaUnity.HybridRendering
         private Material m_Material;
 
         private int m_HasDualCameras = 0;
+        private int m_FrameID = 0;
 
         public bool IsActive() => m_Material != null;
 
@@ -31,10 +32,13 @@ namespace ArenaUnity.HybridRendering
             var hybridCamera = camera.camera.gameObject.GetComponent<HybridCamera>();
             if (hybridCamera)
             {
-                m_HasDualCameras = (hybridCamera.isDualCamera) ? 1 : 0;
+                m_HasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
+                m_FrameID = hybridCamera.FrameID;
             }
             m_Material.SetTexture("_MainTex", source);
             m_Material.SetInt("_DualCameras", m_HasDualCameras);
+            m_Material.SetInt("_FrameID", m_FrameID);
+            Debug.Log(m_FrameID);
 
             HDUtils.DrawFullScreen(cmd, m_Material, destination);
         }
