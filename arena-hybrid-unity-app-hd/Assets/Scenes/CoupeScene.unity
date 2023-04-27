@@ -4356,6 +4356,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 290401571459945281, guid: 955603f93f6474eeca01f9d9534d0abb,
+        type: 3}
+      propertyPath: discoveryInterval
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 290401571459945282, guid: 955603f93f6474eeca01f9d9534d0abb,
         type: 3}
       propertyPath: m_Name
@@ -5368,7 +5373,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463029480}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.00000011920932, y: 3.6, z: 1.0000103}
+  m_LocalPosition: {x: -0.00000011920932, y: 3.6, z: 1.0000105}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
