@@ -24,7 +24,7 @@ namespace ArenaUnity.HybridRendering
         public int maxMissedHeartbeats = 10;
 
         [SerializeField, Tooltip("Discovery interval. Amount of seconds to poll for clients.")]
-        public int discoveryInterval = 5;
+        public int discoveryInterval = 3;
 
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
