@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ARENAHybrid
       objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210405, guid: 6c56638ac1ff44ac7b5f3e17b66d52ca, type: 3}
+      propertyPath: discoveryInterval
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7284318226160210406, guid: 6c56638ac1ff44ac7b5f3e17b66d52ca, type: 3}
       propertyPath: m_RootOrder
       value: 0
