@@ -38,7 +38,6 @@ namespace ArenaUnity.HybridRendering
             m_Material.SetTexture("_MainTex", source);
             m_Material.SetInt("_DualCameras", m_HasDualCameras);
             m_Material.SetInt("_FrameID", m_FrameID);
-            Debug.Log(m_FrameID);
 
             HDUtils.DrawFullScreen(cmd, m_Material, destination);
         }
