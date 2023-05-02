@@ -244,7 +244,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.4",
+      "version": "3.0.0-pre.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -311,7 +311,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "3243872d2cc7178af202b658e522bf94ae1c958a"
+      "hash": "fe7e66a694b4a9ec06184b5016b3dc6572069414"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
