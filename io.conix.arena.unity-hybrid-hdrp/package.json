@@ -1,0 +1,19 @@
+{
+    "name": "io.conix.arena.unity-hybrid-hdrp",
+    "displayName": "HDRP ARENA Hybrid Rendering Library for Unity.",
+    "version": "0.1.0",
+    "unity": "2022.2",
+    "description": "Enables Remote/Hybrid Rendering on ARENA using Unity.",
+    "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.5",
+        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
+        "io.conix.arena.unity-hybrid": "0.1.0"
+    },
+    "samples": [
+        {
+            "displayName": "HDRP Example",
+            "description": "High Definition Render Pipeline Example",
+            "path": "Samples~/HDRP"
+        }
+    ]
+}
