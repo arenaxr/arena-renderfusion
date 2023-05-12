@@ -9,13 +9,13 @@ git clone https://github.com/EdwardLu2018/arena-hybrid-unity-app.git
 # Samples
 
 ## Standard Render Pipeline
-Open `Samples/SRP` in Unity.
+Open `io.conix.arena.unity-hybrid/Samples~/SRP` in Unity.
 
 ## Universal Render Pipeline
-Open `Samples/URP` in Unity.
+Open `io.conix.arena.unity-hybrid-urp/Samples~/URP` in Unity.
 
 ## High Definition Render Pipeline
-Open `Samples/HDRP` in Unity.
+Open `io.conix.arena.unity-hybrid-hdrp/Samples~/HDRP` in Unity.
 
 # Development
 
