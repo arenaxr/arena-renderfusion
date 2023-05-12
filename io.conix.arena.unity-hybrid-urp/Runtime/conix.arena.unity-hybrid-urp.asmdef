@@ -1,0 +1,20 @@
+{
+    "name": "conix.arena.unity-hybrid-urp",
+    "references": [
+        "Unity.WebRTC",
+        "PrettyHierarchy",
+        "conix.arena.unity",
+        "conix.arena.unity-hybrid",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
