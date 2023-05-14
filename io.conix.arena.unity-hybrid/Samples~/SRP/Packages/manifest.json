@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.toolchain.linux-x86_64": "2.0.5",
     "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "io.conix.arena.unity-hybrid": "file:../../../",
     "com.unity.modules.ai": "1.0.0",

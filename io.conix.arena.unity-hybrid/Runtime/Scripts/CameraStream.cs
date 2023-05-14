@@ -71,7 +71,6 @@ namespace ArenaUnity.HybridRendering
         }
     }
 
-    // [RequireComponent(typeof(Camera))]
     public class CameraStream : MonoBehaviour
     {
         static readonly float s_defaultFrameRate = 60;
@@ -205,22 +204,15 @@ namespace ArenaUnity.HybridRendering
             }
         }
 
-        internal void CreateTrack(int screenWidth, int screenHeight)
+        internal void CreateTrack(int width, int height, int screenWidth, int screenHeight)
         {
-            StartCoroutine(CreateTrackCoroutine(screenWidth, screenHeight));
+            StartCoroutine(CreateTrackCoroutine(width, height, screenWidth, screenHeight));
         }
 
-        internal WaitForCreateTrack CreateTrackInternal(RenderTexture rt, int screenWidth, int screenHeight)
+        private IEnumerator CreateTrackCoroutine(int width, int height, int screenWidth, int screenHeight)
         {
-            var instruction = new WaitForCreateTrack();
-            instruction.Done(new VideoStreamTrack(rt));
-            return instruction;
-        }
-
-        private IEnumerator CreateTrackCoroutine(int screenWidth, int screenHeight)
-        {
-            m_renderTexture = m_hybridCameraLeft.CreateRenderTexture(screenWidth, screenHeight);
-            WaitForCreateTrack op = CreateTrackInternal(m_renderTexture, screenWidth, screenHeight);
+            m_renderTexture = m_hybridCameraLeft.CreateRenderTexture(width, height, screenWidth, screenHeight);
+            WaitForCreateTrack op = CreateTrackInternal(m_renderTexture, width, height, screenWidth, screenHeight);
 
             if (op.Track == null)
                 yield return op;
@@ -234,7 +226,14 @@ namespace ArenaUnity.HybridRendering
             m_track = op.Track;
 
             if (!GraphicsSettings.renderPipelineAsset)
-                m_rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(screenWidth, screenHeight);
+                m_rightEyeTargetTexture = m_hybridCameraRight.CreateRenderTexture(width, height, screenWidth, screenHeight);
+        }
+
+        internal WaitForCreateTrack CreateTrackInternal(RenderTexture rt, int width, int height, int screenWidth, int screenHeight)
+        {
+            var instruction = new WaitForCreateTrack();
+            instruction.Done(new VideoStreamTrack(rt));
+            return instruction;
         }
 
         public void SetFrameRate(float frameRate)
