@@ -26,6 +26,9 @@ namespace ArenaUnity.HybridRendering
         [SerializeField, Tooltip("Discovery interval. Amount of seconds to poll for clients.")]
         public int discoveryInterval = 3;
 
+        [SerializeField, Tooltip("Video resolution (width will be internally doubled to account for depth frame).")]
+        public Vector2Int defaultResolution = new Vector2Int(1280, 720);
+
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
 
@@ -176,7 +179,7 @@ namespace ArenaUnity.HybridRendering
             if (!clientPeerDict.TryGetValue(data.id, out peer))
             {
                 peer = CreatePeerConnection(data);
-                peer.AddSender();
+                peer.AddSender(defaultResolution.x, defaultResolution.y);
                 StartCoroutine(peer.GetStats(1.0f));
             }
             else

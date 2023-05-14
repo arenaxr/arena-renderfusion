@@ -40,6 +40,9 @@ namespace ArenaUnity.HybridRendering
             if (m_Material == null)
                 return;
 
+            if (m_CameraColorTarget == null)
+                return;
+
             CommandBuffer cmd = CommandBufferPool.Get();
             using (new ProfilingScope(cmd, m_ProfilingSampler))
             {
