@@ -122,13 +122,13 @@ namespace ArenaUnity.HybridRendering
             return init;
         }
 
-        public void AddSender(bool dualCameraMode=false)
+        public void AddSender(int width, int height, bool dualCameraMode=false)
         {
             ClientStatus clientStatus = new ClientStatus{
                 hasDualCameras = dualCameraMode,
             };
             camStream.UpdateStateWithStatus(clientStatus);
-            camStream.CreateTrack(m_screenWidth, m_screenHeight);
+            camStream.CreateTrack(width, height, m_screenWidth, m_screenHeight);
 
             RTCRtpTransceiverInit init = GetTransceiverInit();
             var transceiver = _peer.AddTransceiver(camStream.Track, init);

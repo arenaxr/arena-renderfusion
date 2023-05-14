@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Name: RGBDepthRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_HasDualCameras: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

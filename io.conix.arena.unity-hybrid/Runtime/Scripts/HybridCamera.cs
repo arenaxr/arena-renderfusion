@@ -13,8 +13,6 @@ namespace ArenaUnity.HybridRendering
     [RequireComponent(typeof(Camera))]
     public class HybridCamera : MonoBehaviour
     {
-        static readonly Vector2Int videoSize = new Vector2Int(1280, 720);
-
         static readonly int s_defaultDepth = 16;
 
         private Camera m_camera;
@@ -90,9 +88,11 @@ namespace ArenaUnity.HybridRendering
             m_renderTexture = null;
         }
 
-        internal RenderTexture CreateRenderTexture(int screenWidth, int screenHeight)
+        internal RenderTexture CreateRenderTexture(int width, int height, int screenWidth, int screenHeight)
         {
             RenderTexture renderTexture;
+
+            width = 2 * width;
 
             // int width = 2 * screenWidth;
             // int height = screenHeight;
@@ -103,8 +103,11 @@ namespace ArenaUnity.HybridRendering
             // int width = 2 * videoSize.x;
             // int height = (int)(videoSize.x * ((float)screenHeight / (float)screenWidth));
 
-            int height = videoSize.y;
-            int width = 2 * (int)(height * ((float)screenWidth / (float)screenHeight));
+            // int height = videoSize.y;
+            // int width = 2 * (int)(height * ((float)screenWidth / (float)screenHeight));
+
+            // height = Mathf.Min(height, 4096);
+            // width = Mathf.Min(width, 4096);
 
             if (m_camera.targetTexture != null)
             {
