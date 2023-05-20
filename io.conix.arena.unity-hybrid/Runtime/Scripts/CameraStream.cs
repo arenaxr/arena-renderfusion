@@ -86,7 +86,6 @@ namespace ArenaUnity.HybridRendering
         private HybridCamera m_hybridCameraLeft;
         private HybridCamera m_hybridCameraRight;
 
-
         private RenderTexture m_renderTexture;
         private RenderTexture m_rightEyeTargetTexture;
 

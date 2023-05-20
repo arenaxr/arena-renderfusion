@@ -154,7 +154,8 @@ namespace ArenaUnity.HybridRendering
                 m_material.SetInteger("_HasRightEyeTex", 1);
                 m_material.SetTexture("_RightEyeTex", otherRendertexture);
             }
-            else {
+            else
+            {
                 m_material.SetInteger("_HasRightEyeTex", 0);
                 m_material.SetTexture("_RightEyeTex", null);
             }
@@ -163,11 +164,6 @@ namespace ArenaUnity.HybridRendering
         internal void SetFrameID(int frameID)
         {
             FrameID = frameID;
-
-            if (m_material)
-            {
-                m_material.SetInteger("_FrameID", FrameID);
-            }
         }
 
         // private void OnPreRender()
@@ -177,6 +173,11 @@ namespace ArenaUnity.HybridRendering
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
+            if (m_material != null)
+            {
+                m_material.SetInteger("_FrameID", FrameID);
+            }
+
             if (m_camera != Camera.main)
             {
                 Graphics.Blit(source, m_renderTexture, m_material);
