@@ -305,15 +305,38 @@ namespace ArenaUnity.HybridRendering
             //Retrieves the 8 double values from the bytes array
             //and copies into an array of doubles
             //8 bytes per double * 8 values = 64 bytes
-            double[] vars = new double[8];
-            Buffer.BlockCopy(bytes, 0, vars, 0, 64); 
+            var numbytes = 17;
+            double[] doubles = new double[numbytes];
+            Buffer.BlockCopy(bytes, 0, doubles, 0, 8*numbytes); 
 
-            //Convert the float id to an int variable
-            int id = Convert.ToInt32(vars[7]);
+            float[] floats = doubles.Select(d => (float)d).ToArray();
 
-            //Timestamp value is ignored for now
-            var clientPose = new ClientPose(id, vars[0], vars[1], vars[2], vars[3], vars[4], vars[5], vars[6]);
-            
+
+            Matrix4x4 transformMatrix = new Matrix4x4();
+
+            for (int i = 0; i < 16; i++) {
+                int row = i / 4;
+                int col = i % 4;
+                transformMatrix[row, col] = floats[i];
+            }
+            //Debug.Log(floats);
+
+            int id = Convert.ToInt32(floats[16]);
+            Vector3 position = transformMatrix.GetColumn(3); //Currently incorrect
+            Quaternion rotation = Quaternion.Inverse(Quaternion.LookRotation(
+                                        transformMatrix.GetColumn(2),
+                                        transformMatrix.GetColumn(1)
+                                        ));
+
+            Vector3 scale = new Vector3(
+                                        transformMatrix.GetColumn(0).magnitude,
+                                        transformMatrix.GetColumn(1).magnitude,
+                                        transformMatrix.GetColumn(2).magnitude
+                                        );
+
+
+            var clientPose = new ClientPose(id, position, rotation, scale);
+
             clientPoses.Add(clientPose);
 
         }
@@ -323,17 +346,9 @@ namespace ArenaUnity.HybridRendering
             m_hybridCameraLeft.SetFrameID(clientPose.id);
             m_hybridCameraRight.SetFrameID(clientPose.id);
 
-            gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
-                (float)clientPose.x,
-                (float)clientPose.y,
-                (float)clientPose.z
-            ));
-            gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
-                (float)clientPose.x_,
-                (float)clientPose.y_,
-                (float)clientPose.z_,
-                (float)clientPose.w_
-            ));
+            //Only takes floats so we convert at this point
+            gameObject.transform.position = ArenaUnity.ToUnityPosition(clientPose.position);
+            gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(clientPose.rotation);
         }
 
         private void Update()
