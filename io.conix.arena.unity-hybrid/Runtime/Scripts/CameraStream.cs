@@ -302,10 +302,20 @@ namespace ArenaUnity.HybridRendering
 
         public void OnInputMessage(byte[] bytes)
         {
-            string poseMsg = System.Text.Encoding.UTF8.GetString(bytes);
-            var clientPose = JsonUtility.FromJson<ClientPose>(poseMsg);
+            //Retrieves the 8 double values from the bytes array
+            //and copies into an array of doubles
+            //8 bytes per double * 8 values = 64 bytes
+            double[] vars = new double[8];
+            Buffer.BlockCopy(bytes, 0, vars, 0, 64); 
 
+            //Convert the float id to an int variable
+            int id = Convert.ToInt32(vars[7]);
+
+            //Timestamp value is ignored for now
+            var clientPose = new ClientPose(id, vars[0], vars[1], vars[2], vars[3], vars[4], vars[5], vars[6]);
+            
             clientPoses.Add(clientPose);
+
         }
 
         private void updatePose(ClientPose clientPose)
@@ -314,15 +324,15 @@ namespace ArenaUnity.HybridRendering
             m_hybridCameraRight.SetFrameID(clientPose.id);
 
             gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
-                clientPose.x,
-                clientPose.y,
-                clientPose.z
+                (float)clientPose.x,
+                (float)clientPose.y,
+                (float)clientPose.z
             ));
             gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
-                clientPose.x_,
-                clientPose.y_,
-                clientPose.z_,
-                clientPose.w_
+                (float)clientPose.x_,
+                (float)clientPose.y_,
+                (float)clientPose.z_,
+                (float)clientPose.w_
             ));
         }
 
