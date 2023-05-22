@@ -314,16 +314,14 @@ namespace ArenaUnity.HybridRendering
 
             Matrix4x4 transformMatrix = new Matrix4x4();
 
-            Debug.Log("====");
             for (int i = 0; i < 16; i++) {
                 int row = i % 4;
                 int col = i / 4;
                 transformMatrix[row, col] = floats[i];
-                Debug.Log(floats[i]);
             }
 
             int id = Convert.ToInt32(floats[16]);
-            Vector3 position = transformMatrix.GetColumn(3); //Currently incorrect
+            Vector3 position = transformMatrix.GetColumn(3);
             Quaternion rotation = Quaternion.LookRotation(
                                         transformMatrix.GetColumn(2),
                                         transformMatrix.GetColumn(1)
