@@ -311,6 +311,7 @@ namespace ArenaUnity.HybridRendering
         private void updatePose(ClientPose clientPose)
         {
             m_hybridCameraLeft.SetFrameID(clientPose.id);
+            m_hybridCameraRight.SetFrameID(clientPose.id);
 
             gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
                 clientPose.x,

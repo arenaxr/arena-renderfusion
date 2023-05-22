@@ -29,7 +29,8 @@ namespace ArenaUnity.HybridRendering
             if (cameraData.cameraType == CameraType.Game)
             {
                 var hybridCamera = cameraData.camera.gameObject.GetComponent<HybridCamera>();
-                if (hybridCamera) {
+                if (hybridCamera)
+                {
                     m_HasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
                     m_FrameID = hybridCamera.FrameID;
                 }
