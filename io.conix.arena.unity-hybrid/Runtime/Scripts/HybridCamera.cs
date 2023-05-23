@@ -92,7 +92,7 @@ namespace ArenaUnity.HybridRendering
         {
             RenderTexture renderTexture;
 
-            width = 2 * width;
+            // width = 2 * width;
 
             // int width = 2 * screenWidth;
             // int height = screenHeight;
@@ -137,7 +137,7 @@ namespace ArenaUnity.HybridRendering
                 };
                 renderTexture.Create();
                 m_camera.targetTexture = renderTexture;
-                m_camera.aspect = (float)(width / 2) / (float)height;
+                m_camera.aspect = (float)(width) / (float)height;
             }
 
             m_renderTexture = renderTexture;
