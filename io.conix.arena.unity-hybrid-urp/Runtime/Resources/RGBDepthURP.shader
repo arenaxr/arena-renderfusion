@@ -32,20 +32,23 @@ Shader "Hidden/RGBDepthShaderURP"
                 float4 col;
                 if (!_DualCameras)
                 {
-                    if (input.texcoord.x <= 1.0/2.0)
-                    {
-                        float xcoord = input.texcoord.x;
-                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
-                        col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
-                    }
-                    else
-                    {
-                        float xcoord = input.texcoord.x - 1.0/2.0;
-                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
-                        float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
-                        col.rgb = depth;
-                    }
+                    // if (input.texcoord.x <= 1.0/2.0)
+                    // {
+                    //     float xcoord = input.texcoord.x;
+                    //     float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    // }
+                    // else
+                    // {
+                    //     float xcoord = input.texcoord.x - 1.0/2.0;
+                    //     float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                    //     float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
+                    //     depth = 5 * Linear01Depth(depth, _ZBufferParams);
+                    //     col.rgb = depth;
+                    // }
+                    float xcoord = input.texcoord.x;
+                    float2 uv = float2(xcoord, input.texcoord.y);
+                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
                 }
                 else
                 {
@@ -63,20 +66,23 @@ Shader "Hidden/RGBDepthShaderURP"
                     *  ------------------------------------
                     *         RGB or depth texture
                     */
-                    if (input.texcoord.x <= 1.0/2.0)
-                    {
-                        float xcoord = input.texcoord.x;
-                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
-                        col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
-                    }
-                    else
-                    {
-                        float xcoord = input.texcoord.x - 1.0/2.0;
-                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
-                        float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
-                        col.rgb = depth;
-                    }
+                    // if (input.texcoord.x <= 1.0/2.0)
+                    // {
+                    //     float xcoord = input.texcoord.x;
+                    //     float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    // }
+                    // else
+                    // {
+                    //     float xcoord = input.texcoord.x - 1.0/2.0;
+                    //     float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                    //     float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
+                    //     depth = 5 * Linear01Depth(depth, _ZBufferParams);
+                    //     col.rgb = depth;
+                    // }
+                    float xcoord = input.texcoord.x;
+                    float2 uv = float2(1.0/4.0 + xcoord / 2.0, input.texcoord.y);
+                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
                 }
 
                 int width = _ScreenSize.x;

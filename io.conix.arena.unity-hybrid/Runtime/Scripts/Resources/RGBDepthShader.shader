@@ -52,24 +52,6 @@ Shader "Hidden/RGBDepthShader"
 
             // float4x4 UNITY_MATRIX_IV;
 
-            // float3 HSV2RGB(float3 HSV) {
-            //     float3 RGB = HSV.z;
-
-            //     float var_h = HSV.x * 6;
-            //     float var_i = floor(var_h);   // Or ... var_i = floor( var_h )
-            //     float var_1 = HSV.z * (1.0 - HSV.y);
-            //     float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
-            //     float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
-            //     if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
-            //     else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
-            //     else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
-            //     else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
-            //     else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
-            //     else                 { RGB = float3(HSV.z, var_1, var_2); }
-
-            //    return (RGB);
-            // }
-
             fixed4 RGBDepthSideBySideSingle(v2f i)
             {
                 fixed4 col;
@@ -156,13 +138,29 @@ Shader "Hidden/RGBDepthShader"
                 return col;
             }
 
+            fixed4 RGBSideBySideDual(v2f i)
+            {
+                fixed4 col;
+                if (i.uv.x <= 1.0/2.0)
+                {
+                    col = tex2D(_MainTex, float2(1.0/4.0 + i.uv.x, i.uv.y));
+                }
+                // Note: _RightEyeTex should already have the standard RGB tiling
+                else
+                {
+                    float xcoord = i.uv.x - 1.0/2.0;
+                    col = tex2D(_RightEyeTex, float2(1.0/4.0 + xcoord, i.uv.y));
+                }
+                return col;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col;
                 if (_HasRightEyeTex == 0)
-                    col = RGBDepthSideBySideSingle(i);
+                    col = tex2D(_MainTex, i.uv);
                 else
-                    col = RGBDepthSideBySideDual(i);
+                    col = RGBSideBySideDual(i);
 
                 int width = _MainTex_TexelSize.z;
                 int height = _MainTex_TexelSize.w;
