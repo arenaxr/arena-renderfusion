@@ -1,4 +1,6 @@
 using System;
+using UnityEngine;
+
 
 namespace ArenaUnity.HybridRendering.Signaling
 {
@@ -46,18 +48,45 @@ namespace ArenaUnity.HybridRendering.Signaling
         // public int usernameFragment;
     }
 
+    // [System.Serializable]
+    // public class ClientPose
+    // {
+    //     public int id;
+    //     public double x;
+    //     public double y;
+    //     public double z;
+    //     public double x_;
+    //     public double y_;
+    //     public double z_;
+    //     public double w_;
+    //     public long ts;
+
+    //     public ClientPose(int id, double x, double y, double z, double x_, double y_, double z_, double w_) {
+    //         this.id = id;
+    //         this.x = x;
+    //         this.y = y;
+    //         this.z = z;
+    //         this.x_ = x_;
+    //         this.y_ = y_;
+    //         this.z_ = z_;
+    //         this.w_ = w_;
+    //     }
+    // }
+
     [System.Serializable]
     public class ClientPose
     {
         public int id;
-        public float x;
-        public float y;
-        public float z;
-        public float x_;
-        public float y_;
-        public float z_;
-        public float w_;
-        public long ts;
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 scale;
+
+        public ClientPose(int id, Vector3 position, Quaternion rotation, Vector3 scale) {
+            this.id = id;
+            this.position = position;
+            this.rotation = rotation;
+            this.scale = scale;
+        }
     }
 
     [System.Serializable]
