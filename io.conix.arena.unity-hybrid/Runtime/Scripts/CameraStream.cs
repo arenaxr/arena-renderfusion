@@ -302,10 +302,41 @@ namespace ArenaUnity.HybridRendering
 
         public void OnInputMessage(byte[] bytes)
         {
-            string poseMsg = System.Text.Encoding.UTF8.GetString(bytes);
-            var clientPose = JsonUtility.FromJson<ClientPose>(poseMsg);
+            //Retrieves the 8 double values from the bytes array
+            //and copies into an array of doubles
+            //8 bytes per double * 8 values = 64 bytes
+            var numbytes = 17;
+            double[] doubles = new double[numbytes];
+            Buffer.BlockCopy(bytes, 0, doubles, 0, 8*numbytes); 
+
+            float[] floats = doubles.Select(d => (float)d).ToArray();
+
+
+            Matrix4x4 transformMatrix = new Matrix4x4();
+
+            for (int i = 0; i < 16; i++) {
+                int row = i % 4;
+                int col = i / 4;
+                transformMatrix[row, col] = floats[i];
+            }
+
+            int id = Convert.ToInt32(floats[16]);
+            Vector3 position = transformMatrix.GetColumn(3);
+            Quaternion rotation = Quaternion.LookRotation(
+                                        transformMatrix.GetColumn(2),
+                                        transformMatrix.GetColumn(1)
+                                        );
+
+            Vector3 scale = new Vector3(transformMatrix.GetColumn(0).magnitude,
+                                        transformMatrix.GetColumn(1).magnitude,
+                                        transformMatrix.GetColumn(2).magnitude
+                                        ); //Currently unused?
+
+
+            var clientPose = new ClientPose(id, position, rotation, scale);
 
             clientPoses.Add(clientPose);
+
         }
 
         private void updatePose(ClientPose clientPose)
@@ -313,17 +344,9 @@ namespace ArenaUnity.HybridRendering
             m_hybridCameraLeft.SetFrameID(clientPose.id);
             m_hybridCameraRight.SetFrameID(clientPose.id);
 
-            gameObject.transform.position = ArenaUnity.ToUnityPosition(new Vector3(
-                clientPose.x,
-                clientPose.y,
-                clientPose.z
-            ));
-            gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(new Quaternion(
-                clientPose.x_,
-                clientPose.y_,
-                clientPose.z_,
-                clientPose.w_
-            ));
+            //Only takes floats so we convert at this point
+            gameObject.transform.position = ArenaUnity.ToUnityPosition(clientPose.position);
+            gameObject.transform.localRotation = ArenaUnity.ToUnityRotationQuat(clientPose.rotation);
         }
 
         private void Update()
