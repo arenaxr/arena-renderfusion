@@ -81,7 +81,7 @@ Shader "Hidden/RGBDepthShaderURP"
                     //     col.rgb = depth;
                     // }
                     float xcoord = input.texcoord.x;
-                    float2 uv = float2(1.0/4.0 + xcoord / 2.0, input.texcoord.y);
+                    float2 uv = float2(xcoord, input.texcoord.y);
                     col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
                 }
 

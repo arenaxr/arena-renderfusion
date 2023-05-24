@@ -92,7 +92,7 @@ namespace ArenaUnity.HybridRendering
         {
             RenderTexture renderTexture;
 
-            // width = 2 * width;
+            width = 2 * width;
 
             // int width = 2 * screenWidth;
             // int height = screenHeight;
@@ -133,7 +133,7 @@ namespace ArenaUnity.HybridRendering
                 RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
                 renderTexture = new RenderTexture(width, height, s_defaultDepth, format)
                 {
-                    antiAliasing = 1
+                    antiAliasing = 4
                 };
                 renderTexture.Create();
                 m_camera.targetTexture = renderTexture;
