@@ -1,3 +1,2 @@
-m_EditorVersion: 2022.2.19f1
-m_EditorVersionWithRevision: 2022.2.19f1 (765657fe9343)
-19e03b3 (Modified to receive bytes instead of json for camera data, then interprets back into floats/ints)
+m_EditorVersion: 2022.2.20f1
+m_EditorVersionWithRevision: 2022.2.20f1 (c5d806317f84)

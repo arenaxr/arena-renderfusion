@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 806badf2219bf4842815a74e7c8adfe6, type: 3}
   m_Name: RGBDepthRendererFeature
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   m_Active: 1
   m_Intensity: 0
 --- !u!114 &-1878332245247344467
@@ -25,7 +25,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: SSAO
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   m_Active: 1
   m_Settings:
     AOMethod: 1
@@ -60,14 +60,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
   m_Name: URP-Balanced-Renderer
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
       type: 3}
+    hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: -1878332245247344467}
-  - {fileID: -7130316996893878309}
-  m_RendererFeatureMap: adc0de57c6d2eee5dbd7352878060c9d
+  - {fileID: 6932360235667540036}
+  m_RendererFeatureMap: adc0de57c6d2eee5dbd7352878060c9d44c801b6e7b03460
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -83,6 +83,7 @@ MonoBehaviour:
     coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
     coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b,
       type: 3}
+    blitHDROverlay: {fileID: 4800000, guid: a89bee29cffa951418fc1e2da94d1959, type: 3}
     cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf,
       type: 3}
     objectMotionVector: {fileID: 4800000, guid: 7b3ede40266cd49a395def176e1bc486,
@@ -107,3 +108,16 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &6932360235667540036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 725cdad27c4d6a1aaafbbfb6a471c6e4, type: 3}
+  m_Name: RGBDepthFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
