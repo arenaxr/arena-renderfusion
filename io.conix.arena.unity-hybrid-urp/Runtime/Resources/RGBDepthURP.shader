@@ -16,8 +16,8 @@ Shader "Hidden/RGBDepthShaderURP"
             #pragma vertex Vert
             #pragma fragment frag
 
-            TEXTURE2D_X(_CameraOpaqueTexture);
-            SAMPLER(sampler_CameraOpaqueTexture);
+            TEXTURE2D_X(_CameraColorTexture);
+            SAMPLER(sampler_CameraColorTexture);
 
             TEXTURE2D_X(_CameraDepthTexture);
             SAMPLER(sampler_CameraDepthTexture);
@@ -36,7 +36,7 @@ Shader "Hidden/RGBDepthShaderURP"
                     // {
                     //     float xcoord = input.texcoord.x;
                     //     float2 uv = float2(2.0 * xcoord, input.texcoord.y);
-                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                     // }
                     // else
                     // {
@@ -48,7 +48,7 @@ Shader "Hidden/RGBDepthShaderURP"
                     // }
                     float xcoord = input.texcoord.x;
                     float2 uv = float2(xcoord, input.texcoord.y);
-                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
                 else
                 {
@@ -70,7 +70,7 @@ Shader "Hidden/RGBDepthShaderURP"
                     // {
                     //     float xcoord = input.texcoord.x;
                     //     float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
-                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                     // }
                     // else
                     // {
@@ -82,7 +82,7 @@ Shader "Hidden/RGBDepthShaderURP"
                     // }
                     float xcoord = input.texcoord.x;
                     float2 uv = float2(xcoord, input.texcoord.y);
-                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
 
                 int width = _ScreenSize.x;
