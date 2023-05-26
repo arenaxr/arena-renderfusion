@@ -92,7 +92,7 @@ namespace ArenaUnity.HybridRendering
         {
             RenderTexture renderTexture;
 
-            width = 2 * width;
+            // width = 2 * width;
 
             // int width = 2 * screenWidth;
             // int height = screenHeight;
