@@ -11,9 +11,6 @@ namespace ArenaUnity.HybridRendering
     {
         private Material m_Material;
 
-        private int m_HasDualCameras = 0;
-        private int m_FrameID = 0;
-
         public bool IsActive() => m_Material != null;
 
         public override CustomPostProcessInjectionPoint injectionPoint => CustomPostProcessInjectionPoint.AfterPostProcess;
@@ -32,16 +29,19 @@ namespace ArenaUnity.HybridRendering
             var hybridCamera = camera.camera.gameObject.GetComponent<HybridCamera>();
             if (hybridCamera)
             {
-                m_HasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
-                m_FrameID = hybridCamera.FrameID;
+                int hasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
+                int frameID = hybridCamera.FrameID;
+
+                m_Material.SetInt("_DualCameras", hasDualCameras);
+                m_Material.SetInt("_FrameID", frameID);
             }
             m_Material.SetTexture("_MainTex", source);
-            m_Material.SetInt("_DualCameras", m_HasDualCameras);
-            m_Material.SetInt("_FrameID", m_FrameID);
 
             HDUtils.DrawFullScreen(cmd, m_Material, destination);
         }
 
-        public override void Cleanup() => CoreUtils.Destroy(m_Material);
+        public override void Cleanup() {
+            CoreUtils.Destroy(m_Material);
+        }
     }
 }

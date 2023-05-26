@@ -105,7 +105,7 @@ Shader "Hidden/RGBDepthShaderHD"
                     //     col.rgb = 50 * depth;
                     // }
                     xcoord = i.uv.x;
-                    positionSS = float2(1.0/4.0 + xcoord / 2.0, i.uv.y) * _ScreenSize.xy;
+                    positionSS = float2(xcoord, i.uv.y) * _ScreenSize.xy;
                     col.rgb = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
                 }
 
