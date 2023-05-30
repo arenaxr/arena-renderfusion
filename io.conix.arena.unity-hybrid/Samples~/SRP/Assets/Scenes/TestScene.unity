@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4514004, g: 0.5008928, b: 0.57231236, a: 1}
+  m_IndirectSpecularColor: {r: 0.451401, g: 0.5008942, b: 0.5723129, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -178,6 +178,18 @@ PrefabInstance:
     - target: {fileID: 7284318226160210406, guid: 4a04038332c4242f8b6c083aa92096db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210407, guid: 4a04038332c4242f8b6c083aa92096db, type: 3}
+      propertyPath: sceneName
+      value: sponza
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503461763394792015, guid: 4a04038332c4242f8b6c083aa92096db, type: 3}
+      propertyPath: defaultResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503461763394792015, guid: 4a04038332c4242f8b6c083aa92096db, type: 3}
+      propertyPath: defaultResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

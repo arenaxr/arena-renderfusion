@@ -178,7 +178,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "fe7e66a694b4a9ec06184b5016b3dc6572069414"
+      "hash": "c76cc06a52527cd1847edbe3a9a408b6d5b2b2da"
     },
     "io.conix.arena.unity-hybrid": {
       "version": "file:../../../",

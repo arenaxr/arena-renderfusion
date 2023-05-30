@@ -158,9 +158,9 @@ Shader "Hidden/RGBDepthShader"
             {
                 fixed4 col;
                 if (_HasRightEyeTex == 0)
-                    col = tex2D(_MainTex, i.uv);
+                    col = RGBDepthSideBySideSingle(i); // tex2D(_MainTex, i.uv);
                 else
-                    col = RGBSideBySideDual(i);
+                    col = RGBDepthSideBySideDual(i);
 
                 int width = _MainTex_TexelSize.z;
                 int height = _MainTex_TexelSize.w;
