@@ -27,7 +27,7 @@ namespace ArenaUnity.HybridRendering
         public int discoveryInterval = 3;
 
         [SerializeField, Tooltip("Video resolution (width will be internally doubled to account for depth frame).")]
-        public Vector2Int defaultResolution = new Vector2Int(1280, 720);
+        public Vector2Int defaultResolution = new Vector2Int(1920, 1080);
 
         [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
         public bool remoteRender = true;
