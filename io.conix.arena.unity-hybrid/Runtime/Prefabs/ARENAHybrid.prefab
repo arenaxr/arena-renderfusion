@@ -50,6 +50,7 @@ MonoBehaviour:
   namespaceName: Edward
   sceneName: example1
   renderCameras: 0
+  drawControllerRays: 1
   logMqttObjects: 0
   logMqttUsers: 0
   logMqttEvents: 0
@@ -70,6 +71,7 @@ MonoBehaviour:
   maxClients: -1
   maxMissedHeartbeats: 10
   discoveryInterval: 3
+  defaultResolution: {x: 1920, y: 1080}
   remoteRender: 1
   runOnStart: 1
   useHAL: 0

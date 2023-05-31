@@ -35,8 +35,8 @@ namespace ArenaUnity.HybridRendering
         public void setCameraProj(float[] proj)
         {
             var cam = GetComponent<Camera>();
-            float x = proj[0];
-            float a = proj[1];
+            float x = proj[0] / 2;
+            float a = proj[1] / 2;
             float y = proj[2];
             float b = proj[3];
             float c = proj[4];
