@@ -32,23 +32,23 @@ Shader "Hidden/RGBDepthShaderURP"
                 float4 col;
                 if (!_DualCameras)
                 {
-                    // if (input.texcoord.x <= 1.0/2.0)
-                    // {
-                    //     float xcoord = input.texcoord.x;
-                    //     float2 uv = float2(2.0 * xcoord, input.texcoord.y);
-                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
-                    // }
-                    // else
-                    // {
-                    //     float xcoord = input.texcoord.x - 1.0/2.0;
-                    //     float2 uv = float2(2.0 * xcoord, input.texcoord.y);
-                    //     float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                    //     depth = 5 * Linear01Depth(depth, _ZBufferParams);
-                    //     col.rgb = depth;
-                    // }
-                    float xcoord = input.texcoord.x;
-                    float2 uv = float2(xcoord, input.texcoord.y);
-                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
+                    if (input.texcoord.x <= 1.0/2.0)
+                    {
+                        float xcoord = input.texcoord.x;
+                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                        col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
+                    }
+                    else
+                    {
+                        float xcoord = input.texcoord.x - 1.0/2.0;
+                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                        float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
+                        depth = Linear01Depth(depth, _ZBufferParams);
+                        col.rgb = depth;
+                    }
+                    // float xcoord = input.texcoord.x;
+                    // float2 uv = float2(xcoord, input.texcoord.y);
+                    // col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
                 else
                 {
@@ -66,30 +66,30 @@ Shader "Hidden/RGBDepthShaderURP"
                     *  ------------------------------------
                     *         RGB or depth texture
                     */
-                    // if (input.texcoord.x <= 1.0/2.0)
-                    // {
-                    //     float xcoord = input.texcoord.x;
-                    //     float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
-                    //     col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
-                    // }
-                    // else
-                    // {
-                    //     float xcoord = input.texcoord.x - 1.0/2.0;
-                    //     float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
-                    //     float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                    //     depth = 5 * Linear01Depth(depth, _ZBufferParams);
-                    //     col.rgb = depth;
-                    // }
-                    float xcoord = input.texcoord.x;
-                    float2 uv = float2(xcoord, input.texcoord.y);
-                    col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
+                    if (input.texcoord.x <= 1.0/2.0)
+                    {
+                        float xcoord = input.texcoord.x;
+                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                        col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
+                    }
+                    else
+                    {
+                        float xcoord = input.texcoord.x - 1.0/2.0;
+                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                        float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
+                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
+                        col.rgb = depth;
+                    }
+                    // float xcoord = input.texcoord.x;
+                    // float2 uv = float2(xcoord, input.texcoord.y);
+                    // col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
 
                 int width = _ScreenSize.x;
                 int height =  _ScreenSize.y;
                 int x = input.texcoord.x * width;
                 int y = (1 - input.texcoord.y) * height;
-                if ((width - 32 < x && x <= width) && (0 <= y && y <= 1)) {
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= height/8)) {
                     // x = x - (width - 32);
                     if ((_FrameID >> x) & 1)
                         col.gb = 1;
