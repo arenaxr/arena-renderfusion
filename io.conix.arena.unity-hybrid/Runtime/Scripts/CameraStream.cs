@@ -307,7 +307,7 @@ namespace ArenaUnity.HybridRendering
             //8 bytes per double * 8 values = 64 bytes
             var numbytes = 17;
             double[] doubles = new double[numbytes];
-            Buffer.BlockCopy(bytes, 0, doubles, 0, 8*numbytes); 
+            Buffer.BlockCopy(bytes, 0, doubles, 0, 8*numbytes);
 
             float[] floats = doubles.Select(d => (float)d).ToArray();
 

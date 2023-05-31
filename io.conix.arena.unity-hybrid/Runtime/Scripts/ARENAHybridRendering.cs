@@ -64,7 +64,7 @@ namespace ArenaUnity.HybridRendering
 #if !UNITY_EDITOR
             string[] arguments = Environment.GetCommandLineArgs();
 
-            ArenaClientScene scene = ArenaClientScene.Instance;
+            var scene = ArenaClientScene.Instance;
 
             if (arguments.Length >= 2)
             {
@@ -119,13 +119,16 @@ namespace ArenaUnity.HybridRendering
         private void OnSignalerStart(ISignaling signaler)
         {
             if (remoteRender)
-                removeNonRemoteRenderedObjs();
+                StartCoroutine(removeNonRemoteRenderedObjs());
 
             StartCoroutine(WebRTC.Update());
             Debug.Log("Hybrid Rendering Server Started!");
         }
 
-        private void removeNonRemoteRenderedObjs() {
+        private IEnumerator removeNonRemoteRenderedObjs()
+        {
+            yield return new WaitUntil(() => ArenaClientScene.Instance.persistLoaded);
+
             foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
             {
                 JToken data = JToken.Parse(aobj.jsonData);
