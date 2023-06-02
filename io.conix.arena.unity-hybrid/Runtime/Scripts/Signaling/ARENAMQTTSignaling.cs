@@ -32,7 +32,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         private readonly string CLIENT_HEALTH_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/health";
         // private readonly string CLIENT_STATS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/stats";
 
-        private readonly string UPDATE_REMOTE_STATUS_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/client/remote";
         private readonly string HAL_CONNECT_TOPIC_PREFIX = "realm/g/a/hybrid_rendering/HAL/connect";
 
         private string SERVER_OFFER_TOPIC;
@@ -73,7 +72,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         public event OnAnswerHandler OnAnswer;
         public event OnIceCandidateHandler OnIceCandidate;
         public event OnClientHealthCheckHandler OnClientHealthCheck;
-        public event OnRemoteObjectStatusUpdateHandler OnRemoteObjectStatusUpdate;
         public event OnHALConnectHandler OnHALConnect;
 
         public void ConnectArena()
@@ -100,7 +98,6 @@ namespace ArenaUnity.HybridRendering.Signaling
             Subscribe(new string[] { $"{CLIENT_HEALTH_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             // Subscribe(new string[] { $"{CLIENT_STATS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
 
-            Subscribe(new string[] { $"{UPDATE_REMOTE_STATUS_TOPIC_PREFIX}/{ArenaClientScene.Instance.namespaceName}/{ArenaClientScene.Instance.sceneName}/#" });
             Subscribe(new string[] { $"{HAL_CONNECT_TOPIC_PREFIX}/{m_halID}/#" });
 
             Debug.Log("Hybrid Rendering MQTT client connected!");
@@ -269,13 +266,6 @@ namespace ArenaUnity.HybridRendering.Signaling
                 else if (routedMessage.type == "stats")
                 {
                     // Debug.Log("got stats");
-                }
-                else if (routedMessage.type == "remote-update")
-                {
-                    var routedMessageRemoteUpdate = JsonUtility.FromJson<RoutedMessage<RemoteObjectStatusUpdate>>(content);
-                    RemoteObjectStatusUpdate remoteStatusUpdate = routedMessageRemoteUpdate.data;
-                    m_mainThreadContext.Post(d => OnRemoteObjectStatusUpdate?.Invoke(this,
-                        remoteStatusUpdate.object_id, remoteStatusUpdate.remoteRendered), null);
                 }
                 else if(routedMessage.type == "HAL")
                 {
