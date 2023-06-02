@@ -181,7 +181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7284318226160210407, guid: 4a04038332c4242f8b6c083aa92096db, type: 3}
       propertyPath: sceneName
-      value: sponza
+      value: sponzaremote
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

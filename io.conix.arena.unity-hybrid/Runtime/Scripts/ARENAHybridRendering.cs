@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Collections;
@@ -61,10 +62,10 @@ namespace ArenaUnity.HybridRendering
             if (!runOnStart)
                 return;
 
+            var scene = ArenaClientScene.Instance;
+
 #if !UNITY_EDITOR
             string[] arguments = Environment.GetCommandLineArgs();
-
-            var scene = ArenaClientScene.Instance;
 
             if (arguments.Length >= 2)
             {
@@ -90,7 +91,9 @@ namespace ArenaUnity.HybridRendering
 
         private IEnumerator SetupSignaling()
         {
-            yield return new WaitUntil(() => ArenaClientScene.Instance.mqttClientConnected);
+            var scene = ArenaClientScene.Instance;
+
+            yield return new WaitUntil(() => scene.mqttClientConnected);
 
             GameObject gobj = new GameObject("Arena MQTT Signaler");
             signaler = gobj.AddComponent(typeof(ARENAMQTTSignaling)) as ARENAMQTTSignaling;
@@ -104,11 +107,12 @@ namespace ArenaUnity.HybridRendering
             signaler.OnAnswer += OnAnswer;
             signaler.OnIceCandidate += OnIceCandidate;
             signaler.OnClientHealthCheck += OnClientHealthCheck;
-            signaler.OnRemoteObjectStatusUpdate += OnRemoteObjectStatusUpdate;
             signaler.OnHALConnect += OnHALConnect;
 
             signaler.UpdateHALInfo(m_id, useHAL);
             signaler.OpenConnection();
+
+            scene.OnMessageCallback = MessageCallback;
 
             // sets up heartbeats to send to client every second
             TimerCallback timercallback = new TimerCallback(HandleTimerCallback);
@@ -119,13 +123,13 @@ namespace ArenaUnity.HybridRendering
         private void OnSignalerStart(ISignaling signaler)
         {
             if (remoteRender)
-                StartCoroutine(removeNonRemoteRenderedObjs());
+                StartCoroutine(RemoveNonRemoteRenderedObjs());
 
             StartCoroutine(WebRTC.Update());
             Debug.Log("Hybrid Rendering Server Started!");
         }
 
-        private IEnumerator removeNonRemoteRenderedObjs()
+        private IEnumerator RemoveNonRemoteRenderedObjs()
         {
             yield return new WaitUntil(() => ArenaClientScene.Instance.persistLoaded);
 
@@ -143,6 +147,31 @@ namespace ArenaUnity.HybridRendering
                 {
                     aobj.gameObject.SetActive(false);
                     // aobj.gameObject.GetComponent<Renderer>().enabled = false;
+                }
+            }
+        }
+
+        private void MessageCallback(string topic, byte[] message)
+        {
+            var scene = ArenaClientScene.Instance;
+
+            string msgJson = System.Text.Encoding.UTF8.GetString(message);
+            dynamic msg = JsonConvert.DeserializeObject(msgJson);
+
+            if (msg.data != null && msg.type == "object" && msg.data.object_type != "camera") {
+                var gobj = GameObject.Find((string)msg.object_id);
+                if (gobj == null) {
+                    ArenaObject[] aobjs = GameObject.FindObjectsOfType<ArenaObject>(true).Where(aobj => aobj.gameObject.name == (string)msg.object_id).ToArray();
+                    if (aobjs.Length == 0) return;
+                    gobj = aobjs[0].gameObject;
+                }
+
+                if (msg.data["remote-render"] != null) {
+                    bool remoteRender = msg.data["remote-render"].enabled;
+                    gobj.SetActive(remoteRender);
+                }
+                else if (gobj.activeSelf) {
+                    gobj.SetActive(false);
                 }
             }
         }
@@ -234,22 +263,6 @@ namespace ArenaUnity.HybridRendering
                 peer.missedHeartbeats = 0;
             else
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
-        }
-
-        private void OnRemoteObjectStatusUpdate(ISignaling signaler, string objectId, bool remoteRendered)
-        {
-            if (!remoteRender)
-                return;
-
-            foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
-            {
-                if (aobj.name != objectId)
-                    continue;
-
-                // Debug.Log($"[OnRemoteObjectStatusUpdate] {objectId} - {remoteRendered}");
-                aobj.gameObject.SetActive(remoteRendered);
-                // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
-            }
         }
 
         private void HandleTimerCallback(object signalerObj)

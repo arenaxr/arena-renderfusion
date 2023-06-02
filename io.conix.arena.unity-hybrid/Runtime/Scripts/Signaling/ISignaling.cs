@@ -10,8 +10,8 @@ namespace ArenaUnity.HybridRendering.Signaling
     public delegate void OnAnswerHandler(ISignaling signaler, SDPData answer);
     public delegate void OnIceCandidateHandler(ISignaling signaler, CandidateData e);
     public delegate void OnClientHealthCheckHandler(ISignaling signaler, string id);
-    public delegate void OnRemoteObjectStatusUpdateHandler(ISignaling signaler, string objectId, bool remoteRendered);
     public delegate void OnHALConnectHandler(ISignaling signaler, ConnectData data);
+
     public interface ISignaling
     {
         event OnClientConnectHandler OnClientConnect;
@@ -21,7 +21,6 @@ namespace ArenaUnity.HybridRendering.Signaling
         event OnAnswerHandler OnAnswer;
         event OnIceCandidateHandler OnIceCandidate;
         event OnClientHealthCheckHandler OnClientHealthCheck;
-        event OnRemoteObjectStatusUpdateHandler OnRemoteObjectStatusUpdate;
         event OnHALConnectHandler OnHALConnect;
 
         string Url { get; }

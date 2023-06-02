@@ -100,12 +100,5 @@ namespace ArenaUnity.HybridRendering.Signaling
         public float[] rightProj;
         public long ts;
     }
-
-    [System.Serializable]
-    public class RemoteObjectStatusUpdate
-    {
-        public string object_id;
-        public bool remoteRendered;
-    }
     #pragma warning restore 0649
 }
