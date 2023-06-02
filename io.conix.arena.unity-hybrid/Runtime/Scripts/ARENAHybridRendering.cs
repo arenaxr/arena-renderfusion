@@ -158,19 +158,24 @@ namespace ArenaUnity.HybridRendering
             string msgJson = System.Text.Encoding.UTF8.GetString(message);
             dynamic msg = JsonConvert.DeserializeObject(msgJson);
 
-            if (msg.data != null && msg.type == "object" && msg.data.object_type != "camera") {
-                var gobj = GameObject.Find((string)msg.object_id);
+            if (msg.data != null && msg.type == "object" &&
+                msg.data.object_type != null &&
+                msg.data.object_type != "camera") {
+
+                string object_id = msg.object_id;
+
+                var gobj = GameObject.Find(object_id);
                 if (gobj == null) {
-                    ArenaObject[] aobjs = GameObject.FindObjectsOfType<ArenaObject>(true).Where(aobj => aobj.gameObject.name == (string)msg.object_id).ToArray();
-                    if (aobjs.Length == 0) return;
-                    gobj = aobjs[0].gameObject;
+                    if (!scene.arenaObjs.ContainsKey(object_id)) return;
+                    gobj = scene.arenaObjs[object_id];
+                    if (gobj == null) return;
                 }
 
                 if (msg.data["remote-render"] != null) {
                     bool remoteRender = msg.data["remote-render"].enabled;
                     gobj.SetActive(remoteRender);
                 }
-                else if (gobj.activeSelf) {
+                else {
                     gobj.SetActive(false);
                 }
             }
