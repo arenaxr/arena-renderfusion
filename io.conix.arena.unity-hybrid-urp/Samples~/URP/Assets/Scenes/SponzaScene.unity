@@ -196,7 +196,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 6000
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -477,7 +477,7 @@ PrefabInstance:
     - target: {fileID: 743554626676363792, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
       propertyPath: sceneName
-      value: sponzaremote
+      value: sponzahybrid
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

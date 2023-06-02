@@ -75,7 +75,7 @@ namespace ArenaUnity.HybridRendering
     {
         static readonly float s_defaultFrameRate = 60;
         static readonly float s_defaultScaleFactor = 1.0f;
-        static readonly uint s_defaultMinBitrate = 30000;
+        static readonly uint s_defaultMinBitrate = 20000;
         static readonly uint s_defaultMaxBitrate = 100000;
 
         private float m_FrameRate = s_defaultFrameRate;

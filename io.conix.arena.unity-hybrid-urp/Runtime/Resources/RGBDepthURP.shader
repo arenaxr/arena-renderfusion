@@ -43,7 +43,7 @@ Shader "Hidden/RGBDepthShaderURP"
                         float xcoord = input.texcoord.x - 1.0/2.0;
                         float2 uv = float2(2.0 * xcoord, input.texcoord.y);
                         float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
+                        depth = 10 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
                     // float xcoord = input.texcoord.x;
@@ -77,7 +77,7 @@ Shader "Hidden/RGBDepthShaderURP"
                         float xcoord = input.texcoord.x - 1.0/2.0;
                         float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
                         float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, uv).r;
-                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
+                        depth = 10 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
                     // float xcoord = input.texcoord.x;

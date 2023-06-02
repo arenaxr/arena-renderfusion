@@ -40,7 +40,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.21",
+      "version": "3.0.22",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -251,7 +251,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "c76cc06a52527cd1847edbe3a9a408b6d5b2b2da"
+      "hash": "0daf925a74e9d6bbf10cae8e1ff840c294783890"
     },
     "io.conix.arena.unity-hybrid": {
       "version": "file:../../../../io.conix.arena.unity-hybrid",
