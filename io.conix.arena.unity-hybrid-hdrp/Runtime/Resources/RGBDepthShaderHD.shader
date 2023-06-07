@@ -113,7 +113,7 @@ Shader "Hidden/RGBDepthShaderHD"
                 int height =  _ScreenSize.y;
                 int x = i.uv.x * width;
                 int y = (1 - i.uv.y) * height;
-                if ((width - 32 < x && x <= width) && (0 <= y && y <= height/8)) {
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= height/16)) {
                     // x = x - (width - 32);
                     if ((_FrameID >> x) & 1)
                         col.gb = 1;
