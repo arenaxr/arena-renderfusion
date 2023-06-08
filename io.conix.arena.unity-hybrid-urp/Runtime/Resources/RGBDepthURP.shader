@@ -89,7 +89,7 @@ Shader "Hidden/RGBDepthShaderURP"
                 int height =  _ScreenSize.y;
                 int x = input.texcoord.x * width;
                 int y = (1 - input.texcoord.y) * height;
-                if ((width - 32 < x && x <= width) && (0 <= y && y <= height/16)) {
+                if ((width - 32 < x && x <= width) && (0 <= y && y <= 16)) {
                     // x = x - (width - 32);
                     if ((_FrameID >> x) & 1)
                         col.gb = 1;
