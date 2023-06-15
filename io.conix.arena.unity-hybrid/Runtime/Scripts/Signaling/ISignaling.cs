@@ -25,7 +25,6 @@ namespace ArenaUnity.HybridRendering.Signaling
 
         string Url { get; }
 
-        void SetSyncContext(SynchronizationContext mainThreadContext);
         void OpenConnection();
         void CloseConnection();
         void SendConnect();

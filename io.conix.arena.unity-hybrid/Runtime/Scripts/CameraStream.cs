@@ -10,7 +10,6 @@ using ArenaUnity.HybridRendering.Signaling;
 
 namespace ArenaUnity.HybridRendering
 {
-
     internal class WaitForCreateTrack : CustomYieldInstruction
     {
         public MediaStreamTrack Track { get { return m_track; } }
