@@ -35,7 +35,7 @@
     },
     "com.unity.collab-proxy": {
       "version": "2.0.4",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -337,7 +337,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "6f5e9119cb29c0bb728e80000908fdf1a5dca853"
+      "hash": "0daf925a74e9d6bbf10cae8e1ff840c294783890"
     },
     "io.conix.arena.unity-hybrid": {
       "version": "file:../../../../io.conix.arena.unity-hybrid",

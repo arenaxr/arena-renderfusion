@@ -237,7 +237,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543264276}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdfbd1e51dad24b82b473176c92af9f3, type: 3}
   m_Name: 
@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 743554626676363789, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
       propertyPath: m_Name
-      value: ARENAHybridURP
+      value: RenderFusion
       objectReference: {fileID: 0}
     - target: {fileID: 743554626676363790, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
@@ -359,7 +359,7 @@ PrefabInstance:
     - target: {fileID: 743554626676363792, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
       propertyPath: sceneName
-      value: hybrid-user-study
+      value: render-fusion-unity
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

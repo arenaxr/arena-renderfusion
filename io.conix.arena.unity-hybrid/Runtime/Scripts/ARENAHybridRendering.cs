@@ -95,11 +95,7 @@ namespace ArenaUnity.HybridRendering
 
             yield return new WaitUntil(() => scene.mqttClientConnected);
 
-            GameObject gobj = new GameObject("Arena MQTT Signaler");
-            signaler = gobj.AddComponent(typeof(ARENAMQTTSignaling)) as ARENAMQTTSignaling;
-            signaler.SetSyncContext(SynchronizationContext.Current);
-
-            // signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
+            signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
             signaler.OnStart += OnSignalerStart;
             signaler.OnClientConnect += OnClientConnect;
             signaler.OnClientDisconnect += OnClientDisconnect;
@@ -112,7 +108,7 @@ namespace ArenaUnity.HybridRendering
             signaler.UpdateHALInfo(m_id, useHAL);
             signaler.OpenConnection();
 
-            scene.OnMessageCallback = MessageCallback;
+            scene.OnMessageCallback += MessageCallback;
 
             // sets up heartbeats to send to client every second
             TimerCallback timercallback = new TimerCallback(HandleTimerCallback);
