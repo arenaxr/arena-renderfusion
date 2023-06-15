@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 743554626676363789, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
       propertyPath: m_Name
-      value: RenderFusion
+      value: ARENAHybridURP
       objectReference: {fileID: 0}
     - target: {fileID: 743554626676363790, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}

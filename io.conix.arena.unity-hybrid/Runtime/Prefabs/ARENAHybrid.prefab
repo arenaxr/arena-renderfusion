@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69796b33dcfe5483995570f15eb21bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authType: 2
+  authType: 1
   hostAddress: arena-dev1.conix.io
   namespaceName: Edward
   sceneName: example1
