@@ -1,21 +1,44 @@
+.arena*
+[Ll]ibrary.meta
+[Tt]emp.meta
+[Oo]bj.meta
+[Bb]uild.meta
+[Bb]uilds.meta
+[Ll]ogs.meta
+[Uu]ser[Ss]ettings.meta
+[Pp]roject[Ss]ettings.meta
+
+/[Aa]ssets/ArenaUnity*
+
+# Editors
+.vscode/
+.idea/
+
+# Mac/OSX
+.DS_Store
+
+# Windows
+Thumbs.db
+
 # This .gitignore file should be placed at the root of your Unity project directory
 #
-# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+# Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Pp]roject[Ss]ettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
-/[Mm]emoryCaptures/
+[Mm]emoryCaptures/
 
-# Recordings can get excessive in size
-/[Rr]ecordings/
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
@@ -51,7 +74,6 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
-*.unitypackage.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
@@ -60,7 +82,6 @@ sysinfo.txt
 *.apk
 *.aab
 *.unitypackage
-*.app
 
 # Crashlytics generated file
 crashlytics-build.properties
@@ -72,7 +93,71 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-/[Aa]ssets/ArenaUnity/*
-
-.vscode/
+# https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
+# General
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# https://raw.githubusercontent.com/github/gitignore/main/Global/Windows.gitignore
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
