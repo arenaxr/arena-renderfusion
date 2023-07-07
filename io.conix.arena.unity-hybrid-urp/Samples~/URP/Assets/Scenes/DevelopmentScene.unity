@@ -359,7 +359,7 @@ PrefabInstance:
     - target: {fileID: 743554626676363792, guid: e79ebde4ff24f4ab8ad578a48033fdda,
         type: 3}
       propertyPath: sceneName
-      value: example1
+      value: hybrid-user-study
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -67,7 +67,7 @@ Shader "Hidden/RGBDepthShader"
                     // col.rgb = NormalDepth.w;
 
                     float depth = tex2D(_CameraDepthTexture, float2(2.0 * xcoord, i.uv.y)).r;
-                    depth = Linear01Depth(depth);
+                    depth = 2 * Linear01Depth(depth);
                     col.rgb = depth;
 
                     // float depth1 = Linear01Depth(depth);
@@ -106,7 +106,7 @@ Shader "Hidden/RGBDepthShader"
                 {
                     float xcoord = i.uv.x - 1.0/4.0;
                     float depth = tex2D(_CameraDepthTexture, float2(1.0/4.0 + 2.0 * xcoord, i.uv.y)).r;
-                    depth = Linear01Depth(depth);
+                    depth = 2 * Linear01Depth(depth);
                     col.rgb = depth;
                 }
                 // here, we want the "middle half" of each half, we offset by 1/8
