@@ -1,24 +1,24 @@
 # ARENA Hybrid Rendering for Unity
 
-Enabling Remote/Hybrid Rendering on [ARENA](https://arenaxr.org/) using Unity.
+Enabling Hybrid Rendering on [ARENA](https://arenaxr.org/) using Unity for remote rendering.
 
 <img alt="" src="images/demo.png">
 
 # Usage
 ```
-git clone https://github.com/EdwardLu2018/arena-hybrid-unity-app.git
+git clone git@github.com:arenaxr/arena-hybrid-rendering.git
 ```
 
 # Samples
 
 ## Standard Render Pipeline
-Open `io.conix.arena.unity-hybrid/Samples~/SRP` in Unity.
+Open `io.conix.arena.unity-hybrid/Samples~/SRP`.
 
 ## Universal Render Pipeline
-Open `io.conix.arena.unity-hybrid-urp/Samples~/URP` in Unity.
+Open `io.conix.arena.unity-hybrid-urp/Samples~/URP`.
 
 ## High Definition Render Pipeline
-Open `io.conix.arena.unity-hybrid-hdrp/Samples~/HDRP` in Unity.
+Open `io.conix.arena.unity-hybrid-hdrp/Samples~/HDRP`.
 
 # Development
 
