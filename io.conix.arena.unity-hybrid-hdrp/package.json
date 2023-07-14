@@ -5,7 +5,7 @@
     "unity": "2022.2",
     "description": "Enables Remote/Hybrid Rendering on ARENA using Unity.",
     "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.5",
+        "com.unity.webrtc": "3.0.0-pre.6",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.unity-hybrid": "0.1.0"
     },

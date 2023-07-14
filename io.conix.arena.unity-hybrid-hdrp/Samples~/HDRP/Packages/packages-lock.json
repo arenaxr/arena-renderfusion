@@ -270,7 +270,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.5",
+      "version": "3.0.0-pre.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -344,7 +344,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.5",
+        "com.unity.webrtc": "3.0.0-pre.6",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
       }
     },
@@ -353,7 +353,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.5",
+        "com.unity.webrtc": "3.0.0-pre.6",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.unity-hybrid": "0.1.0"
       }

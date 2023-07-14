@@ -12,7 +12,7 @@
     "com.unity.toolchain.linux-x86_64": "2.0.5",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.8.0",
-    "com.unity.webrtc": "3.0.0-pre.5",
+    "com.unity.webrtc": "3.0.0-pre.6",
     "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "io.conix.arena.unity-hybrid": "file:../../../../io.conix.arena.unity-hybrid",
     "io.conix.arena.unity-hybrid-urp": "file:../../../",
