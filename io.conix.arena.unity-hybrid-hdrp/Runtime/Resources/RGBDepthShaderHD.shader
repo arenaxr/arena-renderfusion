@@ -67,7 +67,7 @@ Shader "Hidden/RGBDepthShaderHD"
                         xcoord = i.uv.x - 1.0/2.0;
                         positionSS = float2(xcoord * 2.0, i.uv.y) * _ScreenSize.xy;
                         float depth = LoadCameraDepth(positionSS);
-                        depth = 50 * Linear01Depth(depth, _ZBufferParams);
+                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
                     // xcoord = i.uv.x;
@@ -101,7 +101,7 @@ Shader "Hidden/RGBDepthShaderHD"
                         xcoord = i.uv.x - 1.0/2.0;
                         positionSS = float2(1.0/4.0 + xcoord, i.uv.y) * _ScreenSize.xy;
                         float depth = LoadCameraDepth(positionSS);
-                        depth = 50 * Linear01Depth(depth, _ZBufferParams);
+                        depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
                     // xcoord = i.uv.x;

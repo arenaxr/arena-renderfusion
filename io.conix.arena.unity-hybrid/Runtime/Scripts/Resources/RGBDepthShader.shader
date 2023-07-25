@@ -66,7 +66,7 @@ Shader "Hidden/RGBDepthShader"
                     // DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, float2(xcoord, i.uv.y)), NormalDepth.w, NormalDepth.xyz);
                     // col.rgb = NormalDepth.w;
 
-                    float depth = tex2D(_CameraDepthTexture, float2(2.0 * xcoord, i.uv.y)).r;
+                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(2.0 * xcoord, i.uv.y));
                     depth = 50 * Linear01Depth(depth);
                     col.rgb = depth;
 
@@ -105,7 +105,7 @@ Shader "Hidden/RGBDepthShader"
                 if (1.0/4.0 < i.uv.x && i.uv.x <= 1.0/2.0)
                 {
                     float xcoord = i.uv.x - 1.0/4.0;
-                    float depth = tex2D(_CameraDepthTexture, float2(1.0/4.0 + 2.0 * xcoord, i.uv.y)).r;
+                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(1.0/4.0 + 2.0 * xcoord, i.uv.y));
                     depth = 50 * Linear01Depth(depth);
                     col.rgb = depth;
                 }
