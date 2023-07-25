@@ -13,7 +13,7 @@ namespace ArenaUnity.HybridRendering
     [RequireComponent(typeof(Camera))]
     public class HybridCamera : MonoBehaviour
     {
-        static readonly int s_defaultDepth = 16;
+        static readonly int s_defaultDepth = 24;
 
         private Camera m_camera;
 
