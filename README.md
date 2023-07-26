@@ -2,34 +2,35 @@
 
 Enable Hybrid Rendering on [ARENA](https://arenaxr.org/) using Unity for remote rendering!
 
-<img alt="" src="images/demo.png">
+<img alt="" src="Documentation~/images/demo.png">
 
-# Usage
+## Requirements
+
+We implement a custom layer on top of Unity's [WebRTC package](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/index.html). See their [Requirements](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/requirements.html).
+
+## Repository Structure
+
 ```
-git clone git@github.com:arenaxr/arena-hybrid-rendering.git
+<root>
+├── io.conix.arena.unity-hybrid         // Main ARENA Hybrid Rendering Package (must be included in all render pipelines!)
+│   └── Samples~/SRP                    // Sample project for SRP workflows
+├── io.conix.arena.unity-hybrid-urp     // Additional Package for URP workflows (must be included when using URP!)
+│   └── Samples~/URP                    // Sample project for URP workflows
+└── io.conix.arena.unity-hybrid-hdrp    // Additional Package for HDRP workflows (must be included when using HDRP!)
+    └── Samples~/HDRP                   // Sample project for HDRP workflows
 ```
 
-To install the package(s), click Window->Package Manager->`+`->Add package from disk.
+## Usage
 
-Then select `io.conix.arena.unity-hybrid/package.json` from this repo.<br>
-- If you are working in URP, also install `io.conix.arena.unity-hybrid-urp/package.json`. Your URP Settings should include the `RGB Depth Feature` post processing effect that comes with this library.<br>
-- If you are working in HDRP, also install `io.conix.arena.unity-hybrid-hdrp/package.json`. Your HDRP Global Settings should include the `ArenaUnity.HybridRendering.RGBDepthShaderHD` in the `After Post Process` item under the `Custom Post Process Order` list.
+See [Installation](Documentation~/install.md) section.
 
-You can include Prefabs in `io.conix.arena.unity-hybrid/Runtime/Prefabs`
-- Include `io.conix.arena.unity-hybrid-urp/Runtime/Prefabs` if you are using URP.
-- Include `io.conix.arena.unity-hybrid-hdrp/Runtime/Prefabs` if you are using HDRP.
+## Samples
 
-# Samples
-
-## Standard Render Pipeline
+### Standard Render Pipeline
 Open `io.conix.arena.unity-hybrid/Samples~/SRP`.
 
-## Universal Render Pipeline
+### Universal Render Pipeline
 Open `io.conix.arena.unity-hybrid-urp/Samples~/URP`.
 
-## High Definition Render Pipeline
+### High Definition Render Pipeline
 Open `io.conix.arena.unity-hybrid-hdrp/Samples~/HDRP`.
-
-# Development
-
-Development uses Unity Editor Version 2022.3+
