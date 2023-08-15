@@ -1,6 +1,6 @@
-# ARENA Hybrid Rendering for Unity
+# RenderFusion on ARENA using Unity
 
-Enable Hybrid Rendering on [ARENA](https://arenaxr.org/) using Unity for remote rendering!
+RenderFusion on [ARENA](https://arenaxr.org/) using Unity for remote rendering!
 
 <img alt="" src="Documentation~/images/demo.png">
 
@@ -12,25 +12,27 @@ We implement a custom layer on top of Unity's [WebRTC package](https://docs.unit
 
 ```
 <root>
-├── io.conix.arena.unity-hybrid         // Main ARENA Hybrid Rendering Package (must be included in all render pipelines!)
-│   └── Samples~/SRP                    // Sample project for SRP workflows
-├── io.conix.arena.unity-hybrid-urp     // Additional Package for URP workflows (must be included when using URP!)
-│   └── Samples~/URP                    // Sample project for URP workflows
-└── io.conix.arena.unity-hybrid-hdrp    // Additional Package for HDRP workflows (must be included when using HDRP!)
-    └── Samples~/HDRP                   // Sample project for HDRP workflows
+├── io.conix.arena.renderfusion       // Main ARENA RenderFusion Package (must be included in all render pipelines!)
+│   └── Samples~/SRP                  // Sample project for SRP workflows
+├── io.conix.arena.renderfusion-urp   // Additional Package for URP workflows (must be included when using URP!)
+│   └── Samples~/URP                  // Sample project for URP workflows
+└── io.conix.arena.renderfusion-hdrp  // Additional Package for HDRP workflows (must be included when using HDRP!)
+    └── Samples~/HDRP                 // Sample project for HDRP workflows
 ```
 
 ## Usage
 
 See [Installation](Documentation~/install.md) section.
 
+Once you have the relevant packages installed, press Play on the Unity Editor and enter the ARENA scene (`<Host Address>/<Namespace Name>/<Scene Name>`)!
+
 ## Samples
 
 ### Standard Render Pipeline
-Open `io.conix.arena.unity-hybrid/Samples~/SRP`.
+Open `io.conix.arena.renderfusion/Samples~/SRP`.
 
 ### Universal Render Pipeline
-Open `io.conix.arena.unity-hybrid-urp/Samples~/URP`.
+Open `io.conix.arena.renderfusion-urp/Samples~/URP`.
 
 ### High Definition Render Pipeline
-Open `io.conix.arena.unity-hybrid-hdrp/Samples~/HDRP`.
+Open `io.conix.arena.renderfusion-hdrp/Samples~/HDRP`.
