@@ -1,0 +1,17 @@
+{
+    "name": "conix.arena.renderfusion",
+    "references": [
+        "Unity.WebRTC",
+        "PrettyHierarchy",
+        "conix.arena.unity"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
