@@ -1,6 +1,6 @@
-# RenderFusion on ARENA using Unity
+# ARENA RenderFusion
 
-RenderFusion on [ARENA](https://arenaxr.org/) using Unity for remote rendering!
+RenderFusion with [ARENA](https://arenaxr.org/) and Unity!
 
 <img alt="" src="Documentation~/images/demo.png">
 
