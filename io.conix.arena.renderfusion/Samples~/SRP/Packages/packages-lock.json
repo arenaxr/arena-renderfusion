@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.collab-proxy": {
-      "version": "2.0.5",
+      "version": "2.0.7",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -131,6 +131,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "io.conix.arena.renderfusion": {
+      "version": "file:../../../",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
+      }
+    },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
       "depth": 0,
@@ -179,15 +188,6 @@
         "com.unity.modules.xr": "1.0.0"
       },
       "hash": "0daf925a74e9d6bbf10cae8e1ff840c294783890"
-    },
-    "io.conix.arena.renderfusion": {
-      "version": "file:../../../",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
-        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
-      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

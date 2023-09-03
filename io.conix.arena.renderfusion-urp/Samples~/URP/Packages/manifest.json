@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.ai.navigation": "1.1.4",
-    "com.unity.collab-proxy": "2.0.5",
+    "com.unity.collab-proxy": "2.0.7",
     "com.unity.ide.rider": "3.0.24",
     "com.unity.ide.visualstudio": "2.0.18",
     "com.unity.ide.vscode": "1.2.5",
@@ -11,11 +11,11 @@
     "com.unity.timeline": "1.7.5",
     "com.unity.toolchain.linux-x86_64": "2.0.5",
     "com.unity.ugui": "1.0.0",
-    "com.unity.visualscripting": "1.8.0",
+    "com.unity.visualscripting": "1.9.0",
     "com.unity.webrtc": "3.0.0-pre.6",
-    "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "io.conix.arena.renderfusion": "file:../../../../io.conix.arena.renderfusion",
     "io.conix.arena.renderfusion-urp": "file:../../../",
+    "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
