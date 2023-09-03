@@ -25,7 +25,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.7",
+      "version": "1.8.8",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -34,7 +34,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.0.5",
+      "version": "2.0.7",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -260,7 +260,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.8.0",
+      "version": "1.9.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -289,6 +289,25 @@
         "com.unity.modules.xr": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "io.conix.arena.renderfusion": {
+      "version": "file:../../../../io.conix.arena.renderfusion",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
+      }
+    },
+    "io.conix.arena.renderfusion-hdrp": {
+      "version": "file:../../../",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
+        "io.conix.arena.renderfusion": "0.1.0"
+      }
     },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
@@ -338,25 +357,6 @@
         "com.unity.modules.xr": "1.0.0"
       },
       "hash": "0daf925a74e9d6bbf10cae8e1ff840c294783890"
-    },
-    "io.conix.arena.renderfusion": {
-      "version": "file:../../../../io.conix.arena.renderfusion",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
-        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
-      }
-    },
-    "io.conix.arena.renderfusion-hdrp": {
-      "version": "file:../../../",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
-        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
-        "io.conix.arena.renderfusion": "0.1.0"
-      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
