@@ -1,6 +1,6 @@
 {
     "name": "io.conix.arena.renderfusion",
-    "displayName": "ARENA RenderFusion for Unity.",
+    "displayName": "ARENA RenderFusion for Unity",
     "version": "0.1.1",
     "unity": "2022.2",
     "description": "Enables RenderFusion on ARENA using Unity.",
