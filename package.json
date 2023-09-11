@@ -14,5 +14,10 @@
             "description": "Standard Render Pipeline Example",
             "path": "Samples~/SRP"
         }
-    ]
+    ],
+    "author": {
+      "name": "The CONIX Research Center",
+      "email": "info@conix.io",
+      "url": "https://docs.arenaxr.org"
+    }
 }
