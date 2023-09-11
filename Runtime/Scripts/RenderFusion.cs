@@ -118,11 +118,13 @@ namespace ArenaUnity.RenderFusion
 
         private void OnSignalerStart(ISignaling signaler)
         {
+            var scene = ArenaClientScene.Instance;
+
             if (remoteRender)
                 StartCoroutine(RemoveNonRemoteRenderedObjs());
 
             StartCoroutine(WebRTC.Update());
-            Debug.Log("Hybrid Rendering Server Started!");
+            Debug.Log($"Hybrid Rendering Server Started! Please visit https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}");
         }
 
         private IEnumerator RemoveNonRemoteRenderedObjs()
