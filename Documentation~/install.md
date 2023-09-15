@@ -1,5 +1,7 @@
 # Installation
 
+First, install the [ARENA-unity](https://github.com/arenaxr/arena-unity) package, following the instructions [here](https://docs.arenaxr.org/content/unity/).
+
 To install the RenderFusion Unity package, select `Window/Package Manager` from the menu bar.
 
 ![Install Package Manager from menu bar](images/package_manager.png)
@@ -21,7 +23,7 @@ You should include the Prefab from `ARENA RenderFusion for Unity/Runtime/Prefabs
 
 If you are working in URP, __also__ install
 ```
-https://github.com/arenaxr/arena-renderfusion-urp.git
+https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-urp
 ```
 IMPORTANT: Your URP Settings should include the `RGB Depth Feature` post processing effect that comes with this library.
 
@@ -31,7 +33,7 @@ IMPORTANT: Your URP Settings should include the `RGB Depth Feature` post process
 
 If you are working in HDRP, __also__ install
 ```
-https://github.com/arenaxr/arena-renderfusion-hdrp.git
+https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-hdrp
 ```
 IMPORTANT: Your HDRP Global Settings should include the `ArenaUnity.RenderFusion.RGBDepthShaderHD` in the `After Post Process` item under the `Custom Post Process Order` list.
 
