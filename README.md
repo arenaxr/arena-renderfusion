@@ -20,7 +20,7 @@ Once you have the relevant packages installed, press Play on the Unity Editor an
 Open `Samples~/SRP`.
 
 ### Universal Render Pipeline
-See https://github.com/arenaxr/arena-renderfusion-urp.
+Open `Samples~/URP`.
 
 ### High Definition Render Pipeline
-See https://github.com/arenaxr/arena-renderfusion-hdrp.
+Open `Samples~/HDRP`.
