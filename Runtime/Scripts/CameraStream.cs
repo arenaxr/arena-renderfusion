@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using ArenaUnity.RenderFusion.Signaling;
+using ArenaUnity.Schemas;
 
 namespace ArenaUnity.RenderFusion
 {
