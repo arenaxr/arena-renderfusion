@@ -30,9 +30,6 @@ namespace ArenaUnity.RenderFusion
         [SerializeField, Tooltip("Video resolution (width will be internally doubled to account for depth frame).")]
         public Vector2Int defaultResolution = new Vector2Int(1920, 1080);
 
-        [SerializeField, Tooltip("Enable dynamic scene partitioning (using remote-render).")]
-        public bool remoteRender = true;
-
         [SerializeField, Tooltip("Automatically started when called Start method.")]
         public bool runOnStart = true;
 
@@ -106,9 +103,7 @@ namespace ArenaUnity.RenderFusion
             signaler.OnHALConnect += OnHALConnect;
 
             signaler.UpdateHALInfo(m_id, useHAL);
-            signaler.OpenConnection();
-
-            scene.OnMessageCallback += MessageCallback;
+            signaler.OpenConnection();;
 
             // sets up heartbeats to send to client every second
             TimerCallback timercallback = new TimerCallback(HandleTimerCallback);
@@ -120,63 +115,8 @@ namespace ArenaUnity.RenderFusion
         {
             var scene = ArenaClientScene.Instance;
 
-            if (remoteRender)
-                StartCoroutine(RemoveNonRemoteRenderedObjs());
-
             StartCoroutine(WebRTC.Update());
             Debug.Log($"Hybrid Rendering Server Started! Please visit https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}");
-        }
-
-        private IEnumerator RemoveNonRemoteRenderedObjs()
-        {
-            yield return new WaitUntil(() => ArenaClientScene.Instance.persistLoaded);
-
-            foreach (var aobj in FindObjectsOfType<ArenaObject>(true))
-            {
-                JToken data = JToken.Parse(aobj.jsonData);
-                var remoteRenderToken = data["remote-render"];
-                if (remoteRenderToken != null)
-                {
-                    bool remoteRendered = remoteRenderToken["enabled"].Value<bool>();
-                    aobj.gameObject.SetActive(remoteRendered);
-                    // aobj.gameObject.GetComponent<Renderer>().enabled = remoteRendered;
-                }
-                else if (aobj.gameObject.activeSelf)
-                {
-                    aobj.gameObject.SetActive(false);
-                    // aobj.gameObject.GetComponent<Renderer>().enabled = false;
-                }
-            }
-        }
-
-        private void MessageCallback(string topic, byte[] message)
-        {
-            var scene = ArenaClientScene.Instance;
-
-            string msgJson = System.Text.Encoding.UTF8.GetString(message);
-            dynamic msg = JsonConvert.DeserializeObject(msgJson);
-
-            if (msg.data != null && msg.type == "object" &&
-                msg.data.object_type != null &&
-                msg.data.object_type != "camera") {
-
-                string object_id = msg.object_id;
-
-                var gobj = GameObject.Find(object_id);
-                if (gobj == null) {
-                    if (!scene.arenaObjs.ContainsKey(object_id)) return;
-                    gobj = scene.arenaObjs[object_id];
-                    if (gobj == null) return;
-                }
-
-                if (msg.data["remote-render"] != null) {
-                    bool remoteRender = msg.data["remote-render"].enabled;
-                    gobj.SetActive(remoteRender);
-                }
-                else {
-                    gobj.SetActive(false);
-                }
-            }
         }
 
         private PeerConnection CreatePeerConnection(ConnectData data)
