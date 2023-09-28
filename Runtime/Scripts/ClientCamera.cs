@@ -11,7 +11,7 @@ using ArenaUnity.RenderFusion.Signaling;
 namespace ArenaUnity.RenderFusion
 {
     [RequireComponent(typeof(Camera))]
-    public class HybridCamera : MonoBehaviour
+    public class ClientCamera : MonoBehaviour
     {
         static readonly int s_defaultDepth = 24;
 

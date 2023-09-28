@@ -65,7 +65,7 @@ namespace ArenaUnity.RenderFusion
 
             sourceStream = new MediaStream();
 
-            gobj = new GameObject($"hybrid_{m_clientId}");
+            gobj = new GameObject($"rf_client_{m_clientId}");
             camStream = gobj.AddComponent<CameraStream>();
 
             mainThreadTimeRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
