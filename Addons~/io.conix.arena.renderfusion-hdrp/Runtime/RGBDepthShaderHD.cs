@@ -26,11 +26,11 @@ namespace ArenaUnity.RenderFusion
             if (m_Material == null)
                 return;
 
-            var hybridCamera = camera.camera.gameObject.GetComponent<HybridCamera>();
-            if (hybridCamera)
+            var clientCamera = camera.camera.gameObject.GetComponent<ClientCamera>();
+            if (clientCamera)
             {
-                int hasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
-                int frameID = hybridCamera.FrameID;
+                int hasDualCameras = (clientCamera.IsDualCamera) ? 1 : 0;
+                int frameID = clientCamera.FrameID;
 
                 m_Material.SetInt("_DualCameras", hasDualCameras);
                 m_Material.SetInt("_FrameID", frameID);

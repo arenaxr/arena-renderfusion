@@ -30,14 +30,14 @@ namespace ArenaUnity.RenderFusion
             if (m_material == null)
                 return;
 
-            var hybridCamera = cameraData.camera.gameObject.GetComponent<HybridCamera>();
-            if (hybridCamera == null)
+            var clientCamera = cameraData.camera.gameObject.GetComponent<ClientCamera>();
+            if (clientCamera == null)
                 return;
 
             CommandBuffer cmd = CommandBufferPool.Get(m_profilerTag);
 
-            int hasDualCameras = (hybridCamera.IsDualCamera) ? 1 : 0;
-            int frameID = hybridCamera.FrameID;
+            int hasDualCameras = (clientCamera.IsDualCamera) ? 1 : 0;
+            int frameID = clientCamera.FrameID;
 
             m_material.SetInt("_DualCameras", hasDualCameras);
             m_material.SetInt("_FrameID", frameID);

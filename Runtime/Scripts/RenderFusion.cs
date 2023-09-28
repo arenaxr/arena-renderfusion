@@ -50,7 +50,7 @@ namespace ArenaUnity.RenderFusion
 
         internal System.Threading.Timer timer;
 
-        private String m_id = "";
+        private String m_halId = "";
 
         private int timerCounter = 0;
 
@@ -66,7 +66,7 @@ namespace ArenaUnity.RenderFusion
 
             if (arguments.Length >= 2)
             {
-                m_id = arguments[1];
+                m_halId = arguments[1];
             }
 
             if (useHAL)
@@ -102,13 +102,14 @@ namespace ArenaUnity.RenderFusion
             signaler.OnClientHealthCheck += OnClientHealthCheck;
             signaler.OnHALConnect += OnHALConnect;
 
-            signaler.UpdateHALInfo(m_id, useHAL);
-            signaler.OpenConnection();;
+            signaler.UpdateHALInfo(m_halId, useHAL);
+            signaler.OpenConnection();
+
+            signaler.SendConnect();
 
             // sets up heartbeats to send to client every second
             TimerCallback timercallback = new TimerCallback(HandleTimerCallback);
             timer = new Timer(timercallback, signaler as object, 1000, 1000);
-            signaler.SendConnect();
         }
 
         private void OnSignalerStart(ISignaling signaler)
@@ -116,7 +117,8 @@ namespace ArenaUnity.RenderFusion
             var scene = ArenaClientScene.Instance;
 
             StartCoroutine(WebRTC.Update());
-            Debug.Log($"Hybrid Rendering Server Started! Please visit https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}");
+
+            Debug.Log($"RenderFusion server started! Please visit https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}");
         }
 
         private PeerConnection CreatePeerConnection(ConnectData data)
