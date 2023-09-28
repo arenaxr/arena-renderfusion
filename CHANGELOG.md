@@ -11,7 +11,3 @@
 ### Miscellaneous Chores
 
 * release 0.1.2 ([6e4119b](https://github.com/arenaxr/arena-renderfusion/commit/6e4119b7d31a965ddab55f79b88df8bbcfe99ec6))
-
-## Changelog
-
-arena-renderfusion notable changes. Started 2023-9-27 (version 0.1.2).
