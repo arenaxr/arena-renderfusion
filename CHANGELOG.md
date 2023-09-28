@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.2 (2023-09-28)
+## [0.1.2](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.2...v0.1.2) (2023-09-28)
 
 
 ### Features
