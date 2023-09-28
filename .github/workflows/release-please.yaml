@@ -11,3 +11,6 @@ jobs:
         with:
           release-type: node
           package-name: release-please-action
+          extra-files: |
+                        Addons~/io.conix.arena.renderfusion-urp/package.json
+                        Addons~/io.conix.arena.renderfusion-hdrp/package.json
