@@ -12,7 +12,7 @@ We implement a custom layer on top of Unity's [WebRTC package](https://docs.unit
 
 See [Installation](Documentation~/install.md) section.
 
-Once you have the relevant packages installed, press Play on the Unity Editor and enter the ARENA scene (`<Host Address>/<Namespace Name>/<Scene Name>`)!
+Once you have the relevant packages installed, press Play on the Unity Editor or build the Unity application, then enter the ARENA scene (`<Host Address>/<Namespace Name>/<Scene Name>`) on a web browser!
 
 ## Samples
 
