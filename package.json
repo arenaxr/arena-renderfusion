@@ -11,8 +11,18 @@
     "samples": [
         {
             "displayName": "SRP Example",
-            "description": "Standard Render Pipeline Example",
+            "description": "RenderFusion Standard Render Pipeline Example",
             "path": "Samples~/SRP"
+        },
+        {
+            "displayName": "URP Example",
+            "description": "RenderFusion Universal Render Pipeline Example",
+            "path": "Samples~/URP"
+        },
+        {
+            "displayName": "HDRP Example",
+            "description": "RenderFusion High Definition Render Pipeline Example",
+            "path": "Samples~/HDRP"
         }
     ],
     "author": {

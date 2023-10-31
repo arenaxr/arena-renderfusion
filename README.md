@@ -24,3 +24,6 @@ Open `Samples~/URP`.
 
 ### High Definition Render Pipeline
 Open `Samples~/HDRP`.
+
+## License
+See the [LICENSE](LICENSE) file.

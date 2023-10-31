@@ -11,13 +11,6 @@
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
     },
-    "samples": [
-        {
-            "displayName": "HDRP Example",
-            "description": "High Definition Render Pipeline Example",
-            "path": "Samples~/HDRP"
-        }
-    ],
     "author": {
         "name": "The CONIX Research Center",
         "email": "info@conix.io",
