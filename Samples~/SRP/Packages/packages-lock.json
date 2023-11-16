@@ -121,8 +121,8 @@
       }
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.6",
-      "depth": 1,
+      "version": "3.0.0-pre.7",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0",
