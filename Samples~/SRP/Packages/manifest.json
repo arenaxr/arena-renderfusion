@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.unity.toolchain.linux-x86_64": "2.0.6",
+    "com.unity.webrtc": "3.0.0-pre.7",
     "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git",
     "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
     "com.unity.modules.ai": "1.0.0",
