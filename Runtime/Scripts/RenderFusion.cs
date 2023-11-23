@@ -81,11 +81,6 @@ namespace ArenaUnity.RenderFusion
             StartCoroutine(SetupSignaling());
         }
 
-        private void OnDestroy()
-        {
-            timer.Dispose();
-        }
-
         private IEnumerator SetupSignaling()
         {
             var scene = ArenaClientScene.Instance;
@@ -142,6 +137,15 @@ namespace ArenaUnity.RenderFusion
             }
             else
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
+        }
+        private void OnDestroy()
+        {
+            var keysToRemove = clientPeerDict.Keys.ToList();
+            foreach (var id in keysToRemove)
+            {
+                RemovePeerConnection(id);
+            }
+            timer.Dispose();
         }
 
         private void OnClientConnect(ISignaling signaler, ConnectData data)
