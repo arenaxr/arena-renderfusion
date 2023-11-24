@@ -4,6 +4,8 @@ RenderFusion with [ARENA](https://arenaxr.org/) and Unity!
 
 <img alt="" src="Documentation~/images/demo.png">
 
+See a demo video [here](https://www.youtube.com/watch?v=6mA4k9myuOM)!
+
 ## Requirements
 
 We implement a custom layer on top of Unity's [WebRTC package](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/index.html). See their [Requirements](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/requirements.html).
