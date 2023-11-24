@@ -6,6 +6,9 @@
     "_release_please_version_end": "x-release-please-end-version",
     "unity": "2022.2",
     "description": "Enables RenderFusion on ARENA using Unity.",
+    "documentationUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/README.md",
+    "changelogUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/LICENSE",
     "dependencies": {
         "com.unity.webrtc": "3.0.0-pre.6",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
