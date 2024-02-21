@@ -1,5 +1,7 @@
 # Installation
 
+*For AR/VR clients, it is reccomeneded you use this package in __URP__ or __HDRP__ for the best performance.*
+
 First, install the [ARENA-unity](https://github.com/arenaxr/arena-unity) package, following the instructions [here](https://docs.arenaxr.org/content/unity/).
 
 To install the RenderFusion Unity package, select `Window/Package Manager` from the menu bar.
