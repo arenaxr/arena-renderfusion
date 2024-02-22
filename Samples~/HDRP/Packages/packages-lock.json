@@ -34,6 +34,35 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.cloud.draco": {
+      "version": "5.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.8.11",
+        "com.unity.mathematics": "1.3.1"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cloud.draco.webgl-2022": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cloud.gltfast": {
+      "version": "6.2.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.mathematics": "1.3.1",
+        "com.unity.burst": "1.8.4"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
       "version": "2.2.0",
       "depth": 1,
@@ -95,8 +124,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.6",
-      "depth": 1,
+      "version": "1.3.1",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -307,6 +336,8 @@
       "depth": 0,
       "source": "git",
       "dependencies": {
+        "com.unity.cloud.draco": "5.0.2",
+        "com.unity.cloud.gltfast": "6.2.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.collab-proxy": "1.2.16",
         "com.unity.editorcoroutines": "1.0.0",
@@ -349,7 +380,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "1865bc457f5c2a1ed560fdd49d50a3b6b2435a41"
+      "hash": "6e3ea0b60cf7b53bb26cd24168215b3fffeffaf2"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
