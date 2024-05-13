@@ -20,7 +20,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cloud.draco": {
-      "version": "5.0.2",
+      "version": "5.1.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -29,15 +29,8 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.cloud.draco.webgl-2022": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.cloud.gltfast": {
-      "version": "6.2.0",
+      "version": "6.4.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -45,6 +38,15 @@
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.mathematics": "1.3.1",
         "com.unity.burst": "1.8.4"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cloud.ktx": {
+      "version": "3.4.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -99,6 +101,16 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.meshopt.decompress": {
+      "version": "0.1.0-preview.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.burst": "1.4.11"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
@@ -156,18 +168,18 @@
       }
     },
     "com.unity.sysroot": {
-      "version": "2.0.7",
+      "version": "2.0.10",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.6",
+      "version": "2.0.9",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.7"
+        "com.unity.sysroot": "2.0.10"
       },
       "url": "https://packages.unity.com"
     },
@@ -183,8 +195,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
-      "depth": 0,
+      "version": "3.0.8",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.ugui": "1.0.0"
@@ -204,12 +216,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.linux-x86_64": {
-      "version": "2.0.6",
+      "version": "2.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.7",
-        "com.unity.sysroot.linux-x86_64": "2.0.6"
+        "com.unity.sysroot": "2.0.10",
+        "com.unity.sysroot.linux-x86_64": "2.0.9"
       },
       "url": "https://packages.unity.com"
     },
@@ -223,7 +235,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.1",
+      "version": "1.9.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -248,29 +260,31 @@
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
+        "com.unity.webrtc": "3.0.0-pre.7",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
       },
-      "hash": "140b529d220b188d8db4e2e1b97730cc26e611d5"
+      "hash": "12309f0879828af0b2668a1e29488a57be1361c7"
     },
     "io.conix.arena.renderfusion-urp": {
       "version": "https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-urp",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
+        "com.unity.webrtc": "3.0.0-pre.7",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
       },
-      "hash": "140b529d220b188d8db4e2e1b97730cc26e611d5"
+      "hash": "12309f0879828af0b2668a1e29488a57be1361c7"
     },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.cloud.draco": "5.0.2",
-        "com.unity.cloud.gltfast": "6.2.0",
+        "com.unity.cloud.gltfast": "6.4.0",
+        "com.unity.cloud.draco": "5.1.3",
+        "com.unity.cloud.ktx": "3.4.0",
+        "com.unity.meshopt.decompress": "0.1.0-preview.6",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.collab-proxy": "1.2.16",
         "com.unity.editorcoroutines": "1.0.0",
@@ -278,7 +292,7 @@
         "com.unity.ide.visualstudio": "2.0.8",
         "com.unity.ide.vscode": "1.2.3",
         "com.unity.test-framework": "1.1.24",
-        "com.unity.textmeshpro": "2.1.4",
+        "com.unity.textmeshpro": "3.0.8",
         "com.unity.timeline": "1.2.18",
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.ai": "1.0.0",
@@ -313,7 +327,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "6e3ea0b60cf7b53bb26cd24168215b3fffeffaf2"
+      "hash": "c44610b36ad3edbb35b78cd85ba6ed45ee75267e"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
