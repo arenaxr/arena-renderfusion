@@ -188,14 +188,12 @@ namespace ArenaUnity.RenderFusion.Signaling
             Publish(SERVER_STATS_TOPIC, stats);
         }
 
-        protected void ProcessMessage(string topic, byte[] msg)
+        protected void ProcessMessage(string topic, string content)
         {
             if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-2) )) ) return;
 
             try
             {
-                var content = Encoding.UTF8.GetString(msg);
-
                 var routedMessage = JsonUtility.FromJson<RoutedMessage<string>>(content);
                 // ignore other servers
                 if (routedMessage.source == "server") return;
