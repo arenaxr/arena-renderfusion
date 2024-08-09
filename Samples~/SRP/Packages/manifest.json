@@ -1,6 +1,15 @@
 {
   "dependencies": {
-    "com.unity.toolchain.linux-x86_64": "2.0.6",
+    "com.unity.ai.navigation": "1.1.5",
+    "com.unity.collab-proxy": "2.3.1",
+    "com.unity.ide.visualstudio": "2.0.22",
+    "com.unity.ide.vscode": "1.2.5",
+    "com.unity.test-framework": "1.1.33",
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.timeline": "1.7.6",
+    "com.unity.toolchain.linux-x86_64": "2.0.9",
+    "com.unity.ugui": "1.0.0",
+    "com.unity.visualscripting": "1.9.4",
     "com.unity.webrtc": "3.0.0-pre.7",
     "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git",
     "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
