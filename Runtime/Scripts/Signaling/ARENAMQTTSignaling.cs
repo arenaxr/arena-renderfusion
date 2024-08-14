@@ -11,6 +11,7 @@ namespace ArenaUnity.RenderFusion.Signaling
 {
     public class ARENAMQTTSignaling : ISignaling
     {
+        // TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
         private static readonly string TOPIC_PREFIX = "realm/g/a";
 
         private readonly string SERVER_OFFER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/offer";

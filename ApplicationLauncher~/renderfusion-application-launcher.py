@@ -1,11 +1,13 @@
 import json
-import subprocess
-from arena import *
-from sys import platform
 import logging
+import subprocess
 import uuid
+from sys import platform
+
+from arena import *
 
 scene = Scene(host="arena-dev1.conix.io", scene="example")
+# TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
 CLIENT_CONNECT = "realm/g/a/hybrid_rendering/client/connect/#"
 CLIENT_DISCONNECT = "realm/g/a/hybrid_rendering/client/disconnect/#"
 CLIENT_REMOTE = "realm/g/a/hybrid_rendering/client/remote/#"
