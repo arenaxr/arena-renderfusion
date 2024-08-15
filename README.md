@@ -12,17 +12,17 @@ We implement a custom layer on top of Unity's [WebRTC package](https://docs.unit
 
 ## Usage
 
-See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is reccomeneded you use this package in __URP__ or __HDRP__ for the best performance.*
+See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is reccomeneded you use this package in __URP__ for the best performance.*
 
 Once you have the relevant packages installed, press Play on the Unity Editor or build the Unity application, then enter the ARENA scene (`<Host Address>/<Namespace Name>/<Scene Name>`) on a web browser!
 
 ## Samples
 
+### Universal Render Pipeline (recommended)
+Open `Samples~/URP`.
+
 ### Standard Render Pipeline
 Open `Samples~/SRP`.
-
-### Universal Render Pipeline
-Open `Samples~/URP`.
 
 ### High Definition Render Pipeline
 Open `Samples~/HDRP`.

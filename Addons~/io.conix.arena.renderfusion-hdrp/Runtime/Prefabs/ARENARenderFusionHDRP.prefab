@@ -47,9 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   authType: 1
   hostAddress: arenaxr.org
-  namespaceName: Edward
+  namespaceName:
   sceneName: example1
   renderCameras: 0
+  renderHands: 0
   drawControllerRays: 0
   logMqttObjects: 0
   logMqttUsers: 0

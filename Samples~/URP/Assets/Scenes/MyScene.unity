@@ -460,8 +460,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 743554626676363792, guid: 600d2e340ad8949ea87932bc0ffe7159,
         type: 3}
+      propertyPath: renderHands
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 743554626676363792, guid: 600d2e340ad8949ea87932bc0ffe7159,
+        type: 3}
       propertyPath: namespaceName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 743554626676363792, guid: 600d2e340ad8949ea87932bc0ffe7159,
+        type: 3}
+      propertyPath: drawControllerRays
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

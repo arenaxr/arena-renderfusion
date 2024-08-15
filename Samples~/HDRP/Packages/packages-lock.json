@@ -349,7 +349,7 @@
         "com.unity.webrtc": "3.0.0-pre.7",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
       },
-      "hash": "f52f7fbf9f100680e3c9e7fa720b40814c33f211"
+      "hash": "d17e773cce86d567acbac656356288228f0b7789"
     },
     "io.conix.arena.renderfusion-hdrp": {
       "version": "https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-hdrp",
@@ -360,7 +360,7 @@
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
       },
-      "hash": "f52f7fbf9f100680e3c9e7fa720b40814c33f211"
+      "hash": "d17e773cce86d567acbac656356288228f0b7789"
     },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
