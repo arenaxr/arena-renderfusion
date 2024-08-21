@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.2...v0.1.3) (2024-08-15)
+
+
+### Bug Fixes
+
+* fix remote sync by updating onDestroy ([#18](https://github.com/arenaxr/arena-renderfusion/issues/18)) ([a932d22](https://github.com/arenaxr/arena-renderfusion/commit/a932d22bd632c2d6620e45b68d93991755acd108))
+* update unity version and remove dev scenes ([352bffa](https://github.com/arenaxr/arena-renderfusion/commit/352bffa359050d68b5396e84b7527f058b6bd817))
+
 ## [0.1.2](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.2...v0.1.2) (2023-09-28)
 
 
