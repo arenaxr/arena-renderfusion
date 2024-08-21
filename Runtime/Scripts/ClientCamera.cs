@@ -32,7 +32,7 @@ namespace ArenaUnity.RenderFusion
             cam.farClipPlane = 10000f; // match arena
         }
 
-        public void setCameraProj(float[] proj)
+        public void setCameraProjMatrix(float[] proj)
         {
             var cam = GetComponent<Camera>();
             float x = proj[0] / 2;

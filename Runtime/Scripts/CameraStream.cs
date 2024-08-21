@@ -124,7 +124,7 @@ namespace ArenaUnity.RenderFusion
 
         public MediaStreamTrack Track => m_track;
 
-        private ClientCamera addCamera(string identifier)
+        private ClientCamera AddCamera(string identifier)
         {
             var gobj = new GameObject($"camera-{identifier}");
             gobj.transform.parent = gameObject.transform; // new game object the child of this one
@@ -134,8 +134,8 @@ namespace ArenaUnity.RenderFusion
 
         private void Awake()
         {
-            m_clientCameraLeft = addCamera("left");
-            m_clientCameraRight = addCamera("right");
+            m_clientCameraLeft = AddCamera("left");
+            m_clientCameraRight = AddCamera("right");
             // disable stereo cameras at first
             m_clientCameraRight.gameObject.SetActive(false);
         }
@@ -183,8 +183,8 @@ namespace ArenaUnity.RenderFusion
                 m_clientCameraLeft.transform.localPosition = new Vector3(-ipd/2f, 0f, 0f);
                 m_clientCameraRight.transform.localPosition = new Vector3(ipd/2f, 0f, 0f);
 
-                if (leftProj != null && leftProj.Length > 0) m_clientCameraLeft.setCameraProj(leftProj);
-                if (rightProj != null && rightProj.Length > 0) m_clientCameraRight.setCameraProj(rightProj);
+                if (leftProj != null && leftProj.Length > 0) m_clientCameraLeft.setCameraProjMatrix(leftProj);
+                if (rightProj != null && rightProj.Length > 0) m_clientCameraRight.setCameraProjMatrix(rightProj);
 
                 if (!GraphicsSettings.renderPipelineAsset)
                 {
@@ -302,41 +302,36 @@ namespace ArenaUnity.RenderFusion
 
         public void OnInputMessage(byte[] bytes)
         {
-            //Retrieves the 8 double values from the bytes array
-            //and copies into an array of doubles
-            //8 bytes per double * 8 values = 64 bytes
-            var numbytes = 17;
-            double[] doubles = new double[numbytes];
-            Buffer.BlockCopy(bytes, 0, doubles, 0, 8*numbytes);
+            // Retrieves the 8 double values from the bytes array and copies into an array of doubles
+            // 8 bytes per double * 8 values = 64 bytes
+            const int cameraPoseNumElems = 17; // 16 elem pose matrix + 1 frameID
+            double[] elems = new double[cameraPoseNumElems];
+            Buffer.BlockCopy(bytes, 0, elems, 0, 8*cameraPoseNumElems);
 
-            float[] floats = doubles.Select(d => (float)d).ToArray();
-
+            float[] floats = elems.Select(d => (float)d).ToArray();
 
             Matrix4x4 transformMatrix = new Matrix4x4();
 
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < cameraPoseNumElems-1; i++) {
                 int row = i % 4;
                 int col = i / 4;
                 transformMatrix[row, col] = floats[i];
             }
 
-            int id = Convert.ToInt32(floats[16]);
+            int frameID = Convert.ToInt32(floats[cameraPoseNumElems-1]);
             Vector3 position = transformMatrix.GetColumn(3);
             Quaternion rotation = Quaternion.LookRotation(
                                         transformMatrix.GetColumn(2),
                                         transformMatrix.GetColumn(1)
-                                        );
+                                    );
+            Vector3 scale = new Vector3(
+                                transformMatrix.GetColumn(0).magnitude,
+                                transformMatrix.GetColumn(1).magnitude,
+                                transformMatrix.GetColumn(2).magnitude
+                            );
 
-            Vector3 scale = new Vector3(transformMatrix.GetColumn(0).magnitude,
-                                        transformMatrix.GetColumn(1).magnitude,
-                                        transformMatrix.GetColumn(2).magnitude
-                                        ); //Currently unused?
-
-
-            var clientPose = new ClientPose(id, position, rotation, scale);
-
+            var clientPose = new ClientPose(frameID, position, rotation, scale);
             clientPoses.Add(clientPose);
-
         }
 
         private void updatePose(ClientPose clientPose)
