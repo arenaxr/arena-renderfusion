@@ -53,6 +53,7 @@ namespace ArenaUnity.RenderFusion.Signaling
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
 
+            // TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
             SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
             SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
             SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
