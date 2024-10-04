@@ -11,31 +11,7 @@ namespace ArenaUnity.RenderFusion.Signaling
 {
     public class ARENAMQTTSignaling : ISignaling
     {
-        // TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
-        private static readonly string TOPIC_PREFIX = "realm/g/a";
-
-        private readonly string SERVER_OFFER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/offer";
-        private readonly string SERVER_ANSWER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/answer";
-        private readonly string SERVER_CANDIDATE_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/candidate";
-        private readonly string SERVER_HEALTH_CHECK_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/health";
-        private readonly string SERVER_STATS_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/stats";
-        private readonly string SERVER_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/connect";
-
-        private readonly string CLIENT_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/connect";
-        private readonly string CLIENT_DISCONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/disconnect";
-        private readonly string CLIENT_OFFER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/offer";
-        private readonly string CLIENT_ANSWER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/answer";
-        private readonly string CLIENT_CANDIDATE_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/candidate";
-        private readonly string CLIENT_HEALTH_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/health";
-        // private readonly string CLIENT_STATS_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/stats";
-        private readonly string HAL_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/HAL/connect";
-
-        private string SERVER_OFFER_TOPIC;
-        private string SERVER_ANSWER_TOPIC;
-        private string SERVER_CANDIDATE_TOPIC;
-        private string SERVER_HEALTH_CHECK_TOPIC;
-        private string SERVER_STATS_TOPIC;
-        private string SERVER_CONNECT_TOPIC;
+        private ArenaTopics renderTopic;
 
         private string[] m_subbedTopics;
 
@@ -52,24 +28,15 @@ namespace ArenaUnity.RenderFusion.Signaling
             var scene = ArenaClientScene.Instance;
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
-
-            // TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
-            SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_HEALTH_CHECK_TOPIC = $"{SERVER_HEALTH_CHECK_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_STATS_TOPIC = $"{SERVER_STATS_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_CONNECT_TOPIC = $"{SERVER_CONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
+            renderTopic = new ArenaTopics(
+                realm: scene.realm,
+                name_space: scene.namespaceName,
+                scenename: scene.sceneName,
+                idtag: scene.userid
+            );
 
             m_subbedTopics = new string[] {
-                $"{CLIENT_CONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_OFFER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_ANSWER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_HEALTH_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                // $"{CLIENT_STATS_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{HAL_CONNECT_TOPIC_PREFIX}/{m_halID}/#",
+                $"{renderTopic.PUB_SCENE_RENDER}/#",
             };
 
             for (int i = 0; i < m_subbedTopics.Length; i++) {
@@ -99,11 +66,18 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
         }
 
-        private void Publish(string topic, string msg)
+        private void Publish(string toUuid, string msg)
         {
             var scene = ArenaClientScene.Instance;
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
-            scene.Publish(topic, payload);
+            var renderPrivateTopic = new ArenaTopics(
+                realm: renderTopic.REALM,
+                name_space: renderTopic.nameSpace,
+                scenename: renderTopic.sceneName,
+                idtag: renderTopic.idTag,
+                touid: toUuid
+            );
+            scene.Publish(renderPrivateTopic.PUB_SCENE_RENDER_PRIVATE, payload);
         }
 
         public void SendConnect()
@@ -115,7 +89,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = m_clientId,
                 data = ""
             };
-            Publish(SERVER_CONNECT_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendOffer(string id, RTCSessionDescription offer)
@@ -130,7 +104,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_OFFER_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendAnswer(string id, RTCSessionDescription answer)
@@ -146,7 +120,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_ANSWER_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendHealthCheck(string id){
@@ -159,7 +133,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = id,
                 data = $"{scene.namespaceName}/{scene.sceneName}"
             };
-            Publish(SERVER_HEALTH_CHECK_TOPIC, JsonUtility.ToJson(healthCheck));
+            Publish(id, JsonUtility.ToJson(healthCheck));
         }
 
         public void UpdateHALInfo(string id, bool halStatus)
@@ -182,12 +156,12 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_CANDIDATE_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendStats(string stats)
         {
-            Publish(SERVER_STATS_TOPIC, stats);
+            Publish(m_clientId, stats);
         }
 
         protected void ProcessMessage(string topic, string content)

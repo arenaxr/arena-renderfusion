@@ -9,7 +9,7 @@
     "licensesUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/LICENSE",
     "dependencies": {
         "com.unity.webrtc": "3.0.0-pre.7",
-        "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git#topic-v5"
+        "io.conix.arena.unity": "0.14.0"
     },
     "samples": [
         {
