@@ -11,7 +11,8 @@ namespace ArenaUnity.RenderFusion.Signaling
 {
     public class ARENAMQTTSignaling : ISignaling
     {
-        private ArenaTopics renderTopic;
+        private ArenaTopics publicRenderServerTopic;
+        private ArenaTopics privateRenderServerTopic;
 
         private string[] m_subbedTopics;
 
@@ -28,15 +29,20 @@ namespace ArenaUnity.RenderFusion.Signaling
             var scene = ArenaClientScene.Instance;
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
-            renderTopic = new ArenaTopics(
+            publicRenderServerTopic = new ArenaTopics(
                 realm: scene.realm,
                 name_space: scene.namespaceName,
                 scenename: scene.sceneName,
-                idtag: scene.userid
+                idtag: "-"
             );
-
+            privateRenderServerTopic = new ArenaTopics(
+                realm: scene.realm,
+                name_space: scene.namespaceName,
+                scenename: scene.sceneName,
+                idtag: "-"
+            );
             m_subbedTopics = new string[] {
-                $"{renderTopic.PUB_SCENE_RENDER}/#",
+                $"{privateRenderServerTopic.SUB_SCENE_RENDER_PRIVATE}",
             };
 
             for (int i = 0; i < m_subbedTopics.Length; i++) {
@@ -70,14 +76,7 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
             var scene = ArenaClientScene.Instance;
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
-            var renderPrivateTopic = new ArenaTopics(
-                realm: renderTopic.REALM,
-                name_space: renderTopic.nameSpace,
-                scenename: renderTopic.sceneName,
-                idtag: renderTopic.idTag,
-                touid: toUuid
-            );
-            scene.Publish(renderPrivateTopic.PUB_SCENE_RENDER_PRIVATE, payload);
+            scene.Publish(publicRenderServerTopic.PUB_SCENE_RENDER, payload);
         }
 
         public void SendConnect()
@@ -166,7 +165,9 @@ namespace ArenaUnity.RenderFusion.Signaling
 
         protected void ProcessMessage(string topic, string content)
         {
-            if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-2) )) ) return;
+            if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-5) )) ) return;
+
+            Debug.Log($"MQTT Recieved: {topic} {content}");
 
             try
             {
