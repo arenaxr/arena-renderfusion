@@ -76,14 +76,9 @@ namespace ArenaUnity.RenderFusion.Signaling
                 idtag: "-",
                 touid: toUid
             );
-            if (toUid == null)
-            {
-                scene.Publish(pubRenderServerTopic.PUB_SCENE_RENDER, payload);
-            }
-            else
-            {
-                scene.Publish(pubRenderServerTopic.PUB_SCENE_RENDER_PRIVATE, payload);
-            }
+            var topic = (toUid == null) ? pubRenderServerTopic.PUB_SCENE_RENDER : pubRenderServerTopic.PUB_SCENE_RENDER_PRI_SERV;
+            scene.Publish(topic, payload);
+            Debug.Log($"MQTT Sent: {topic} {msg}");
         }
 
         public void SendConnect()
@@ -110,7 +105,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(id, JsonUtility.ToJson(routedMessage));
+            Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendAnswer(string id, RTCSessionDescription answer)
@@ -126,7 +121,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(id, JsonUtility.ToJson(routedMessage));
+            Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendHealthCheck(string id){
@@ -139,7 +134,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = id,
                 data = $"{scene.namespaceName}/{scene.sceneName}"
             };
-            Publish(id, JsonUtility.ToJson(healthCheck));
+            Publish(null, JsonUtility.ToJson(healthCheck));
         }
 
         public void UpdateHALInfo(string id, bool halStatus)
@@ -162,7 +157,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(id, JsonUtility.ToJson(routedMessage));
+            Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendStats(string stats)
@@ -174,7 +169,7 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
             if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-5) )) ) return;
 
-            Debug.Log($"MQTT Recieved: {topic} {content}");
+            Debug.Log($"MQTT Received: {topic} {content}");
 
             try
             {
