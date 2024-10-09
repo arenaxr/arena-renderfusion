@@ -93,7 +93,7 @@ namespace ArenaUnity.RenderFusion.Signaling
             Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendOffer(string id, RTCSessionDescription offer)
+        public void SendOffer(string id, string toUid, RTCSessionDescription offer)
         {
             RoutedMessage<SDPData> routedMessage = new RoutedMessage<SDPData>{
                 type = "offer",
@@ -105,10 +105,10 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(null, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendAnswer(string id, RTCSessionDescription answer)
+        public void SendAnswer(string id, string toUid, RTCSessionDescription answer)
         {
             RoutedMessage<SDPData> routedMessage = new RoutedMessage<SDPData>
             {
@@ -121,7 +121,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(null, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendHealthCheck(string id){
@@ -143,7 +143,7 @@ namespace ArenaUnity.RenderFusion.Signaling
             m_halStatus = halStatus;
         }
 
-        public void SendCandidate(string id, RTCIceCandidate candidate)
+        public void SendCandidate(string id, string toUid, RTCIceCandidate candidate)
         {
             RoutedMessage<CandidateData> routedMessage = new RoutedMessage<CandidateData>
             {
@@ -157,12 +157,12 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(null, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendStats(string stats)
+        public void SendStats(string stats, string toUid)
         {
-            Publish(null, stats);
+            Publish(toUid, stats);
         }
 
         protected void ProcessMessage(string topic, string content)
