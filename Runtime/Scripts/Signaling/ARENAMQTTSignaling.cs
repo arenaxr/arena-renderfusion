@@ -11,8 +11,7 @@ namespace ArenaUnity.RenderFusion.Signaling
 {
     public class ARENAMQTTSignaling : ISignaling
     {
-        private ArenaTopics publicRenderServerTopic;
-        private ArenaTopics privateRenderServerTopic;
+        private ArenaTopics subRenderServerTopic;
 
         private string[] m_subbedTopics;
 
@@ -29,20 +28,14 @@ namespace ArenaUnity.RenderFusion.Signaling
             var scene = ArenaClientScene.Instance;
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
-            publicRenderServerTopic = new ArenaTopics(
-                realm: scene.realm,
-                name_space: scene.namespaceName,
-                scenename: scene.sceneName,
-                idtag: "-"
-            );
-            privateRenderServerTopic = new ArenaTopics(
+            subRenderServerTopic = new ArenaTopics(
                 realm: scene.realm,
                 name_space: scene.namespaceName,
                 scenename: scene.sceneName,
                 idtag: "-"
             );
             m_subbedTopics = new string[] {
-                $"{privateRenderServerTopic.SUB_SCENE_RENDER_PRIVATE}",
+                $"{subRenderServerTopic.SUB_SCENE_RENDER_PRIVATE}",
             };
 
             for (int i = 0; i < m_subbedTopics.Length; i++) {
@@ -72,11 +65,25 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
         }
 
-        private void Publish(string toUuid, string msg)
+        private void Publish(string toUid, string msg)
         {
             var scene = ArenaClientScene.Instance;
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
-            scene.Publish(publicRenderServerTopic.PUB_SCENE_RENDER, payload);
+            var pubRenderServerTopic = new ArenaTopics(
+                realm: scene.realm,
+                name_space: scene.namespaceName,
+                scenename: scene.sceneName,
+                idtag: "-",
+                touid: toUid
+            );
+            if (toUid == null)
+            {
+                scene.Publish(pubRenderServerTopic.PUB_SCENE_RENDER, payload);
+            }
+            else
+            {
+                scene.Publish(pubRenderServerTopic.PUB_SCENE_RENDER_PRIVATE, payload);
+            }
         }
 
         public void SendConnect()
@@ -88,7 +95,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = m_clientId,
                 data = ""
             };
-            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
+            Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendOffer(string id, RTCSessionDescription offer)
@@ -103,7 +110,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
+            Publish(id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendAnswer(string id, RTCSessionDescription answer)
@@ -119,7 +126,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
+            Publish(id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendHealthCheck(string id){
@@ -155,12 +162,12 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(routedMessage.id, JsonUtility.ToJson(routedMessage));
+            Publish(id, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendStats(string stats)
         {
-            Publish(m_clientId, stats);
+            Publish(null, stats);
         }
 
         protected void ProcessMessage(string topic, string content)
