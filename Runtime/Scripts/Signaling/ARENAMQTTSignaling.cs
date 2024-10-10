@@ -167,7 +167,9 @@ namespace ArenaUnity.RenderFusion.Signaling
 
         protected void ProcessMessage(string topic, string content)
         {
-            if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-5) )) ) return;
+            // filter messages based on expected payload format
+            var topicSplit = topic.Split("/");
+            if (topicSplit.Length <= 4 || topicSplit[4] != "r") return;
 
             Debug.Log($"MQTT Received: {topic} {content}");
 
