@@ -28,11 +28,11 @@ namespace ArenaUnity.RenderFusion.Signaling
         void OpenConnection();
         void CloseConnection();
         void SendConnect();
-        void SendOffer(string id, RTCSessionDescription offer);
-        void SendAnswer(string id, RTCSessionDescription answer);
-        void SendCandidate(string id, RTCIceCandidate candidate);
+        void SendOffer(string id, string toUid, RTCSessionDescription offer);
+        void SendAnswer(string id, string toUid, RTCSessionDescription answer);
+        void SendCandidate(string id, string toUid, RTCIceCandidate candidate);
         void SendHealthCheck(string id);
-        void SendStats(string stats);
+        void SendStats(string stats, string toUid);
         void UpdateHALInfo(string id, bool halStatus);
     }
 }
