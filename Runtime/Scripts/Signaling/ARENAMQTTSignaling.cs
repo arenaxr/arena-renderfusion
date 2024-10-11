@@ -21,10 +21,12 @@ namespace ArenaUnity.RenderFusion.Signaling
 
         private string m_halID;
         private bool m_halStatus;
+        private bool m_LogMqttRender = false;
 
         public string Url { get { return ArenaClientScene.Instance.sceneUrl; } }
 
-        public ARENAMQTTSignaling(SynchronizationContext mainThreadContext) {
+        public ARENAMQTTSignaling(SynchronizationContext mainThreadContext, bool logMqttRender) {
+            m_LogMqttRender = logMqttRender;
             var scene = ArenaClientScene.Instance;
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
@@ -78,7 +80,8 @@ namespace ArenaUnity.RenderFusion.Signaling
             );
             var topic = (toUid == null) ? pubRenderServerTopic.PUB_SCENE_RENDER : pubRenderServerTopic.PUB_SCENE_RENDER_PRI_SERV;
             scene.Publish(topic, payload);
-            Debug.Log($"MQTT Sent: {topic} {msg}");
+
+            if (m_LogMqttRender) Debug.Log($"Sent: {topic} {msg}");
         }
 
         public void SendConnect()
@@ -171,7 +174,7 @@ namespace ArenaUnity.RenderFusion.Signaling
             var topicSplit = topic.Split("/");
             if (topicSplit.Length <= 4 || topicSplit[4] != "r") return;
 
-            Debug.Log($"MQTT Received: {topic} {content}");
+            if (m_LogMqttRender) Debug.Log($"Received: {topic} {content}");
 
             try
             {
