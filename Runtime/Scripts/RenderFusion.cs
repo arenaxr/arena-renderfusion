@@ -42,9 +42,6 @@ namespace ArenaUnity.RenderFusion
             new RTCIceServer() {urls = new string[] {"stun:stun.l.google.com:19302"}}
         };
 
-        [SerializeField, Tooltip("Whether to log render fusion MQTT messages for debugging.")]
-        public bool logMqttRender = false;
-
 #pragma warning restore 0649
 
         internal ISignaling signaler;
@@ -90,7 +87,7 @@ namespace ArenaUnity.RenderFusion
 
             yield return new WaitUntil(() => scene.mqttClientConnected);
 
-            signaler = new ARENAMQTTSignaling(SynchronizationContext.Current, logMqttRender);
+            signaler = new ARENAMQTTSignaling(SynchronizationContext.Current);
             signaler.OnStart += OnSignalerStart;
             signaler.OnClientConnect += OnClientConnect;
             signaler.OnClientDisconnect += OnClientDisconnect;

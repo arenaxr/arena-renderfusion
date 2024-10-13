@@ -7,12 +7,17 @@ from sys import platform
 from arena import *
 
 scene = Scene(host="arena-dev1.conix.io", scene="example")
-# TODO (mwfarb): update to new scene-scoped render fusion topic-v5 structure
-CLIENT_CONNECT = "realm/g/a/hybrid_rendering/client/connect/#"
-CLIENT_DISCONNECT = "realm/g/a/hybrid_rendering/client/disconnect/#"
-CLIENT_REMOTE = "realm/g/a/hybrid_rendering/client/remote/#"
-SERVER_HEALTH = "realm/g/a/hybrid_rendering/server/health/#"
-HAL_CONNECT = "realm/g/a/hybrid_rendering/HAL/connect/"
+topicParams = {  # Reusable topic param dict
+    'realm': scene.realm,
+    'nameSpace': scene.namespace,
+    'sceneName': scene.scene,
+    'idTag': '-'
+}
+CLIENT_CONNECT = PUBLISH_TOPICS.SCENE_RENDER_PRIVATE.substitute(topicParams)
+CLIENT_DISCONNECT = PUBLISH_TOPICS.SCENE_RENDER_PRIVATE.substitute(topicParams)
+CLIENT_REMOTE = PUBLISH_TOPICS.SCENE_RENDER_PRIVATE.substitute(topicParams)
+SERVER_HEALTH = PUBLISH_TOPICS.SCENE_RENDER_PUBLIC.substitute(topicParams)
+HAL_CONNECT = PUBLISH_TOPICS.SCENE_RENDER_PUBLIC.substitute(topicParams)
 
 clientDict = dict()
 SceneDict = dict()
