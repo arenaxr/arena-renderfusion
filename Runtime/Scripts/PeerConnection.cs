@@ -60,7 +60,7 @@ namespace ArenaUnity.RenderFusion
 
             _peer = peer;
             _peer.OnNegotiationNeeded = () => StartCoroutine(OnNegotiationNeeded());
-            _peer.OnIceCandidate = candidate => m_signaler.SendCandidate(m_id, candidate);
+            _peer.OnIceCandidate = candidate => m_signaler.SendCandidate(m_id, m_clientId, candidate);
             _peer.OnDataChannel = OnDataChannel;
 
             sourceStream = new MediaStream();
@@ -185,7 +185,7 @@ namespace ArenaUnity.RenderFusion
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent offer.");
-                    m_signaler.SendOffer(m_id, _peer.LocalDescription);
+                    m_signaler.SendOffer(m_id, m_clientId, _peer.LocalDescription);
                 }
             }
             else
@@ -223,7 +223,7 @@ namespace ArenaUnity.RenderFusion
                 if (!op1.IsError)
                 {
                     // Debug.Log($"[{m_clientId}] sent answer.");
-                    m_signaler.SendAnswer(m_id, _peer.LocalDescription);
+                    m_signaler.SendAnswer(m_id, m_clientId, _peer.LocalDescription);
                 }
             }
             else
@@ -311,7 +311,7 @@ namespace ArenaUnity.RenderFusion
                         ;
                     }
                 }
-                m_signaler.SendStats(text);
+                m_signaler.SendStats(text, m_clientId);
                 // Debug.Log(statsOperation);
             }
         }

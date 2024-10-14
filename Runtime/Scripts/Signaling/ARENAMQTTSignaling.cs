@@ -11,30 +11,7 @@ namespace ArenaUnity.RenderFusion.Signaling
 {
     public class ARENAMQTTSignaling : ISignaling
     {
-        private static readonly string TOPIC_PREFIX = "realm/g/a";
-
-        private readonly string SERVER_OFFER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/offer";
-        private readonly string SERVER_ANSWER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/answer";
-        private readonly string SERVER_CANDIDATE_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/candidate";
-        private readonly string SERVER_HEALTH_CHECK_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/health";
-        private readonly string SERVER_STATS_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/stats";
-        private readonly string SERVER_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/server/connect";
-
-        private readonly string CLIENT_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/connect";
-        private readonly string CLIENT_DISCONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/disconnect";
-        private readonly string CLIENT_OFFER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/offer";
-        private readonly string CLIENT_ANSWER_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/answer";
-        private readonly string CLIENT_CANDIDATE_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/candidate";
-        private readonly string CLIENT_HEALTH_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/health";
-        // private readonly string CLIENT_STATS_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/client/stats";
-        private readonly string HAL_CONNECT_TOPIC_PREFIX = $"{TOPIC_PREFIX}/hybrid_rendering/HAL/connect";
-
-        private string SERVER_OFFER_TOPIC;
-        private string SERVER_ANSWER_TOPIC;
-        private string SERVER_CANDIDATE_TOPIC;
-        private string SERVER_HEALTH_CHECK_TOPIC;
-        private string SERVER_STATS_TOPIC;
-        private string SERVER_CONNECT_TOPIC;
+        private ArenaTopics subRenderServerTopic;
 
         private string[] m_subbedTopics;
 
@@ -51,23 +28,14 @@ namespace ArenaUnity.RenderFusion.Signaling
             var scene = ArenaClientScene.Instance;
 
             m_clientId = "cloud-" + Guid.NewGuid().ToString();
-
-            SERVER_OFFER_TOPIC = $"{SERVER_OFFER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_ANSWER_TOPIC = $"{SERVER_ANSWER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_CANDIDATE_TOPIC = $"{SERVER_CANDIDATE_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_HEALTH_CHECK_TOPIC = $"{SERVER_HEALTH_CHECK_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_STATS_TOPIC = $"{SERVER_STATS_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-            SERVER_CONNECT_TOPIC = $"{SERVER_CONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}";
-
+            subRenderServerTopic = new ArenaTopics(
+                realm: scene.realm,
+                name_space: scene.namespaceName,
+                scenename: scene.sceneName,
+                idtag: "-"
+            );
             m_subbedTopics = new string[] {
-                $"{CLIENT_CONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_DISCONNECT_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_OFFER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_ANSWER_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_CANDIDATE_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{CLIENT_HEALTH_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                // $"{CLIENT_STATS_TOPIC_PREFIX}/{scene.namespaceName}/{scene.sceneName}/#",
-                $"{HAL_CONNECT_TOPIC_PREFIX}/{m_halID}/#",
+                $"{subRenderServerTopic.SUB_SCENE_RENDER_PRIVATE}",
             };
 
             for (int i = 0; i < m_subbedTopics.Length; i++) {
@@ -97,10 +65,18 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
         }
 
-        private void Publish(string topic, string msg)
+        private void Publish(string toUid, string msg)
         {
             var scene = ArenaClientScene.Instance;
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
+            var pubRenderServerTopic = new ArenaTopics(
+                realm: scene.realm,
+                name_space: scene.namespaceName,
+                scenename: scene.sceneName,
+                idtag: "-",
+                touid: toUid
+            );
+            var topic = (toUid == null) ? pubRenderServerTopic.PUB_SCENE_RENDER : pubRenderServerTopic.PUB_SCENE_RENDER_PRI_SERV;
             scene.Publish(topic, payload);
         }
 
@@ -113,10 +89,10 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = m_clientId,
                 data = ""
             };
-            Publish(SERVER_CONNECT_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(null, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendOffer(string id, RTCSessionDescription offer)
+        public void SendOffer(string id, string toUid, RTCSessionDescription offer)
         {
             RoutedMessage<SDPData> routedMessage = new RoutedMessage<SDPData>{
                 type = "offer",
@@ -128,10 +104,10 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_OFFER_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendAnswer(string id, RTCSessionDescription answer)
+        public void SendAnswer(string id, string toUid, RTCSessionDescription answer)
         {
             RoutedMessage<SDPData> routedMessage = new RoutedMessage<SDPData>
             {
@@ -144,7 +120,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_ANSWER_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
         public void SendHealthCheck(string id){
@@ -157,7 +133,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 id = id,
                 data = $"{scene.namespaceName}/{scene.sceneName}"
             };
-            Publish(SERVER_HEALTH_CHECK_TOPIC, JsonUtility.ToJson(healthCheck));
+            Publish(null, JsonUtility.ToJson(healthCheck));
         }
 
         public void UpdateHALInfo(string id, bool halStatus)
@@ -166,7 +142,7 @@ namespace ArenaUnity.RenderFusion.Signaling
             m_halStatus = halStatus;
         }
 
-        public void SendCandidate(string id, RTCIceCandidate candidate)
+        public void SendCandidate(string id, string toUid, RTCIceCandidate candidate)
         {
             RoutedMessage<CandidateData> routedMessage = new RoutedMessage<CandidateData>
             {
@@ -180,17 +156,19 @@ namespace ArenaUnity.RenderFusion.Signaling
                 }
             };
 
-            Publish(SERVER_CANDIDATE_TOPIC, JsonUtility.ToJson(routedMessage));
+            Publish(toUid, JsonUtility.ToJson(routedMessage));
         }
 
-        public void SendStats(string stats)
+        public void SendStats(string stats, string toUid)
         {
-            Publish(SERVER_STATS_TOPIC, stats);
+            Publish(toUid, stats);
         }
 
         protected void ProcessMessage(string topic, string content)
         {
-            if ( !m_subbedTopics.Any(s => topic.Contains( s.Substring(0,s.Length-2) )) ) return;
+            // filter messages based on expected payload format, only read "r" messages
+            var topicSplit = topic.Split("/");
+            if (topicSplit.Length <= 4 || topicSplit[4] != "r") return;
 
             try
             {
