@@ -2,7 +2,7 @@
     "name": "io.conix.arena.renderfusion-hdrp",
     "displayName": "ARENA RenderFusion for Unity HDRP",
     "_release_please_version_start": "x-release-please-start-version",
-    "version": "0.1.3",
+    "version": "1.0.0",
     "_release_please_version_end": "x-release-please-end-version",
     "unity": "2022.2",
     "description": "Enables RenderFusion on ARENA using Unity.",
