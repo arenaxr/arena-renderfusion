@@ -39,7 +39,7 @@ namespace ArenaUnity.RenderFusion.Signaling
             };
 
             for (int i = 0; i < m_subbedTopics.Length; i++) {
-                scene.Subscribe(new string[] { m_subbedTopics[i] });
+                scene.Subscribe(m_subbedTopics[i]);
             }
 
             scene.OnMessageCallback += ProcessMessage;
