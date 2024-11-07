@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.3...v1.0.0) (2024-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Refactored topic structure for more granular flow and access ([#19](https://github.com/arenaxr/arena-renderfusion/issues/19))
+
+### Features
+
+* Refactored topic structure for more granular flow and access ([#19](https://github.com/arenaxr/arena-renderfusion/issues/19)) ([ec3806b](https://github.com/arenaxr/arena-renderfusion/commit/ec3806b425599168bc173aed5f9a86c557758d9d))
+
 ## [0.1.3](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.2...v0.1.3) (2024-08-15)
 
 
