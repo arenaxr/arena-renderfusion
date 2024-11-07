@@ -14,6 +14,8 @@ namespace ArenaUnity.RenderFusion.Signaling
         private ArenaTopics subRenderServerTopic;
 
         private string[] m_subbedTopics;
+        private int msgTypeRenderIdx = (int)ArenaTopicTokens.SCENE_MSGTYPE;
+        private string msgTypeRender = ArenaTopicSceneMsgTypes.RENDER;
 
         private SynchronizationContext m_mainThreadContext;
 
@@ -73,6 +75,7 @@ namespace ArenaUnity.RenderFusion.Signaling
                 realm: scene.realm,
                 name_space: scene.namespaceName,
                 scenename: scene.sceneName,
+                userclient: scene.userclient,
                 idtag: "-",
                 touid: toUid
             );
@@ -168,7 +171,7 @@ namespace ArenaUnity.RenderFusion.Signaling
         {
             // filter messages based on expected payload format, only read "r" messages
             var topicSplit = topic.Split("/");
-            if (topicSplit.Length <= 4 || topicSplit[4] != "r") return;
+            if (topicSplit.Length <= msgTypeRenderIdx || topicSplit[msgTypeRenderIdx] != msgTypeRender) return;
 
             try
             {
