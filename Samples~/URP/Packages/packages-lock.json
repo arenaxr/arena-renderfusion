@@ -1,14 +1,5 @@
 {
   "dependencies": {
-    "com.unity.ai.navigation": {
-      "version": "1.1.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.ai": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.burst": {
       "version": "1.8.18",
       "depth": 1,
@@ -85,7 +76,7 @@
     },
     "com.unity.ide.rider": {
       "version": "3.0.31",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.ext.nunit": "1.0.6"
@@ -235,7 +226,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.linux-x86_64": {
-      "version": "2.0.9",
+      "version": "2.0.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -265,7 +256,7 @@
     },
     "com.unity.webrtc": {
       "version": "3.0.0-pre.7",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.audio": "1.0.0",
@@ -282,7 +273,7 @@
         "com.unity.webrtc": "3.0.0-pre.7",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git"
       },
-      "hash": "996aa9c0f66cec696d46da01bcaa85b606e25c9d"
+      "hash": "07b690a88cd050f94562fa401110ba6f2728a5ff"
     },
     "io.conix.arena.renderfusion-urp": {
       "version": "https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-urp",
@@ -293,7 +284,7 @@
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
       },
-      "hash": "996aa9c0f66cec696d46da01bcaa85b606e25c9d"
+      "hash": "07b690a88cd050f94562fa401110ba6f2728a5ff"
     },
     "io.conix.arena.unity": {
       "version": "https://github.com/arenaxr/arena-unity.git",
