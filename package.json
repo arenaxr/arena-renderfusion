@@ -29,8 +29,8 @@
         }
     ],
     "author": {
-        "name": "The CONIX Research Center",
-        "email": "info@conix.io",
-        "url": "https://docs.arenaxr.org"
-    }
+    "name": "Carnegie Mellon University",
+    "email": "arenaxr@andrew.cmu.edu",
+    "url": "https://docs.arenaxr.org"
+  }
 }
