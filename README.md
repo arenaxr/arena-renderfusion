@@ -22,6 +22,10 @@ See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is
 
 Once you have the relevant packages installed, press Play on the Unity Editor or build the Unity application, then enter the ARENA scene (`https://arenaxr.org/<ARENA User Name>/<Scene Name>`) on a web browser!
 
+## Alternate Server Usage
+
+In addition to the above, you may deploy your own ARENA webserver if you do not wish to use our test deployment server at [arenaxr.org](https://arenaxr.org). You can follow our setup guidelines in [arenaxr/arena-services-docker](https://github.com/arenaxr/arena-services-docker), to run your own server.
+
 ## Samples
 
 ### Universal Render Pipeline (recommended)
