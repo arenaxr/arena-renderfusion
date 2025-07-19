@@ -46,7 +46,7 @@ See the [LICENSE](LICENSE) file.
 
 If you find this project helpful for any research-related purposes, please consider citing our paper:
 ```
-@inproceedings{renderfusion,
+@inproceedings{lu2023renderfusion,
   author = {Lu, Edward and Bharadwaj, Sagar and Dasari, Mallesham and Smith, Connor and Seshan, Srinivasan and Rowe, Anthony},
   booktitle = {2023 International Symposium on Mixed and Augmented Reality (ISMAR)},
   title = {RenderFusion: Balancing Local and Remote Rendering for Interactive 3D Scenes},

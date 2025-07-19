@@ -122,9 +122,26 @@ namespace ArenaUnity.RenderFusion
             return init;
         }
 
-        public void AddSender(int width, int height, bool dualCameraMode=false)
+        private string GetProfileFromFmtp(string fmtp)
         {
-            ClientStatus clientStatus = new ClientStatus{
+            if (string.IsNullOrEmpty(fmtp)) return "unknown";
+
+            var parts = fmtp.Split(';');
+            foreach (var part in parts)
+            {
+                var trimmed = part.Trim();
+                if (trimmed.StartsWith("profile-level-id="))
+                {
+                    return trimmed.Substring("profile-level-id=".Length);
+                }
+            }
+            return "unknown";
+        }
+
+        public void AddSender(int width, int height, bool dualCameraMode = false)
+        {
+            ClientStatus clientStatus = new ClientStatus
+            {
                 hasDualCameras = dualCameraMode,
             };
             camStream.UpdateStateWithStatus(clientStatus);
@@ -136,7 +153,21 @@ namespace ArenaUnity.RenderFusion
             var capabilities = RTCRtpSender.GetCapabilities(TrackKind.Video);
             var codecs = capabilities.codecs.Where(codec => !excludeCodecMimeType.Contains(codec.mimeType));
             // var codecs = capabilities.codecs.Where(codec => codec.mimeType == "video/H264");
-            transceiver.SetCodecPreferences(codecs.ToArray());
+            var codecStrings = codecs.Select(c =>
+            {
+                var profile = GetProfileFromFmtp(c.sdpFmtpLine);
+                return string.IsNullOrEmpty(profile) || profile == "unknown"
+                    ? c.mimeType
+                    : c.mimeType + " (profile: " + profile + ")";
+            });
+            Debug.Log("Available video codecs: " + string.Join(", ", codecStrings));
+
+            var error = transceiver.SetCodecPreferences(codecs.ToArray());
+            if (error != RTCErrorType.None)
+            {
+                Debug.LogError($"Failed to set codec preferences: {error}");
+                return;
+            }
 
             camStream.SetTransceiver(m_id, transceiver);
         }
@@ -166,7 +197,6 @@ namespace ArenaUnity.RenderFusion
         public IEnumerator OnNegotiationNeeded()
         {
             // Debug.Log($"[{m_clientId}] creating offer.");
-
             var op = _peer.CreateOffer();
             yield return op;
 
@@ -197,7 +227,6 @@ namespace ArenaUnity.RenderFusion
         public IEnumerator CreateAndSendAnswerCoroutine(SDPData offer)
         {
             // Debug.Log($"[{m_clientId}] creating answer.");
-
             RTCSessionDescription description;
             description.type = RTCSdpType.Offer;
             description.sdp = offer.sdp;

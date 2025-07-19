@@ -8,7 +8,7 @@
 [Uu]ser[Ss]ettings.meta
 [Pp]roject[Ss]ettings.meta
 
-/[Aa]ssets/ArenaUnity*
+Samples~/*/[Aa]ssets/ArenaUnity*
 
 # Editors
 .vscode/

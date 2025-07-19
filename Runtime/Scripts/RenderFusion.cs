@@ -113,7 +113,7 @@ namespace ArenaUnity.RenderFusion
 
             StartCoroutine(WebRTC.Update());
 
-            Debug.Log($"RenderFusion server started! Please visit https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}");
+            Debug.Log($"RenderFusion server started! Please visit <a href=\"https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}\">https://{scene.hostAddress}/{scene.namespaceName}/{scene.sceneName}</a>");
         }
 
         private PeerConnection CreatePeerConnection(ConnectData data)
@@ -128,8 +128,7 @@ namespace ArenaUnity.RenderFusion
 
         private void RemovePeerConnection(string id)
         {
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(id, out peer))
+            if (clientPeerDict.TryGetValue(id, out PeerConnection peer))
             {
                 clientPeerDict.Remove(id);
                 peer.Dispose();
@@ -156,8 +155,7 @@ namespace ArenaUnity.RenderFusion
                 return;
             }
 
-            PeerConnection peer;
-            if (!clientPeerDict.TryGetValue(data.id, out peer))
+            if (!clientPeerDict.TryGetValue(data.id, out PeerConnection peer))
             {
                 peer = CreatePeerConnection(data);
                 peer.AddSender(defaultResolution.x, defaultResolution.y);
@@ -178,9 +176,7 @@ namespace ArenaUnity.RenderFusion
         private void OnOffer(ISignaling signaler, SDPData offer)
         {
             // Debug.Log("got offer.");
-
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(offer.id, out peer))
+            if (clientPeerDict.TryGetValue(offer.id, out PeerConnection peer))
                 StartCoroutine(peer.CreateAndSendAnswerCoroutine(offer));
             else
                 Debug.LogWarning($"Peer {offer.id} not found in dictionary.");
@@ -189,9 +185,7 @@ namespace ArenaUnity.RenderFusion
         private void OnAnswer(ISignaling signaler, SDPData answer)
         {
             // Debug.Log("got answer.");
-
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(answer.id, out peer))
+            if (clientPeerDict.TryGetValue(answer.id, out PeerConnection peer))
                 StartCoroutine(peer.SetRemoteDescriptionCoroutine(RTCSdpType.Answer, answer));
             else
                 Debug.LogWarning($"Peer {answer.id} not found in dictionary.");
@@ -199,16 +193,14 @@ namespace ArenaUnity.RenderFusion
 
         private void OnIceCandidate(ISignaling signaler, CandidateData data)
         {
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(data.id, out peer))
+            if (clientPeerDict.TryGetValue(data.id, out PeerConnection peer))
                 peer.AddIceCandidate(data);
             else
                 Debug.LogWarning($"Peer {data.id} not found in dictionary.");
         }
 
         private void OnClientHealthCheck(ISignaling signaler, string id) {
-            PeerConnection peer;
-            if (clientPeerDict.TryGetValue(id, out peer))
+            if (clientPeerDict.TryGetValue(id, out PeerConnection peer))
                 peer.missedHeartbeats = 0;
             else
                 Debug.LogWarning($"Peer {id} not found in dictionary.");
