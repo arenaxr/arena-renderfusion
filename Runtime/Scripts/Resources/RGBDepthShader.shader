@@ -57,7 +57,7 @@ Shader "Hidden/RGBDepthShader"
                 fixed4 col;
                 if (i.uv.x <= 1.0/2.0)
                 {
-                    col = tex2D(_MainTex, float2(i.uv.x * 2.0, i.uv.y));
+                    col = tex2D(_MainTex, float2(i.uv.x + 1.0/4.0, i.uv.y));
                 }
                 else
                 {
@@ -127,12 +127,12 @@ Shader "Hidden/RGBDepthShader"
                 if (1.0/2.0 < i.uv.x && i.uv.x <= 3.0/4.0)
                 {
                     float xcoord = i.uv.x - 1.0/2.0;
-                    col = tex2D(_RightEyeTex, float2(1.0/8.0 + xcoord, i.uv.y));
+                    col = tex2D(_RightEyeTex, float2(2.0 * xcoord, i.uv.y));
                 }
                 if (3.0/4.0 < i.uv.x)
                 {
                     float xcoord = i.uv.x - 3.0/4.0;
-                    col = tex2D(_RightEyeTex, float2(1.0/8.0 + xcoord + 1.0/2.0, i.uv.y));
+                    col = tex2D(_RightEyeTex, float2(1.0/8.0 + 2.0 * xcoord + 1.0/2.0, i.uv.y));
                 }
 
                 return col;

@@ -137,7 +137,7 @@ namespace ArenaUnity.RenderFusion
                 };
                 renderTexture.Create();
                 m_camera.targetTexture = renderTexture;
-                m_camera.aspect = (float)(width / 2) / (float)height;
+                // m_camera.aspect = (float)(width / 2) / (float)height;
             }
 
             m_renderTexture = renderTexture;

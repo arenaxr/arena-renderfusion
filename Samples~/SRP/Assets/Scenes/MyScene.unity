@@ -175,12 +175,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7284318226160210407, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
+      propertyPath: sceneName
+      value: empty
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284318226160210407, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
       propertyPath: hostAddress
       value: arenaxr.org
       objectReference: {fileID: 0}
     - target: {fileID: 7284318226160210407, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
       propertyPath: namespaceName
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906753264204538930, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
+      propertyPath: defaultResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906753264204538930, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
+      propertyPath: defaultResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906753264204538930, guid: 42d8db344c9414d10abfb7716b06ea50, type: 3}
+      propertyPath: maxMissedHeartbeats
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
