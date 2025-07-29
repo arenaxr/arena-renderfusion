@@ -1,4 +1,4 @@
-Shader "Hidden/RGBDepthShaderURP"
+Shader "Hidden/RGBDepthURP"
 {
     SubShader
     {
@@ -22,7 +22,7 @@ Shader "Hidden/RGBDepthShaderURP"
             TEXTURE2D_X(_CameraDepthTexture);
             SAMPLER(sampler_CameraDepthTexture);
 
-            int _DualCameras;
+            int _HasStereoCameras;
             int _FrameID;
 
             half4 frag (Varyings input) : SV_Target
@@ -30,25 +30,22 @@ Shader "Hidden/RGBDepthShaderURP"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 float4 col;
-                if (!_DualCameras)
+                if (!_HasStereoCameras)
                 {
-                    if (input.texcoord.x <= 1.0/2.0)
+                    if (input.texcoord.x <= 0.5)
                     {
-                        float xcoord = input.texcoord.x;
-                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                        float xCoord = input.texcoord.x;
+                        float2 uv = float2(0.25 + xCoord, input.texcoord.y);
                         col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                     }
                     else
                     {
-                        float xcoord = input.texcoord.x - 1.0/2.0;
-                        float2 uv = float2(2.0 * xcoord, input.texcoord.y);
+                        float xCoord = input.texcoord.x - 0.5;
+                        float2 uv = float2(0.25 + xCoord, input.texcoord.y);
                         float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
                         depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
-                    // float xcoord = input.texcoord.x;
-                    // float2 uv = float2(xcoord, input.texcoord.y);
-                    // col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
                 else
                 {
@@ -64,25 +61,22 @@ Shader "Hidden/RGBDepthShaderURP"
                     * |        |                 |         |
                     * |        |                 |         |
                     *  ------------------------------------
-                    *         RGB or depth texture
+                    *          Source RGB or Depth texture
                     */
-                    if (input.texcoord.x <= 1.0/2.0)
+                    if (input.texcoord.x <= 0.5)
                     {
-                        float xcoord = input.texcoord.x;
-                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                        float xCoord = input.texcoord.x;
+                        float2 uv = float2(0.25 + xCoord, input.texcoord.y);
                         col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                     }
                     else
                     {
-                        float xcoord = input.texcoord.x - 1.0/2.0;
-                        float2 uv = float2(1.0/4.0 + xcoord, input.texcoord.y);
+                        float xCoord = input.texcoord.x - 0.5;
+                        float2 uv = float2(0.25 + xCoord, input.texcoord.y);
                         float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
                         depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
-                    // float xcoord = input.texcoord.x;
-                    // float2 uv = float2(xcoord, input.texcoord.y);
-                    // col.rgb = SAMPLE_TEXTURE2D_X(_CameraColorTexture, sampler_CameraColorTexture, uv).rgb;
                 }
 
                 int width = _ScreenSize.x;

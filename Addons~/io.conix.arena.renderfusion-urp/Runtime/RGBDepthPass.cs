@@ -39,7 +39,7 @@ namespace ArenaUnity.RenderFusion
             int hasDualCameras = (clientCamera.IsDualCamera) ? 1 : 0;
             int frameID = clientCamera.FrameID;
 
-            m_material.SetInt("_DualCameras", hasDualCameras);
+            m_material.SetInt("_HasStereoCameras", hasDualCameras);
             m_material.SetInt("_FrameID", frameID);
 
             Blit(cmd, ref renderingData, m_material);

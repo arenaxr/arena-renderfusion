@@ -112,10 +112,10 @@ namespace ArenaUnity.RenderFusion
                 new RTCRtpEncodingParameters()
                 {
                     active = true,
-                    minBitrate = (ulong?)camStream.minBitrate * 1000,
-                    maxBitrate = (ulong?)camStream.maxBitrate * 1000,
-                    maxFramerate = (uint?)camStream.frameRate,
-                    scaleResolutionDownBy = camStream.scaleResolutionDown
+                    minBitrate = (ulong?)camStream.MinBitrate * 1000,
+                    maxBitrate = (ulong?)camStream.MaxBitrate * 1000,
+                    maxFramerate = (uint?)camStream.FrameRate,
+                    scaleResolutionDownBy = camStream.ScaleResolutionDown
                 }
             };
 

@@ -37,6 +37,6 @@ If you are working in HDRP, __also__ install
 ```
 https://github.com/arenaxr/arena-renderfusion.git?path=/Addons~/io.conix.arena.renderfusion-hdrp
 ```
-IMPORTANT: Your HDRP Global Settings should include the `ArenaUnity.RenderFusion.RGBDepthShaderHD` in the `After Post Process` item under the `Custom Post Process Order` list.
+IMPORTANT: Your HDRP Global Settings should include the `ArenaUnity.RenderFusion.RGBDepthHDRP` in the `After Post Process` item under the `Custom Post Process Order` list. You should see a split color/depth screen in the Editor if this is done correctly.
 
 ![URP settings](images/hdrp_settings.png)

@@ -67,10 +67,10 @@ namespace ArenaUnity.RenderFusion
         {
             if (!GraphicsSettings.renderPipelineAsset)
             {
-                if (Shader.Find("Hidden/RGBDepthShader") != null)
-                    m_material = new Material(Shader.Find("Hidden/RGBDepthShader"));
+                if (Shader.Find("Hidden/RGBDepth") != null)
+                    m_material = new Material(Shader.Find("Hidden/RGBDepth"));
                 else
-                    throw new InvalidOperationException("Cannot find required shader Hidden/RGBDepthShader!");
+                    throw new InvalidOperationException("Cannot find required shader Hidden/RGBDepth!");
             }
 
             m_camera = GetComponent<Camera>();
@@ -106,8 +106,12 @@ namespace ArenaUnity.RenderFusion
             // int height = videoSize.y;
             // int width = 2 * (int)(height * ((float)screenWidth / (float)screenHeight));
 
-            // height = Mathf.Min(height, 4096);
-            // width = Mathf.Min(width, 4096);
+            if (width >= 4096 || height >= 4096)
+            {
+                Debug.LogWarning($"Video size is too large: {width}x{height}. Clamping to 4096x4096.");
+                height = Mathf.Min(height, 4096);
+                width = Mathf.Min(width, 4096);
+            }
 
             if (m_camera.targetTexture != null)
             {
@@ -133,11 +137,10 @@ namespace ArenaUnity.RenderFusion
                 RenderTextureFormat format = WebRTC.GetSupportedRenderTextureFormat(SystemInfo.graphicsDeviceType);
                 renderTexture = new RenderTexture(width, height, s_defaultDepth, format)
                 {
-                    antiAliasing = 4
+                    antiAliasing = 2
                 };
                 renderTexture.Create();
                 m_camera.targetTexture = renderTexture;
-                m_camera.aspect = (float)(width / 2) / (float)height;
             }
 
             m_renderTexture = renderTexture;

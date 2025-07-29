@@ -102,22 +102,22 @@ namespace ArenaUnity.RenderFusion
 
         public IReadOnlyDictionary<string, RTCRtpTransceiver> Transceivers => m_transceivers;
 
-        public float frameRate
+        public float FrameRate
         {
             get { return m_FrameRate; }
         }
 
-        public uint minBitrate
+        public uint MinBitrate
         {
             get { return m_MinBitrate; }
         }
 
-        public uint maxBitrate
+        public uint MaxBitrate
         {
             get { return m_MaxBitrate; }
         }
 
-        public float scaleResolutionDown
+        public float ScaleResolutionDown
         {
             get { return m_ScaleFactor; }
         }

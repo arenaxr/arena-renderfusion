@@ -2,7 +2,7 @@
 
 High-quality remote/split rendering on the web! Stream Unity scenes into the browser using RenderFusion with [ARENA](https://arenaxr.org/)!
 
-RenderFusion is a form of "remote rendering", which uses a nearby powerful machine to render 3D content and streams the rendering results to a web browser. RenderFusion also employs "split rendering", which renders some portions of the 3D scene locally on the browser to reduce latency.
+RenderFusion performs "remote rendering", which offloads rendering to a nearby machine and streams the results to a web browser. RenderFusion also employs "split rendering", which renders some portions of the 3D scene locally on the browser to reduce latency.
 
 Note: this is an *experimental* ARENA feature, but is deployed on the main branch, so it works out the box!
 

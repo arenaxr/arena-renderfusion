@@ -1,4 +1,4 @@
-Shader "Hidden/RGBDepthShader"
+Shader "Hidden/RGBDepth"
 {
     Properties
     {
@@ -55,18 +55,18 @@ Shader "Hidden/RGBDepthShader"
             fixed4 RGBDepthSideBySideSingle(v2f i)
             {
                 fixed4 col;
-                if (i.uv.x <= 1.0/2.0)
+                if (i.uv.x <= 0.5)
                 {
-                    col = tex2D(_MainTex, float2(i.uv.x * 2.0, i.uv.y));
+                    col = tex2D(_MainTex, float2(i.uv.x + 0.25, i.uv.y));
                 }
                 else
                 {
-                    float xcoord = i.uv.x - 1.0/2.0;
+                    float xCoord = i.uv.x - 0.25;
                     // float4 NormalDepth;
-                    // DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, float2(xcoord, i.uv.y)), NormalDepth.w, NormalDepth.xyz);
+                    // DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, float2(xCoord, i.uv.y)), NormalDepth.w, NormalDepth.xyz);
                     // col.rgb = NormalDepth.w;
 
-                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(2.0 * xcoord, i.uv.y));
+                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(xCoord, i.uv.y));
                     depth = 50 * Linear01Depth(depth);
                     col.rgb = depth;
 
@@ -96,16 +96,17 @@ Shader "Hidden/RGBDepthShader"
                  * |        |                 |         |
                  * |        |                 |         |
                  *  ------------------------------------
-                 *         RGB or depth texture
+                 *          Source RGB or Depth texture
                  */
-                if (i.uv.x <= 1.0/4.0)
+                if (i.uv.x <= 0.25)
                 {
-                    col = tex2D(_MainTex, float2(1.0/4.0 + 2.0 * i.uv.x, i.uv.y));
+                    float xCoord = 2.0 * i.uv.x + 0.25;
+                    col = tex2D(_MainTex, float2(xCoord, i.uv.y));
                 }
-                if (1.0/4.0 < i.uv.x && i.uv.x <= 1.0/2.0)
+                if (0.25 < i.uv.x && i.uv.x <= 0.5)
                 {
-                    float xcoord = i.uv.x - 1.0/4.0;
-                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(1.0/4.0 + 2.0 * xcoord, i.uv.y));
+                    float xCoord = 2.0 * (i.uv.x - 0.25) + 0.25;
+                    float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, float2(xCoord, i.uv.y));
                     depth = 50 * Linear01Depth(depth);
                     col.rgb = depth;
                 }
@@ -121,18 +122,18 @@ Shader "Hidden/RGBDepthShader"
                  * |        |                 |         |        |                 |         |
                  * |        |                 |         |        |                 |         |
                  *  ------------------------------------ ------------------------------------
-                 *                  RGB texture                     depth texture
+                 *          Source RGB texture                   Source Depth texture
                  */
                 // Note: _RightEyeTex should already have the standard RGB-Depth tiling
-                if (1.0/2.0 < i.uv.x && i.uv.x <= 3.0/4.0)
+                if (0.5 < i.uv.x && i.uv.x <= 0.75)
                 {
-                    float xcoord = i.uv.x - 1.0/2.0;
-                    col = tex2D(_RightEyeTex, float2(1.0/8.0 + xcoord, i.uv.y));
+                    float xCoord = 2.0 * (i.uv.x - 0.5);
+                    col = tex2D(_RightEyeTex, float2(xCoord, i.uv.y));
                 }
-                if (3.0/4.0 < i.uv.x)
+                if (0.75 < i.uv.x)
                 {
-                    float xcoord = i.uv.x - 3.0/4.0;
-                    col = tex2D(_RightEyeTex, float2(1.0/8.0 + xcoord + 1.0/2.0, i.uv.y));
+                    float xCoord = 2.0 * (i.uv.x - 0.75) + 0.5;
+                    col = tex2D(_RightEyeTex, float2(xCoord, i.uv.y));
                 }
 
                 return col;
@@ -141,15 +142,16 @@ Shader "Hidden/RGBDepthShader"
             fixed4 RGBSideBySideDual(v2f i)
             {
                 fixed4 col;
-                if (i.uv.x <= 1.0/2.0)
+                if (i.uv.x <= 0.5)
                 {
-                    col = tex2D(_MainTex, float2(1.0/4.0 + i.uv.x, i.uv.y));
+                    float xCoord = i.uv.x;
+                    col = tex2D(_MainTex, float2(0.25 + xCoord, i.uv.y));
                 }
                 // Note: _RightEyeTex should already have the standard RGB tiling
                 else
                 {
-                    float xcoord = i.uv.x - 1.0/2.0;
-                    col = tex2D(_RightEyeTex, float2(1.0/4.0 + xcoord, i.uv.y));
+                    float xCoord = i.uv.x - 0.5;
+                    col = tex2D(_RightEyeTex, float2(0.25 + xCoord, i.uv.y));
                 }
                 return col;
             }

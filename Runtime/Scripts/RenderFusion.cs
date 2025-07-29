@@ -22,13 +22,13 @@ namespace ArenaUnity.RenderFusion
         public int maxClients = -1;
 
         [SerializeField, Tooltip("Maximum missed heartbeats before removal of a client.")]
-        public int maxMissedHeartbeats = 10;
+        public int maxMissedHeartbeats = 3;
 
-        [SerializeField, Tooltip("Discovery interval. Amount of seconds to poll for clients.")]
-        public int discoveryInterval = 3;
+        [SerializeField, Tooltip("Amount of seconds to poll for new clients.")]
+        public int discoveryInterval = 1;
 
         [SerializeField, Tooltip("Video resolution (width will be internally doubled to account for depth frame).")]
-        public Vector2Int defaultResolution = new Vector2Int(1920, 1080);
+        public Vector2Int videoResolution = new Vector2Int(1920, 1080);
 
         [SerializeField, Tooltip("Automatically started when called Start method.")]
         public bool runOnStart = true;
@@ -158,7 +158,7 @@ namespace ArenaUnity.RenderFusion
             if (!clientPeerDict.TryGetValue(data.id, out PeerConnection peer))
             {
                 peer = CreatePeerConnection(data);
-                peer.AddSender(defaultResolution.x, defaultResolution.y);
+                peer.AddSender(videoResolution.x, videoResolution.y);
                 StartCoroutine(peer.GetStats(1.0f));
             }
             else

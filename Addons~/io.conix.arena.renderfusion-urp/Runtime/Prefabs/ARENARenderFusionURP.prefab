@@ -46,17 +46,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   authType: 1
+  headless: 0
   hostAddress: arenaxr.org
-  namespaceName:
+  namespaceName: 
   sceneName: example1
+  logMqttSceneObjects: 0
+  logMqttUserObjects: 0
+  logMqttUserPresense: 0
+  logMqttRemoteRender: 0
+  logMqttChats: 0
+  logMqttPrograms: 0
+  logMqttEnvironment: 0
+  logMqttDebug: 0
+  globalUpdateMs: 100
   renderCameras: 0
   renderHands: 0
   drawControllerRays: 0
-  logMqttObjects: 0
-  logMqttUsers: 0
-  logMqttEvents: 0
-  logMqttNonPersist: 0
-  globalUpdateMs: 100
 --- !u!114 &4338424512855815962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,10 +75,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxClients: -1
-  maxMissedHeartbeats: 10
-  discoveryInterval: 3
-  defaultResolution: {x: 1920, y: 1080}
-  remoteRender: 1
+  maxMissedHeartbeats: 3
+  discoveryInterval: 1
+  videoResolution: {x: 1920, y: 1080}
   runOnStart: 1
   useHAL: 0
   iceServers:

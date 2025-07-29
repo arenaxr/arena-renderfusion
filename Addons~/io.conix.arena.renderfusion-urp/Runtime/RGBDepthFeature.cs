@@ -22,13 +22,13 @@ namespace ArenaUnity.RenderFusion
 
         public override void Create()
         {
-            if (Shader.Find("Hidden/RGBDepthShaderURP") != null)
+            if (Shader.Find("Hidden/RGBDepthURP") != null)
             {
-                m_material = CoreUtils.CreateEngineMaterial(Shader.Find("Hidden/RGBDepthShaderURP"));
+                m_material = CoreUtils.CreateEngineMaterial(Shader.Find("Hidden/RGBDepthURP"));
                 m_renderPass = new RGBDepthPass(name, m_material);
             }
             else
-                throw new InvalidOperationException("Cannot find required shader Hidden/RGBDepthShaderURP!");
+                throw new InvalidOperationException("Cannot find required shader Hidden/RGBDepthURP!");
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)

@@ -6,8 +6,8 @@ using ArenaUnity;
 
 namespace ArenaUnity.RenderFusion
 {
-    [Serializable, VolumeComponentMenu("Post-processing/Custom/RGBDepthShaderHD")]
-    public sealed class RGBDepthShaderHD : CustomPostProcessVolumeComponent, IPostProcessComponent
+    [Serializable, VolumeComponentMenu("Post-processing/Custom/RGBDepthHDRP")]
+    public sealed class RGBDepthHDRP : CustomPostProcessVolumeComponent, IPostProcessComponent
     {
         private Material m_Material;
 
@@ -17,8 +17,8 @@ namespace ArenaUnity.RenderFusion
 
         public override void Setup()
         {
-            if (Shader.Find("Hidden/RGBDepthShaderHD") != null)
-                m_Material = new Material(Shader.Find("Hidden/RGBDepthShaderHD"));
+            if (Shader.Find("Hidden/RGBDepthHDRP") != null)
+                m_Material = new Material(Shader.Find("Hidden/RGBDepthHDRP"));
         }
 
         public override void Render(CommandBuffer cmd, HDCamera camera, RTHandle source, RTHandle destination)
@@ -32,7 +32,7 @@ namespace ArenaUnity.RenderFusion
                 int hasDualCameras = (clientCamera.IsDualCamera) ? 1 : 0;
                 int frameID = clientCamera.FrameID;
 
-                m_Material.SetInt("_DualCameras", hasDualCameras);
+                m_Material.SetInt("_HasStereoCameras", hasDualCameras);
                 m_Material.SetInt("_FrameID", frameID);
             }
             m_Material.SetTexture("_MainTex", source);

@@ -1,4 +1,4 @@
-Shader "Hidden/RGBDepthShaderHD"
+Shader "Hidden/RGBDepthHDRP"
 {
     SubShader
     {
@@ -45,34 +45,28 @@ Shader "Hidden/RGBDepthShaderHD"
             TEXTURE2D_X(_MainTex);
             TEXTURE2D_X(_DepthTexture);
 
-            int _DualCameras;
+            int _HasStereoCameras;
             int _FrameID;
 
             float4 CustomPostProcess(Varyings i) : SV_Target
             {
                 float4 col;
-                float xcoord;
-                uint2 positionSS;
-
-                if (!_DualCameras)
+                if (!_HasStereoCameras)
                 {
-                    if (i.uv.x <= 1.0/2.0)
+                    if (i.uv.x <= 0.5)
                     {
-                        xcoord = i.uv.x;
-                        positionSS = float2(xcoord * 2.0, i.uv.y) * _ScreenSize.xy;
+                        float xCoord = i.uv.x + 0.25;
+                        float2 positionSS = float2(xCoord, i.uv.y) * _ScreenSize.xy;
                         col.rgb = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
                     }
                     else
                     {
-                        xcoord = i.uv.x - 1.0/2.0;
-                        positionSS = float2(xcoord * 2.0, i.uv.y) * _ScreenSize.xy;
+                        float xCoord = (i.uv.x - 0.5) + 0.25;
+                        float2 positionSS = float2(xCoord, i.uv.y) * _ScreenSize.xy;
                         float depth = LoadCameraDepth(positionSS);
                         depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
-                    // xcoord = i.uv.x;
-                    // positionSS = float2(xcoord, i.uv.y) * _ScreenSize.xy;
-                    // col.rgb = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
                 }
                 else
                 {
@@ -88,25 +82,22 @@ Shader "Hidden/RGBDepthShaderHD"
                     * |        |                 |         |
                     * |        |                 |         |
                     *  ------------------------------------
-                    *         RGB or depth texture
+                    *          Source RGB or Depth texture
                     */
-                    if (i.uv.x <= 1.0/2.0)
+                    if (i.uv.x <= 0.5)
                     {
-                        xcoord = i.uv.x;
-                        positionSS = float2(1.0/4.0 + xcoord, i.uv.y) * _ScreenSize.xy;
+                        float xCoord = i.uv.x;
+                        float2 positionSS = float2(0.25 + xCoord, i.uv.y) * _ScreenSize.xy;
                         col.rgb = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
                     }
                     else
                     {
-                        xcoord = i.uv.x - 1.0/2.0;
-                        positionSS = float2(1.0/4.0 + xcoord, i.uv.y) * _ScreenSize.xy;
+                        float xCoord = i.uv.x - 0.5;
+                        float2 positionSS = float2(0.25 + xCoord, i.uv.y) * _ScreenSize.xy;
                         float depth = LoadCameraDepth(positionSS);
                         depth = 5 * Linear01Depth(depth, _ZBufferParams);
                         col.rgb = depth;
                     }
-                    // xcoord = i.uv.x;
-                    // positionSS = float2(xcoord, i.uv.y) * _ScreenSize.xy;
-                    // col.rgb = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
                 }
 
                 int width = _ScreenSize.x;

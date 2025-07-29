@@ -11,7 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 781cc897cf8675041a751163b51f97dd, type: 3}
   m_Name: HDRenderPipelineGlobalSettings
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
+  m_Version: 5
+  m_ShaderVariantLogLevel: 0
+  m_ExportShaderVariants: 1
   m_DefaultVolumeProfile: {fileID: 11400000, guid: 14b392ee213d25a48b1feddbd9f5a9be,
     type: 2}
   m_LookDevVolumeProfile: {fileID: 11400000, guid: 4594f4a3fb14247e192bcca6dc23c8ed,
@@ -68,7 +71,7 @@ MonoBehaviour:
   beforePostProcessCustomPostProcesses: []
   afterPostProcessBlursCustomPostProcesses: []
   afterPostProcessCustomPostProcesses:
-  - ArenaUnity.RenderFusion.RGBDepthShaderHD, conix.arena.renderfusion-hdrp, Version=0.0.0.0,
+  - ArenaUnity.RenderFusion.RGBDepthHDRP, conix.arena.renderfusion-hdrp, Version=0.0.0.0,
     Culture=neutral, PublicKeyToken=null
   beforeTAACustomPostProcesses: []
   lightLayerName0: Light Layer default
@@ -105,6 +108,3 @@ MonoBehaviour:
     serializedBakeSettings: []
     serializedBakingSets: []
     m_LightingScenario: Default
-  m_Version: 5
-  m_ShaderVariantLogLevel: 0
-  m_ExportShaderVariants: 1
