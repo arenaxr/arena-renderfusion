@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.0...v1.0.1) (2025-7-29)
+
+### Bug Fixes
+
+* Make packages for Samples point to local and render at same aspect ratio for ClientStream.cs ([08eeea7](https://github.com/arenaxr/arena-renderfusion/commit/08eeea76f5388c2f44a47cff336a6f9a8b89ef17))
+
 ## [1.0.0](https://github.com/arenaxr/arena-renderfusion/compare/v0.1.3...v1.0.0) (2024-11-07)
 
 
