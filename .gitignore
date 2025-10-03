@@ -9,6 +9,8 @@
 [Pp]roject[Ss]ettings.meta
 
 Samples~/*/[Aa]ssets/ArenaUnity*
+Samples~/*/[Aa]ssets/TextMesh*
+Samples~/*/[Aa]ssets/Text Mesh*
 
 # Editors
 .vscode/
