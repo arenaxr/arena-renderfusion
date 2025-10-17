@@ -25,8 +25,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.19",
-      "depth": 1,
+      "version": "1.8.24",
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
@@ -35,7 +35,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cloud.draco": {
-      "version": "5.1.8",
+      "version": "5.2.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -45,11 +45,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cloud.gltfast": {
-      "version": "6.13.0",
+      "version": "6.14.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.4",
+        "com.unity.burst": "1.8.24",
         "com.unity.collections": "1.2.4",
         "com.unity.mathematics": "1.2.6",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -58,19 +58,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cloud.ktx": {
-      "version": "3.4.5",
+      "version": "3.5.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.unitywebrequest": "1.0.0"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.collab-proxy": {
-      "version": "2.7.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
@@ -104,7 +97,7 @@
       "source": "builtin",
       "dependencies": {
         "com.unity.ide.visualstudio": "2.0.22",
-        "com.unity.ide.rider": "3.0.34",
+        "com.unity.ide.rider": "3.0.36",
         "com.unity.ide.vscode": "1.2.5",
         "com.unity.editorcoroutines": "1.0.0",
         "com.unity.performance.profile-analyzer": "1.2.3",
@@ -113,7 +106,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.34",
+      "version": "3.0.38",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -122,11 +115,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.22",
+      "version": "2.0.25",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.1.9"
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },
@@ -219,7 +212,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.settings-manager": {
-      "version": "2.0.1",
+      "version": "2.1.0",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
@@ -281,7 +274,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.6",
+      "version": "1.7.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -365,56 +358,15 @@
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.burst": "1.8.8",
-        "com.unity.cloud.draco": "5.1.8",
-        "com.unity.cloud.gltfast": "6.13.0",
-        "com.unity.cloud.ktx": "3.4.5",
-        "com.unity.collab-proxy": "1.2.16",
-        "com.unity.collections": "2.1.4",
+        "com.unity.cloud.draco": "5.2.0",
+        "com.unity.cloud.gltfast": "6.14.1",
+        "com.unity.cloud.ktx": "3.5.0",
         "com.unity.editorcoroutines": "1.0.0",
-        "com.unity.ide.rider": "1.2.1",
-        "com.unity.ide.visualstudio": "2.0.8",
-        "com.unity.mathematics": "1.2.6",
         "com.unity.meshopt.decompress": "0.1.0-preview.7",
         "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.test-framework": "1.1.24",
-        "com.unity.textmeshpro": "3.0.9",
-        "com.unity.timeline": "1.2.18",
-        "com.unity.ugui": "1.0.0",
-        "com.unity.visualeffectgraph": "14.0.10",
-        "com.unity.modules.ai": "1.0.0",
-        "com.unity.modules.androidjni": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.assetbundle": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
-        "com.unity.modules.cloth": "1.0.0",
-        "com.unity.modules.director": "1.0.0",
-        "com.unity.modules.imageconversion": "1.0.0",
-        "com.unity.modules.imgui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.particlesystem": "1.0.0",
-        "com.unity.modules.physics": "1.0.0",
-        "com.unity.modules.physics2d": "1.0.0",
-        "com.unity.modules.screencapture": "1.0.0",
-        "com.unity.modules.terrain": "1.0.0",
-        "com.unity.modules.terrainphysics": "1.0.0",
-        "com.unity.modules.tilemap": "1.0.0",
-        "com.unity.modules.ui": "1.0.0",
-        "com.unity.modules.uielements": "1.0.0",
-        "com.unity.modules.umbra": "1.0.0",
-        "com.unity.modules.unityanalytics": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
-        "com.unity.modules.unitywebrequestaudio": "1.0.0",
-        "com.unity.modules.unitywebrequesttexture": "1.0.0",
-        "com.unity.modules.unitywebrequestwww": "1.0.0",
-        "com.unity.modules.vehicles": "1.0.0",
-        "com.unity.modules.video": "1.0.0",
-        "com.unity.modules.vr": "1.0.0",
-        "com.unity.modules.wind": "1.0.0",
-        "com.unity.modules.xr": "1.0.0"
+        "com.unity.textmeshpro": "3.0.9"
       },
-      "hash": "e1d1a99e9b662f1713d9abd62da660e3b5f0fce6"
+      "hash": "1c3ea5ca31e0033061fa13de9e7e63c819db4649"
     },
     "org.nesnausk.gaussian-splatting": {
       "version": "1.1.1",
