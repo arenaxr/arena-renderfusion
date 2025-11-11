@@ -280,7 +280,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
+        "com.unity.webrtc": "3.0.0-pre.8",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
       }
@@ -298,7 +298,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.unity.textmeshpro": "3.0.9"
       },
-      "hash": "1c3ea5ca31e0033061fa13de9e7e63c819db4649"
+      "hash": "8d2b0b7973dd4d58e9a095fe99e0a210a681d656"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
