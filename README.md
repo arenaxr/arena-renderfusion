@@ -2,7 +2,7 @@
 
 High-quality remote/split rendering on the web! Stream Unity scenes into the browser using RenderFusion with [ARENA](https://arenaxr.org/)!
 
-RenderFusion performs "remote rendering", which offloads rendering to a nearby machine and streams the results to a web browser. RenderFusion also employs "split rendering", which renders some portions of the 3D scene locally on the browser to reduce latency.
+RenderFusion performs "remote rendering", which offloads rendering to a nearby machine and streams the results as video to a web browser. RenderFusion also employs "split rendering", which renders some portions of the 3D scene locally on the browser to reduce latency.
 
 Note: this is an *experimental* ARENA feature, but is deployed on the main branch, so it works out the box!
 
@@ -18,7 +18,7 @@ We implement a custom layer on top of Unity's [WebRTC package](https://docs.unit
 
 ## Usage
 
-See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is HIGHLY reccomeneded you use this package in __URP__ for the best performance.*
+See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is HIGHLY recommended you use this package in __URP__ for the best performance.*
 
 Once you have the relevant packages installed, press Play on the Unity Editor or build the Unity application, then enter the ARENA scene (`https://arenaxr.org/<ARENA User Name>/<Scene Name>`) on a web browser!
 

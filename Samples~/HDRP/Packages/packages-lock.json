@@ -286,7 +286,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.linux-x86_64": {
-      "version": "2.0.10",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -314,7 +314,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.8",
+      "version": "1.9.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -348,7 +348,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
+        "com.unity.webrtc": "3.0.0-pre.8",
         "io.conix.arena.unity": "https://github.com/arenaxr/arena-unity.git",
         "io.conix.arena.renderfusion": "https://github.com/arenaxr/arena-renderfusion.git"
       }
@@ -366,7 +366,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.unity.textmeshpro": "3.0.9"
       },
-      "hash": "1c3ea5ca31e0033061fa13de9e7e63c819db4649"
+      "hash": "8d2b0b7973dd4d58e9a095fe99e0a210a681d656"
     },
     "org.nesnausk.gaussian-splatting": {
       "version": "1.1.1",
