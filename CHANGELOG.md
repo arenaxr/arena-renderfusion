@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.1...v1.0.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* **samples:** remove text mesh pro assets from samples ([0405012](https://github.com/arenaxr/arena-renderfusion/commit/0405012c8b00f71179f13a93222ba49e8fc8f814))
+
 ## [1.0.1](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.0...v1.0.1) (2025-7-29)
 
 ### Bug Fixes
