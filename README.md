@@ -41,6 +41,9 @@ Open `Samples~/HDRP`.
 
 For a quick start, simply open `Samples~/URP` using the Unity Hub. Click on the `ARENARenderFusion` Game Object, change the Scene Name to your favorite ARENA scene, then press Play!
 
+## Documentation
+- [Contributing](CONTRIBUTING.md)
+
 ## License
 See the [LICENSE](LICENSE) file.
 
