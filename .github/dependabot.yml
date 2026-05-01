@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/" # Location of your Unity package.json
+    schedule:
+      interval: "monthly"
