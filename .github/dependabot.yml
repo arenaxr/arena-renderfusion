@@ -4,3 +4,5 @@ updates:
     directory: "/" # Location of your Unity package.json
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 7
