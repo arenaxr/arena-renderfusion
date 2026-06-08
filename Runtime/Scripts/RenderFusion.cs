@@ -62,6 +62,8 @@ namespace ArenaUnity.RenderFusion
             var scene = ArenaClientScene.Instance;
 
 #if !UNITY_EDITOR
+            scene.requestRemoteRenderRights = true;
+
             string[] arguments = Environment.GetCommandLineArgs();
 
             if (arguments.Length >= 2)
