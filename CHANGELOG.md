@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.2](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.1...v1.0.2) (2026-06-08)
+
+
+### Bug Fixes
+
+* auto-request render rights in standalone builds ([a060042](https://github.com/arenaxr/arena-renderfusion/commit/a0600424cac805f30bda5a69e35ffa748aaab84b))
+* request render rights unconditionally in editor and builds ([198c1ab](https://github.com/arenaxr/arena-renderfusion/commit/198c1abc328d4bdca1ec5310df3d7d37f557c2ee))
+* **samples:** remove text mesh pro assets from samples ([0405012](https://github.com/arenaxr/arena-renderfusion/commit/0405012c8b00f71179f13a93222ba49e8fc8f814))
+
 ## [1.0.1](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.0...v1.0.1) (2025-7-29)
 
 ### Bug Fixes
