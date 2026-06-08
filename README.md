@@ -22,6 +22,38 @@ See [Installation](Documentation~/install.md) section. *For AR/VR clients, it is
 
 Once you have the relevant packages installed, press Play on the Unity Editor or build the Unity application, then enter the ARENA scene (`https://arenaxr.org/<ARENA User Name>/<Scene Name>`) on a web browser!
 
+## Authentication & Permissions
+
+RenderFusion uses a dedicated MQTT topic namespace (`/r/`) that requires elevated permissions beyond normal scene access. **Setting `public_read` / `public_write` on a scene is not sufficient** — the `/r/` topic is only granted to authenticated scene owners and editors.
+
+### Requirements
+
+1. **Google authentication** — you must use `Auth: Google` (not Anonymous) on the `ArenaClientScene` component. Anonymous users cannot host RenderFusion.
+2. **Scene ownership or editor role** — you must either:
+   - Own the scene (your ARENA username matches the scene's namespace), **or**
+   - Be added as an **editor** of the scene by its owner (via the ARENA scene editor or API)
+3. **Render rights token** — the MQTT auth token must include `renderfusionid` permissions:
+   - **In the Unity Editor**: this is handled automatically — the ARENA library detects the RenderFusion package and requests render permissions during authentication.
+   - **In standalone builds**: the RenderFusion component automatically sets `requestRemoteRenderRights = true` before connecting.
+
+### Why `public_read` / `public_write` is not enough
+
+The scene's public read/write toggles control the standard object (`/o/`), user (`/u/`), presence (`/x/`), and chat (`/c/`) topics. The render (`/r/`) and environment (`/e/`) topics are privileged — they are only granted to authenticated owners/editors who explicitly request host permissions. This prevents unauthorized users from injecting render streams into scenes they don't control.
+
+## Troubleshooting
+
+### QoS 128 / "Subscribed FAILED"
+
+If you see `Subscribed FAILED to: realm/s/<ns>/<scene>/r/+/+/-/#` in the Unity console, the MQTT broker rejected the subscription. This means your auth token does not include `/r/` permissions. Check:
+
+- You are signed in with Google auth (not Anonymous)
+- Your username matches the scene's namespace, or you are an editor of the scene
+- The RenderFusion package is properly installed (the ARENA library auto-detects it in the editor)
+
+### "Permissions FAILED Sending" for `/r/` topics
+
+The warning `Scene remote rendering changes for topic type 'r' only available to Google authenticated scene Owner and Editors by API request` means your publish permissions do not cover the render topic. The same ownership/editor requirements apply as above.
+
 ## Alternate Server Usage
 
 In addition to the above, you may deploy your own ARENA webserver if you do not wish to use our test deployment server at [arenaxr.org](https://arenaxr.org). You can follow our setup guidelines in [arenaxr/arena-services-docker](https://github.com/arenaxr/arena-services-docker), to run your own server.
