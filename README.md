@@ -54,6 +54,50 @@ If you see `Subscribed FAILED to: realm/s/<ns>/<scene>/r/+/+/-/#` in the Unity c
 
 The warning `Scene remote rendering changes for topic type 'r' only available to Google authenticated scene Owner and Editors by API request` means your publish permissions do not cover the render topic. The same ownership/editor requirements apply as above.
 
+## Performance & Optimization
+
+### Unity Settings (`ArenaClientScene` Component)
+
+| Setting | Recommended | Why |
+|---------|-------------|-----|
+| **Load Persisted Objects** | ☐ Unchecked | The Unity RenderFusion app is the renderer — it doesn't need to download and process scene objects from MQTT. Reduces bandwidth and memory. |
+| **Load Live Objects** | ☐ Unchecked | Same as above. Reduces MQTT traffic, especially important for remote users on high-latency connections. |
+
+### Unity Settings (`RenderFusion` Component)
+
+| Setting | Recommended | Why |
+|---------|-------------|-----|
+| **Max Missed Heartbeats** | `1000000` | For remote users (high RTT), MQTT heartbeats can be delayed enough to cause false disconnects. A large value prevents premature timeout. |
+
+### Selective Remote Rendering
+
+Not all objects need to be rendered remotely. You can use the `remote-render` component on individual persisted objects to control which are rendered by Unity vs. locally in the browser:
+
+```json
+"remote-render": { "enabled": true }
+```
+
+- **`enabled: true`** — the browser skips loading this object's model; Unity renders it remotely via the compositor
+- **`enabled: false`** (or absent) — the browser loads and renders the object locally
+
+This is useful when you want heavy models rendered by Unity but need lightweight interactive objects (buttons, UI elements) to remain local for low-latency interaction.
+
+## Browser URL Parameters
+
+The following [URL parameters](https://docs.arenaxr.org/content/interface/params.html) are useful when viewing a RenderFusion scene in the browser:
+
+| Parameter | Description |
+|-----------|-------------|
+| `noav` | Disables Jitsi videoconferencing. Recommended when testing RenderFusion — eliminates Jitsi errors and reduces bandwidth. |
+| `skipav` | Skips the webcam/microphone setup modal on page load. |
+| `atw` | Enable/disable Asynchronous Time Warping for remote rendering (default: `true`). |
+| `disableRenderFusion` | Explicitly disable RenderFusion — the browser renders everything locally. |
+
+Example URL for RenderFusion testing:
+```
+https://arenaxr.org/public/my-scene/?noav&skipav
+```
+
 ## Alternate Server Usage
 
 In addition to the above, you may deploy your own ARENA webserver if you do not wish to use our test deployment server at [arenaxr.org](https://arenaxr.org). You can follow our setup guidelines in [arenaxr/arena-services-docker](https://github.com/arenaxr/arena-services-docker), to run your own server.
