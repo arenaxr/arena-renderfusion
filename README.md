@@ -95,7 +95,7 @@ The following [URL parameters](https://docs.arenaxr.org/content/interface/params
 
 Example URL for RenderFusion testing:
 ```
-https://arenaxr.org/public/my-scene/?noav&skipav
+https://arenaxr.org/public/my-scene/?noav=1&skipav=1
 ```
 
 ## Alternate Server Usage
