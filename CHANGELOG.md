@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.2...v1.0.3) (2026-06-17)
+
+
+### Bug Fixes
+
+* match URP/HDRP depth scalar to Standard RP and web compositor ([b0c0b94](https://github.com/arenaxr/arena-renderfusion/commit/b0c0b94e33ddfba0e121f8c4ebda54577ef7fc23))
+* match URP/HDRP depth scalar to Standard RP and web compositor ([fb15166](https://github.com/arenaxr/arena-renderfusion/commit/fb1516677afb090b564e03aa4dde75db7f53ee61)), closes [#26](https://github.com/arenaxr/arena-renderfusion/issues/26)
+
 ## [1.0.2](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.1...v1.0.2) (2026-06-08)
 
 
