@@ -1,7 +1,22 @@
+# Dependabot configuration
 version: 2
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "npm"
-    directory: "/" # Location of your Unity package.json
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: "nuget"
+    directory: "/"
     schedule:
       interval: "monthly"
     cooldown:
