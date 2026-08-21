@@ -4,6 +4,14 @@
 - Pin GitHub Actions in CI workflows to exact release tag commit SHAs with inline tag comments for Dependabot SemVer support.
 
 
+## [1.1.0](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.3...v1.1.0) (2026-08-21)
+
+
+### Features
+
+* **ci:** align action commit SHAs to exact release tags for Dependabot SemVer support ([fe51a42](https://github.com/arenaxr/arena-renderfusion/commit/fe51a42251b7181cbb73aea8c280791c1a6b6671))
+* **ci:** configure dependabot, pin workflow actions to SHAs, and add agent/contributing docs ([ba1ad33](https://github.com/arenaxr/arena-renderfusion/commit/ba1ad3333b7fcbe2918ee508a4024cbc51de20b5))
+
 ## [1.0.3](https://github.com/arenaxr/arena-renderfusion/compare/v1.0.2...v1.0.3) (2026-06-17)
 
 
