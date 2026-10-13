@@ -34,6 +34,10 @@ The `arena-renderfusion` uses [Release Please](https://github.com/googleapis/rel
 > **Issue and PR References in Commit & PR Messages:**
 > Only use `#NN` notation in commit messages, PR titles, and PR descriptions if they correspond to actual GitHub issues or pull requests. Do **not** use `#NN` notation for internal enumerations of planning docs or triage items (e.g., use `Task NN` or plain text instead), as this creates erroneous links and may result in unintended automatic actions.
 
+> [!IMPORTANT]
+> **No emoji in documentation, code comments, commit messages, or GitHub issue/PR titles and descriptions.**
+> Write plain text. Emoji render inconsistently across editors, terminals, diffs, and generated release notes, and add nothing a plain word does not. This applies to all contributors, including automated/agentic coding tools. Icons in the software's own user interface are fine, but they must follow the project's existing conventions for UI icons.
+
 
 ## CI & Dependency Management Conventions
 - **GitHub Actions Tag SHA Pinning**: All GitHub Action references in `.github/workflows/` MUST be pinned to the exact commit SHA of the official release tag (e.g., `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0`).
