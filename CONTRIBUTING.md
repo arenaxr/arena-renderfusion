@@ -17,12 +17,13 @@ This document covers **development rules and conventions** specific to this repo
 ## Local Development
 
 To develop `arena-renderfusion` locally:
-1. Install standard C++/CMake build tools.
-2. Execute the setup scripts or use standard `cmake .. && make` pipelines to build the application.
-3. Ensure the `config.json` uses the correct endpoints.
+1. Install Unity 6.3 LTS and open `Samples~/Universal` or `Samples~/HighDefinition` in Unity Hub.
+2. The project manifests reference `Packages/RenderFusion` and the matching `Addons~` package using relative paths. Do not import the repository root as a Unity package.
+3. Edit the runtime sources in `Packages/RenderFusion/Runtime` or the pipeline code in `Addons~`. Use the Unity Test Runner's EditMode suite to verify changes.
+4. For a live check, open `Assets/Scenes/MyScene.unity`, configure the ARENA host/namespace/scene on its RenderFusion object, enter Play mode, and open the same ARENA scene in a browser.
 
 ## Code Style
-- Follow standard C++ coding conventions.
+- Follow standard C# coding conventions.
 - Provide explicit error trapping for 3D streaming sockets.
 
 The `arena-renderfusion` uses [Release Please](https://github.com/googleapis/release-please) to automate CHANGELOG generation and semantic versioning. Your PR titles *must* follow Conventional Commit standards (e.g., `feat:`, `fix:`, `chore:`).

@@ -14,7 +14,19 @@ See demo videos: [RenderFusion](https://www.youtube.com/watch?v=6mA4k9myuOM) and
 
 ## Requirements
 
+The samples target Unity 6.3 LTS, tested with Unity 6000.3.28f1 and URP/HDRP 17.3.0. Local package dependencies use relative paths within this checkout; no setup script or machine-specific package paths are required. The ARENA Unity dependency is pinned to a Git revision so each checkout resolves the same library code.
+
+The core Unity package lives in `Packages/RenderFusion`; the repository root is a private development workspace. To install from Git, use `https://github.com/arenaxr/arena-renderfusion.git?path=/Packages/RenderFusion`. Keeping packages separate from the sample projects prevents Unity from assigning downloaded dependency scripts to an enclosing local package.
+
+Existing installations must update their core and addon Git URLs to the paths in [Installation](Documentation~/install.md). Package identities and existing script/prefab GUIDs are preserved.
+
 We implement a custom layer on top of Unity's [WebRTC package](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/index.html). See their [Requirements](https://docs.unity3d.com/Packages/com.unity.webrtc@3.0/manual/requirements.html).
+
+Depth is streamed as 8-bit grayscale using the existing ARENA browser format. Every render pipeline encodes eye-space distance in metres divided by `200`, independently of the Unity camera's clipping planes. This matches the browser's `/ 50` decoder with its default 10,000 m far plane. Geometry beyond approximately 200 m saturates; an empty background stays white.
+
+Desktop cameras match ARENA's default 80-degree field of view and 0.005–10,000 m clipping interval. Stereo cameras preserve the supplied off-axis projection and use matching depth parameters; returning to desktop restores automatic projection. Stereo still assumes parallel eyes separated by the supplied IPD and matching browser/stream viewport aspects. Validate alignment on the target headset: the existing browser messages do not provide full per-eye poses or actual XR framebuffer dimensions.
+
+Validated on macOS and Linux with Unity 6000.3.28f1: 149 EditMode checks per platform, plus live desktop Chrome alignment and reconnect checks. Standalone builds and headset alignment have not been validated end to end.
 
 ## Usage
 
@@ -105,19 +117,20 @@ In addition to the above, you may deploy your own ARENA webserver if you do not 
 ## Samples
 
 ### Universal Render Pipeline (recommended)
-Open `Samples~/URP`.
+Open `Samples~/Universal`.
 
-### Standard Render Pipeline
-Open `Samples~/SRP`.
+### Built-in Render Pipeline (deprecated)
+The `Samples~/BuiltIn` project uses Unity's Built-in Render Pipeline and is deprecated. Use the URP sample for new projects.
 
 ### High Definition Render Pipeline
-Open `Samples~/HDRP`.
+Open `Samples~/HighDefinition`.
 
 ## Quick Start
 
-For a quick start, simply open `Samples~/URP` using the Unity Hub. Click on the `ARENARenderFusion` Game Object, change the Scene Name to your favorite ARENA scene, then press Play!
+Open `Samples~/Universal` using Unity Hub, then open `Assets/Scenes/MyScene.unity`. Select `ARENARenderFusionURP` in the Hierarchy, configure the ARENA namespace and scene on `ArenaClientScene`, press Play, and open the matching ARENA scene in Chrome.
 
 ## Documentation
+
 - [Contributing](CONTRIBUTING.md)
 
 ## License

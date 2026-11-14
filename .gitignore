@@ -1,4 +1,7 @@
 .arena*
+*.slnx
+**/Assets/_Recovery/
+**/Assets/_Recovery.meta
 [Ll]ibrary.meta
 [Tt]emp.meta
 [Oo]bj.meta

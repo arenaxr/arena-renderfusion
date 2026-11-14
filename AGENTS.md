@@ -13,8 +13,8 @@ Orientation for agents (and humans) working in this repo. Detailed docs live in 
 
 ## Installation & setup
 - [Documentation~/install.md](Documentation~/install.md) — installation guide for URP/HDRP, including ARENA-unity dependency setup.
+- [Packages/RenderFusion/package.json](Packages/RenderFusion/package.json) — distributed Unity package; runtime code and package tests live here. The root `package.json` is private workspace/release metadata.
 
-## Addons & launcher
-- [Addons~/io.conix.arena.renderfusion-hdrp/README.md](Addons~/io.conix.arena.renderfusion-hdrp/README.md) — RenderFusion addon for Unity's High Definition Render Pipeline (HDRP).
-- [Addons~/io.conix.arena.renderfusion-urp/README.md](Addons~/io.conix.arena.renderfusion-urp/README.md) — RenderFusion addon for Unity's Universal Render Pipeline (URP).
-- [ApplicationLauncher~/README.md](ApplicationLauncher~/README.md) — application launcher for deployed RenderFusion rendering instances (WIP).
+## Addons
+- [Addons~/HighDefinition/README.md](Addons~/HighDefinition/README.md) — RenderFusion addon for Unity's High Definition Render Pipeline (HDRP).
+- [Addons~/Universal/README.md](Addons~/Universal/README.md) — RenderFusion addon for Unity's Universal Render Pipeline (URP).

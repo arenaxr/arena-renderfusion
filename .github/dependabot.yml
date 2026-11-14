@@ -9,6 +9,7 @@ updates:
       default-days: 7
 
   - package-ecosystem: "npm"
+    # Root workspaces include the core package and both render-pipeline addons.
     directory: "/"
     schedule:
       interval: "monthly"

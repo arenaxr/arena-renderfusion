@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/v17.6.0/schemas/config.json",
+  "release-type": "node",
+  "include-component-in-tag": false,
+  "packages": {
+    ".": {
+      "package-name": "io.conix.arena.renderfusion",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "Packages/RenderFusion/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "Addons~/Universal/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "Addons~/Universal/package.json",
+          "jsonpath": "$.dependencies['io.conix.arena.renderfusion']"
+        },
+        {
+          "type": "json",
+          "path": "Addons~/HighDefinition/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "Addons~/HighDefinition/package.json",
+          "jsonpath": "$.dependencies['io.conix.arena.renderfusion']"
+        }
+      ]
+    }
+  }
+}
