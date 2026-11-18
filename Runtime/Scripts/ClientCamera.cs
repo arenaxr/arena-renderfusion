@@ -65,7 +65,7 @@ namespace ArenaUnity.RenderFusion
 
         private void Awake()
         {
-            if (!GraphicsSettings.renderPipelineAsset)
+            if (!GraphicsSettings.defaultRenderPipeline)
             {
                 if (Shader.Find("Hidden/RGBDepth") != null)
                     m_material = new Material(Shader.Find("Hidden/RGBDepth"));
@@ -150,7 +150,7 @@ namespace ArenaUnity.RenderFusion
 
         internal void SetRenderTextureOther(RenderTexture otherRendertexture)
         {
-            if (GraphicsSettings.renderPipelineAsset) return;
+            if (GraphicsSettings.defaultRenderPipeline) return;
 
             if (otherRendertexture != null)
             {

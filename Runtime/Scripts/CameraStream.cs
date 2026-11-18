@@ -161,7 +161,7 @@ namespace ArenaUnity.RenderFusion
                 m_clientCameraLeft.setCameraParams();
                 m_clientCameraRight.setCameraParams();
 
-                if (!GraphicsSettings.renderPipelineAsset)
+                if (!GraphicsSettings.defaultRenderPipeline)
                 {
                     m_clientCameraLeft.SetRenderTextureOther(null);
                 }
@@ -186,7 +186,7 @@ namespace ArenaUnity.RenderFusion
                 if (leftProj != null && leftProj.Length > 0) m_clientCameraLeft.setCameraProjMatrix(leftProj);
                 if (rightProj != null && rightProj.Length > 0) m_clientCameraRight.setCameraProjMatrix(rightProj);
 
-                if (!GraphicsSettings.renderPipelineAsset)
+                if (!GraphicsSettings.defaultRenderPipeline)
                 {
                     if (m_rightEyeTargetTexture)
                         m_clientCameraLeft.SetRenderTextureOther(m_rightEyeTargetTexture);
@@ -224,7 +224,7 @@ namespace ArenaUnity.RenderFusion
             }
             m_track = op.Track;
 
-            if (!GraphicsSettings.renderPipelineAsset)
+            if (!GraphicsSettings.defaultRenderPipeline)
                 m_rightEyeTargetTexture = m_clientCameraRight.CreateRenderTexture(width, height, screenWidth, screenHeight);
         }
 
