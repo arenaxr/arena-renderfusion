@@ -1,7 +1,7 @@
 {
     "name": "arena-renderfusion-workspace",
     "private": true,
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "Development workspace for the ARENA RenderFusion Unity packages.",
     "documentationUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/README.md",
     "changelogUrl": "https://github.com/arenaxr/arena-renderfusion/blob/main/CHANGELOG.md",
