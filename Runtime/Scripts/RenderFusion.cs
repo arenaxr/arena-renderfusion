@@ -157,17 +157,21 @@ namespace ArenaUnity.RenderFusion
                 return;
             }
 
-            if (!clientPeerDict.TryGetValue(data.id, out PeerConnection peer))
+            if (clientPeerDict.ContainsKey(data.id))
             {
-                peer = CreatePeerConnection(data);
-                peer.AddSender(videoResolution.x, videoResolution.y);
-                StartCoroutine(peer.GetStats(1.0f));
+                // Duplicate join from a connected client (page reload, or a retry
+                // while negotiation is still in flight — clients re-announce until
+                // they receive an offer). Closing the peer and stopping there
+                // strands the client with no connection until its NEXT join, and
+                // kills negotiations mid-offer. Treat it as a reconnect instead:
+                // dispose the stale peer and immediately build a fresh one.
+                Debug.Log($"[OnClientConnect] Duplicate join from {data.id}; replacing existing peer.");
+                RemovePeerConnection(data.id);
             }
-            else
-            {
-                peer.peer.Close();
-                clientPeerDict.Remove(data.id);
-            }
+
+            PeerConnection peer = CreatePeerConnection(data);
+            peer.AddSender(videoResolution.x, videoResolution.y);
+            StartCoroutine(peer.GetStats(1.0f));
         }
 
         private void OnClientDisconnect(ISignaling signaler, string id)
