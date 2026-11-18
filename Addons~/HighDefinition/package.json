@@ -2,7 +2,7 @@
     "name": "io.conix.arena.renderfusion-hdrp",
     "displayName": "ARENA RenderFusion for Unity HDRP",
     "_release_please_version_start": "x-release-please-start-version",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "_release_please_version_end": "x-release-please-end-version",
     "unity": "6000.3",
     "description": "Enables RenderFusion on ARENA using Unity's HDRP.",
@@ -13,11 +13,11 @@
         "com.unity.render-pipelines.high-definition": "17.3.0",
         "com.unity.webrtc": "3.0.0",
         "io.conix.arena.unity": "1.7.1",
-        "io.conix.arena.renderfusion": "1.0.3"
+        "io.conix.arena.renderfusion": "1.1.0"
     },
     "author": {
-    "name": "Carnegie Mellon University",
-    "email": "arenaxr@andrew.cmu.edu",
-    "url": "https://docs.arenaxr.org"
-  }
+        "name": "Carnegie Mellon University",
+        "email": "arenaxr@andrew.cmu.edu",
+        "url": "https://docs.arenaxr.org"
+    }
 }
